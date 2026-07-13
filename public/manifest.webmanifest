@@ -1,0 +1,12 @@
+{
+  "name": "The Black Prince — Blox Fruits Shop",
+  "short_name": "Black Prince",
+  "description": "Blox Fruits Marketplace: Fruit, Akun, Joki, Community & AI Admin 24/7",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#12100f",
+  "theme_color": "#12100f",
+  "icons": [
+    { "src": "/favicon.ico", "sizes": "64x64", "type": "image/x-icon" }
+  ]
+}
