@@ -247,7 +247,7 @@ function RecordModal({
 
         <div className="grid grid-cols-2 gap-3">
           {fields.filter((f) => !f.hidden).map((f) => (
-            <div key={f.key} className={f.colSpan === 2 || f.type === "textarea" ? "col-span-2" : "col-span-2 sm:col-span-1"}>
+            <div key={f.key} className={f.colSpan === 2 || f.type === "textarea" || f.type === "image" ? "col-span-2" : "col-span-2 sm:col-span-1"}>
               <label className="block text-xs font-semibold text-muted-foreground">
                 {f.label}
                 {f.required && <span className="ml-1 text-red-400">*</span>}
