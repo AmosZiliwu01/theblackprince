@@ -6,20 +6,30 @@ export const Route = createFileRoute("/_authenticated/admin/fruits")({
     <AdminCrud
       table="fruits"
       title="Harga Fruit"
-      description="Kelola daftar fruit, stok, dan harga."
+      description="Kelola daftar fruit, stok, gambar, dan harga."
       orderBy="sort_order"
       fields={[
+        { key: "image_url", label: "Gambar Produk", type: "image", colSpan: 2 },
+        { key: "alt_text", label: "Alt Text", type: "text", placeholder: "Gambar buah Dough" },
         { key: "name", label: "Nama", type: "text", required: true },
         { key: "category", label: "Kategori", type: "text", placeholder: "Common / Rare / Legendary / Mythical / Gomu" },
         { key: "price", label: "Harga (Rp)", type: "number", required: true, defaultValue: 0 },
         { key: "stock", label: "Stok", type: "number", defaultValue: 0 },
         { key: "ready", label: "Ready", type: "boolean", defaultValue: true },
         { key: "sort_order", label: "Urutan", type: "number", defaultValue: 0 },
-        { key: "icon", label: "Icon (emoji)", type: "text", placeholder: "🍎" },
         { key: "description", label: "Deskripsi", type: "textarea" },
       ]}
       listColumns={[
-        { key: "icon", label: "" },
+        {
+          key: "image_url",
+          label: "Img",
+          render: (r) =>
+            r.image_url ? (
+              <img src={r.image_url} alt="" className="h-8 w-8 rounded object-cover" />
+            ) : (
+              <span className="text-muted-foreground">—</span>
+            ),
+        },
         { key: "name", label: "Nama" },
         { key: "category", label: "Kategori" },
         {
