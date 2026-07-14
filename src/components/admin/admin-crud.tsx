@@ -3,10 +3,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus, Edit2, Trash2, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
+import { ImageUploadField } from "./image-upload-field";
 
 const sb = supabase as any;
 
-export type FieldType = "text" | "textarea" | "number" | "boolean" | "select" | "datetime";
+export type FieldType = "text" | "textarea" | "number" | "boolean" | "select" | "datetime" | "image";
 
 export interface FieldDef {
   key: string;
