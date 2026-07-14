@@ -345,6 +345,9 @@ function FieldInput({
       />
     );
   }
+  if (field.type === "image") {
+    return <ImageUploadField value={value} onChange={onChange} />;
+  }
   return (
     <input
       type={field.type === "number" ? "number" : "text"}
