@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { Search } from "lucide-react";
 import { SiteLayout } from "@/components/site/site-layout";
 import { fruitsQO, categoriesQO } from "@/lib/site-queries";
+import { ProductCard } from "@/components/product-card";
 
 export const Route = createFileRoute("/fruits")({
   head: () => ({
@@ -41,9 +42,7 @@ function FruitsPage() {
         <h1 className="text-3xl font-black">
           Harga <span className="text-gradient">Fruit</span>
         </h1>
-        <p className="text-sm text-muted-foreground">
-          Stok update realtime. Chat AI untuk cek fruit tertentu.
-        </p>
+        <p className="text-sm text-muted-foreground">Stok update realtime. Chat AI untuk cek fruit tertentu.</p>
 
         <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-center">
           <div className="relative flex-1">
@@ -56,43 +55,30 @@ function FruitsPage() {
             />
           </div>
           <div className="flex gap-2 overflow-x-auto pb-1">
-            <CategoryChip active={cat === "all"} onClick={() => setCat("all")}>
-              Semua
-            </CategoryChip>
+            <Chip active={cat === "all"} onClick={() => setCat("all")}>Semua</Chip>
             {cats.map((c: any) => (
-              <CategoryChip key={c.id} active={cat === c.name} onClick={() => setCat(c.name)}>
+              <Chip key={c.id} active={cat === c.name} onClick={() => setCat(c.name)}>
                 {c.name}
-              </CategoryChip>
+              </Chip>
             ))}
           </div>
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {filtered.map((f: any) => (
-            <div
+            <ProductCard
               key={f.id}
-              className={
-                "rounded-2xl border p-3 transition " +
-                (f.ready
-                  ? "border-border bg-card hover:border-primary/60 hover:shadow-neon"
-                  : "border-border/40 bg-card/50 opacity-70")
-              }
-            >
-              <div className="mb-2 grid h-20 place-items-center rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 text-4xl">
-                {f.icon || "🍎"}
-              </div>
-              <p className="truncate text-sm font-bold">{f.name}</p>
-              <p className="text-[10px] uppercase tracking-wide text-muted-foreground">{f.category}</p>
-              <p className="mt-1 text-base font-black text-primary">
-                Rp {Number(f.price).toLocaleString("id-ID")}
-              </p>
-              <div className="mt-1 flex items-center justify-between text-[11px]">
-                <span className={f.ready ? "text-emerald-400" : "text-red-400"}>
-                  {f.ready ? "READY" : "SOLD"}
-                </span>
-                <span className="text-muted-foreground">Stok: {f.stock}</span>
-              </div>
-            </div>
+              id={f.id}
+              kind="fruit"
+              name={f.name}
+              price={Number(f.price)}
+              image_url={f.image_url}
+              alt_text={f.alt_text}
+              stock={Number(f.stock ?? 0)}
+              ready={Boolean(f.ready)}
+              category={f.category}
+              meta={f.description}
+            />
           ))}
           {filtered.length === 0 && (
             <div className="col-span-full rounded-xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">
@@ -105,15 +91,7 @@ function FruitsPage() {
   );
 }
 
-function CategoryChip({
-  children,
-  active,
-  onClick,
-}: {
-  children: React.ReactNode;
-  active: boolean;
-  onClick: () => void;
-}) {
+function Chip({ children, active, onClick }: { children: React.ReactNode; active: boolean; onClick: () => void }) {
   return (
     <button
       onClick={onClick}

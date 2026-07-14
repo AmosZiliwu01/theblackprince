@@ -17,7 +17,9 @@ import { Route as FruitsRouteImport } from './routes/fruits'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as CommunityRouteImport } from './routes/community'
+import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ChatRouteImport } from './routes/chat'
+import { Route as CartRouteImport } from './routes/cart'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AccountsRouteImport } from './routes/accounts'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -79,9 +81,19 @@ const CommunityRoute = CommunityRouteImport.update({
   path: '/community',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ChatRoute = ChatRouteImport.update({
   id: '/chat',
   path: '/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -198,7 +210,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/accounts': typeof AccountsRoute
   '/auth': typeof AuthRoute
+  '/cart': typeof CartRoute
   '/chat': typeof ChatRoute
+  '/checkout': typeof CheckoutRoute
   '/community': typeof CommunityRoute
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
@@ -228,7 +242,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/accounts': typeof AccountsRoute
   '/auth': typeof AuthRoute
+  '/cart': typeof CartRoute
   '/chat': typeof ChatRoute
+  '/checkout': typeof CheckoutRoute
   '/community': typeof CommunityRoute
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
@@ -259,7 +275,9 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/accounts': typeof AccountsRoute
   '/auth': typeof AuthRoute
+  '/cart': typeof CartRoute
   '/chat': typeof ChatRoute
+  '/checkout': typeof CheckoutRoute
   '/community': typeof CommunityRoute
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
@@ -291,7 +309,9 @@ export interface FileRouteTypes {
     | '/'
     | '/accounts'
     | '/auth'
+    | '/cart'
     | '/chat'
+    | '/checkout'
     | '/community'
     | '/events'
     | '/faq'
@@ -321,7 +341,9 @@ export interface FileRouteTypes {
     | '/'
     | '/accounts'
     | '/auth'
+    | '/cart'
     | '/chat'
+    | '/checkout'
     | '/community'
     | '/events'
     | '/faq'
@@ -351,7 +373,9 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/accounts'
     | '/auth'
+    | '/cart'
     | '/chat'
+    | '/checkout'
     | '/community'
     | '/events'
     | '/faq'
@@ -383,7 +407,9 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AccountsRoute: typeof AccountsRoute
   AuthRoute: typeof AuthRoute
+  CartRoute: typeof CartRoute
   ChatRoute: typeof ChatRoute
+  CheckoutRoute: typeof CheckoutRoute
   CommunityRoute: typeof CommunityRoute
   EventsRoute: typeof EventsRoute
   FaqRoute: typeof FaqRoute
@@ -452,11 +478,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommunityRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/chat': {
       id: '/chat'
       path: '/chat'
       fullPath: '/chat'
       preLoaderRoute: typeof ChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -660,7 +700,9 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AccountsRoute: AccountsRoute,
   AuthRoute: AuthRoute,
+  CartRoute: CartRoute,
   ChatRoute: ChatRoute,
+  CheckoutRoute: CheckoutRoute,
   CommunityRoute: CommunityRoute,
   EventsRoute: EventsRoute,
   FaqRoute: FaqRoute,

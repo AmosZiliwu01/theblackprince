@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Wrench, Clock } from "lucide-react";
 import { SiteLayout } from "@/components/site/site-layout";
 import { jokiQO } from "@/lib/site-queries";
+import { ProductCard } from "@/components/product-card";
 
 export const Route = createFileRoute("/joki")({
   head: () => ({
@@ -27,28 +27,28 @@ function JokiPage() {
         </h1>
         <p className="text-sm text-muted-foreground">Level, race, awaken, raid — tinggal titip akun.</p>
 
-        <div className="mt-6 grid gap-3 md:grid-cols-2">
-          {joki.map((j: any) => (
-            <div key={j.id} className="rounded-2xl border border-border bg-card p-5 transition hover:border-primary/60 hover:shadow-neon">
-              <div className="flex items-start gap-3">
-                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl gradient-primary shadow-neon">
-                  <Wrench className="h-5 w-5 text-primary-foreground" />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="font-bold">{j.name}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">{j.description}</p>
-                  <p className="mt-2 inline-flex items-center gap-1 text-xs text-muted-foreground">
-                    <Clock className="h-3 w-3" /> {j.estimation}
-                  </p>
-                </div>
-                <p className="text-right text-lg font-black text-primary">
-                  Rp {Number(j.price).toLocaleString("id-ID")}
-                </p>
-              </div>
-            </div>
-          ))}
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          {joki.map((j: any) => {
+            const stock = j.stock == null ? null : Number(j.stock);
+            const ready = Boolean(j.active) && (stock == null || stock > 0);
+            return (
+              <ProductCard
+                key={j.id}
+                id={j.id}
+                kind="joki"
+                name={j.name}
+                price={Number(j.price)}
+                image_url={j.image_url}
+                alt_text={j.alt_text}
+                stock={stock}
+                ready={ready}
+                category={j.category || j.estimation}
+                meta={j.description}
+              />
+            );
+          })}
           {joki.length === 0 && (
-            <div className="rounded-xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">
+            <div className="col-span-full rounded-xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">
               Belum ada layanan joki aktif.
             </div>
           )}
