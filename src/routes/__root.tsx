@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { CartProvider } from "@/lib/cart-context";
 
 function NotFoundComponent() {
   return (
@@ -140,18 +141,20 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
-      <Toaster
-        theme="dark"
-        position="top-center"
-        toastOptions={{
-          style: {
-            background: "oklch(0.18 0.025 35)",
-            border: "1px solid oklch(0.28 0.03 35)",
-            color: "oklch(0.97 0.01 60)",
-          },
-        }}
-      />
+      <CartProvider>
+        <Outlet />
+        <Toaster
+          theme="dark"
+          position="top-center"
+          toastOptions={{
+            style: {
+              background: "oklch(0.18 0.025 35)",
+              border: "1px solid oklch(0.28 0.03 35)",
+              color: "oklch(0.97 0.01 60)",
+            },
+          }}
+        />
+      </CartProvider>
     </QueryClientProvider>
   );
 }
