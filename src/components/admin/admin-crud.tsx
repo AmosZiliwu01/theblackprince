@@ -3,10 +3,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus, Edit2, Trash2, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
+import { ImageUploadField } from "./image-upload-field";
 
 const sb = supabase as any;
 
-export type FieldType = "text" | "textarea" | "number" | "boolean" | "select" | "datetime";
+export type FieldType = "text" | "textarea" | "number" | "boolean" | "select" | "datetime" | "image";
 
 export interface FieldDef {
   key: string;
@@ -246,7 +247,7 @@ function RecordModal({
 
         <div className="grid grid-cols-2 gap-3">
           {fields.filter((f) => !f.hidden).map((f) => (
-            <div key={f.key} className={f.colSpan === 2 || f.type === "textarea" ? "col-span-2" : "col-span-2 sm:col-span-1"}>
+            <div key={f.key} className={f.colSpan === 2 || f.type === "textarea" || f.type === "image" ? "col-span-2" : "col-span-2 sm:col-span-1"}>
               <label className="block text-xs font-semibold text-muted-foreground">
                 {f.label}
                 {f.required && <span className="ml-1 text-red-400">*</span>}
@@ -343,6 +344,9 @@ function FieldInput({
         className={base}
       />
     );
+  }
+  if (field.type === "image") {
+    return <ImageUploadField value={value} onChange={onChange} />;
   }
   return (
     <input

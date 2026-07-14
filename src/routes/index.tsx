@@ -165,20 +165,32 @@ function HomePage() {
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
           {featuredFruits.map((f: any) => (
-            <div
+            <Link
+              to="/fruits"
               key={f.id}
-              className="group rounded-xl border border-border bg-card p-3 transition hover:border-primary/60 hover:shadow-neon"
+              className="group overflow-hidden rounded-xl border border-border bg-card transition hover:border-primary/60 hover:shadow-neon"
             >
-              <div className="mb-2 grid h-14 place-items-center rounded-lg bg-gradient-to-br from-orange-500/20 to-red-600/20 text-3xl">
-                {f.icon || "🍎"}
+              <div className="aspect-square w-full overflow-hidden bg-gradient-to-br from-orange-500/20 to-red-600/20">
+                {f.image_url ? (
+                  <img
+                    src={f.image_url}
+                    alt={f.alt_text || f.name}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="grid h-full w-full place-items-center text-3xl">🍎</div>
+                )}
               </div>
-              <p className="truncate text-sm font-bold">{f.name}</p>
-              <p className="text-[11px] uppercase text-muted-foreground">{f.category}</p>
-              <p className="mt-1 text-sm font-black text-primary">Rp {Number(f.price).toLocaleString("id-ID")}</p>
-              <p className="text-[11px] text-muted-foreground">
-                {f.stock > 0 ? `Stok: ${f.stock}` : "PO 1-3 hari"}
-              </p>
-            </div>
+              <div className="p-2.5">
+                <p className="truncate text-sm font-bold">{f.name}</p>
+                <p className="text-[11px] uppercase text-muted-foreground">{f.category}</p>
+                <p className="mt-1 text-sm font-black text-primary">Rp {Number(f.price).toLocaleString("id-ID")}</p>
+                <p className="text-[11px] text-muted-foreground">
+                  {f.stock > 0 ? `Stok: ${f.stock}` : "PO 1-3 hari"}
+                </p>
+              </div>
+            </Link>
           ))}
         </div>
       </section>

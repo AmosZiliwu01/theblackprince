@@ -16,42 +16,51 @@ export type Database = {
     Tables: {
       accounts: {
         Row: {
+          alt_text: string | null
           created_at: string
           description: string | null
           fruit: string | null
           id: string
+          image_url: string | null
           level: number | null
           name: string
           price: number
           race: string | null
           sort_order: number
           status: string
+          thumbnail_url: string | null
           updated_at: string
         }
         Insert: {
+          alt_text?: string | null
           created_at?: string
           description?: string | null
           fruit?: string | null
           id?: string
+          image_url?: string | null
           level?: number | null
           name: string
           price?: number
           race?: string | null
           sort_order?: number
           status?: string
+          thumbnail_url?: string | null
           updated_at?: string
         }
         Update: {
+          alt_text?: string | null
           created_at?: string
           description?: string | null
           fruit?: string | null
           id?: string
+          image_url?: string | null
           level?: number | null
           name?: string
           price?: number
           race?: string | null
           sort_order?: number
           status?: string
+          thumbnail_url?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -313,42 +322,51 @@ export type Database = {
       }
       fruits: {
         Row: {
+          alt_text: string | null
           category: string | null
           created_at: string
           description: string | null
           icon: string | null
           id: string
+          image_url: string | null
           name: string
           price: number
           ready: boolean
           sort_order: number
           stock: number
+          thumbnail_url: string | null
           updated_at: string
         }
         Insert: {
+          alt_text?: string | null
           category?: string | null
           created_at?: string
           description?: string | null
           icon?: string | null
           id?: string
+          image_url?: string | null
           name: string
           price?: number
           ready?: boolean
           sort_order?: number
           stock?: number
+          thumbnail_url?: string | null
           updated_at?: string
         }
         Update: {
+          alt_text?: string | null
           category?: string | null
           created_at?: string
           description?: string | null
           icon?: string | null
           id?: string
+          image_url?: string | null
           name?: string
           price?: number
           ready?: boolean
           sort_order?: number
           stock?: number
+          thumbnail_url?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -392,35 +410,50 @@ export type Database = {
       joki_services: {
         Row: {
           active: boolean
+          alt_text: string | null
+          category: string | null
           created_at: string
           description: string | null
           estimation: string | null
           id: string
+          image_url: string | null
           name: string
           price: number
           sort_order: number
+          stock: number | null
+          thumbnail_url: string | null
           updated_at: string
         }
         Insert: {
           active?: boolean
+          alt_text?: string | null
+          category?: string | null
           created_at?: string
           description?: string | null
           estimation?: string | null
           id?: string
+          image_url?: string | null
           name: string
           price?: number
           sort_order?: number
+          stock?: number | null
+          thumbnail_url?: string | null
           updated_at?: string
         }
         Update: {
           active?: boolean
+          alt_text?: string | null
+          category?: string | null
           created_at?: string
           description?: string | null
           estimation?: string | null
           id?: string
+          image_url?: string | null
           name?: string
           price?: number
           sort_order?: number
+          stock?: number | null
+          thumbnail_url?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -483,6 +516,8 @@ export type Database = {
           site_name: string
           tagline: string
           updated_at: string
+          whatsapp_greeting: string | null
+          whatsapp_number: string | null
         }
         Insert: {
           id?: number
@@ -490,6 +525,8 @@ export type Database = {
           site_name?: string
           tagline?: string
           updated_at?: string
+          whatsapp_greeting?: string | null
+          whatsapp_number?: string | null
         }
         Update: {
           id?: number
@@ -497,6 +534,8 @@ export type Database = {
           site_name?: string
           tagline?: string
           updated_at?: string
+          whatsapp_greeting?: string | null
+          whatsapp_number?: string | null
         }
         Relationships: []
       }
