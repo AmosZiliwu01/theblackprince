@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 
 import { SiteLayout } from "@/components/site/site-layout";
+import { ProductImage } from "@/components/product-image";
 import {
   bannersQO,
   fruitsQO,
@@ -166,22 +167,18 @@ function HomePage() {
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
           {featuredFruits.map((f: any) => (
             <Link
-              to="/fruits"
+              to="/fruits/$id"
+              params={{ id: f.id }}
               key={f.id}
               className="group overflow-hidden rounded-xl border border-border bg-card transition hover:border-primary/60 hover:shadow-neon"
             >
-              <div className="aspect-square w-full overflow-hidden bg-gradient-to-br from-orange-500/20 to-red-600/20">
-                {f.image_url ? (
-                  <img
-                    src={f.image_url}
-                    alt={f.alt_text || f.name}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="grid h-full w-full place-items-center text-3xl">🍎</div>
-                )}
-              </div>
+              <ProductImage
+                src={f.image_url}
+                alt={f.alt_text || f.name}
+                kind="fruit"
+                ratio="square"
+                className="rounded-none"
+              />
               <div className="p-2.5">
                 <p className="truncate text-sm font-bold">{f.name}</p>
                 <p className="text-[11px] uppercase text-muted-foreground">{f.category}</p>
@@ -205,18 +202,24 @@ function HomePage() {
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
           {featuredJoki.map((j: any) => (
-            <div key={j.id} className="rounded-xl border border-border bg-card p-4">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="font-bold">{j.name}</p>
-                  <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{j.description}</p>
-                  <p className="mt-2 text-xs text-muted-foreground">Estimasi: {j.estimation}</p>
-                </div>
-                <p className="shrink-0 text-right text-sm font-black text-primary">
-                  Rp {Number(j.price).toLocaleString("id-ID")}
-                </p>
+            <Link
+              to="/joki/$id"
+              params={{ id: j.id }}
+              key={j.id}
+              className="flex items-start gap-3 rounded-xl border border-border bg-card p-4 transition hover:border-primary/60 hover:shadow-neon"
+            >
+              <div className="w-16 shrink-0">
+                <ProductImage src={j.image_url} alt={j.alt_text || j.name} kind="joki" ratio="square" />
               </div>
-            </div>
+              <div className="min-w-0 flex-1">
+                <p className="font-bold">{j.name}</p>
+                <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{j.description}</p>
+                <p className="mt-2 text-xs text-muted-foreground">Estimasi: {j.estimation}</p>
+              </div>
+              <p className="shrink-0 text-right text-sm font-black text-primary">
+                Rp {Number(j.price).toLocaleString("id-ID")}
+              </p>
+            </Link>
           ))}
         </div>
       </section>
@@ -232,7 +235,7 @@ function HomePage() {
           </span>
           <div className="min-w-0 flex-1 text-primary-foreground">
             <p className="text-xs font-bold uppercase opacity-90">Assistant Admin AI</p>
-            <p className="text-lg font-black">Tanya apa aja, jawab realtime dari database</p>
+            <p className="text-lg font-black">Tanya apa aja, jawab realtime sesuai data</p>
             <p className="text-xs opacity-90">Harga · Stok · PS · Live · Giveaway · Event · FAQ</p>
           </div>
           <Crown className="hidden h-10 w-10 text-primary-foreground/70 md:block" />

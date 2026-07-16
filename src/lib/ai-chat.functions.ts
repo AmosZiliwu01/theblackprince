@@ -17,14 +17,6 @@ function serverSb() {
   const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
   return createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
-    global: {
-      fetch: (input, init) => {
-        const h = new Headers(init?.headers);
-        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
-        h.set("apikey", key);
-        return fetch(input as any, { ...(init ?? {}), headers: h });
-      },
-    },
   });
 }
 
@@ -135,6 +127,25 @@ async function buildContext(): Promise<string> {
   return sys;
 }
 
+async function saveChatSession(sb: ReturnType<typeof serverSb>, sessionKey: string) {
+  const { error } = await sb.rpc("upsert_chat_session", { p_session_key: sessionKey });
+  if (error) console.error("upsert_chat_session RPC failed:", error);
+}
+
+async function saveChatMessage(
+  sb: ReturnType<typeof serverSb>,
+  sessionKey: string,
+  role: string,
+  content: string,
+) {
+  const { error } = await sb.rpc("insert_chat_message", {
+    p_session_key: sessionKey,
+    p_role: role,
+    p_content: content,
+  });
+  if (error) console.error("insert_chat_message RPC failed:", error);
+}
+
 export const chatWithAssistant = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => InputSchema.parse(data))
   .handler(async ({ data }) => {
@@ -149,18 +160,13 @@ export const chatWithAssistant = createServerFn({ method: "POST" })
 
     const systemContext = await buildContext();
 
-    // Persist last user message
+    // Persist last user message via SECURITY DEFINER RPCs — see
+    // chat_rpc_migration.sql. These bypass whatever was rejecting anon-role
+    // direct table writes with 42501.
     const lastUser = [...data.messages].reverse().find((m) => m.role === "user");
     if (lastUser) {
-      await sb.from("chat_sessions").upsert(
-        { session_key: data.sessionKey, updated_at: new Date().toISOString() } as any,
-        { onConflict: "session_key" },
-      );
-      await sb.from("chat_messages").insert({
-        session_key: data.sessionKey,
-        role: "user",
-        content: lastUser.content,
-      } as any);
+      await saveChatSession(sb, data.sessionKey);
+      await saveChatMessage(sb, data.sessionKey, "user", lastUser.content);
     }
 
     const body = {
@@ -195,7 +201,7 @@ export const chatWithAssistant = createServerFn({ method: "POST" })
         if (retry.ok) {
           const j = await retry.json();
           const reply = j.choices?.[0]?.message?.content ?? "Maaf bang, coba ulangi ya.";
-          await sb.from("chat_messages").insert({ session_key: data.sessionKey, role: "assistant", content: reply } as any);
+          await saveChatMessage(sb, data.sessionKey, "assistant", reply);
           return { ok: true as const, reply };
         }
       }
@@ -205,11 +211,7 @@ export const chatWithAssistant = createServerFn({ method: "POST" })
     const json = await res.json();
     const reply: string = json.choices?.[0]?.message?.content ?? "Maaf bang, coba ulangi ya.";
 
-    await sb.from("chat_messages").insert({
-      session_key: data.sessionKey,
-      role: "assistant",
-      content: reply,
-    } as any);
+    await saveChatMessage(sb, data.sessionKey, "assistant", reply);
 
     return { ok: true as const, reply };
   });

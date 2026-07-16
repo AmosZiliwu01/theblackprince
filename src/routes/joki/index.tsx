@@ -4,7 +4,7 @@ import { SiteLayout } from "@/components/site/site-layout";
 import { jokiQO } from "@/lib/site-queries";
 import { ProductCard } from "@/components/product-card";
 
-export const Route = createFileRoute("/joki")({
+export const Route = createFileRoute("/joki/")({
   head: () => ({
     meta: [
       { title: "Jasa Joki Blox Fruits — The Black Prince" },

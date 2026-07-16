@@ -33,16 +33,26 @@ export function SingletonEditor({
       const payload: any = { id: 1 };
       for (const f of fields) {
         let v = row?.[f.key];
-        if (f.type === "number") v = v === "" || v == null ? null : Number(v);
-        if (f.type === "boolean") v = Boolean(v);
-        if (typeof v === "string" && v.trim() === "") v = null;
+        if (f.type === "number") {
+          v = v === "" || v == null ? null : Number(v);
+        } else if (f.type === "boolean") {
+          v = Boolean(v);
+        } else if (typeof v === "string") {
+          // Keep empty strings as "" rather than null — several singleton
+          // columns (ai_settings.forbidden_words, custom_instructions, etc.)
+          // are defined NOT NULL DEFAULT '' and reject null values.
+          v = v;
+        } else if (v == null) {
+          v = f.type === "text" || f.type === "textarea" ? "" : null;
+        }
         payload[f.key] = v;
       }
       const { error } = await sb.from(table).upsert(payload, { onConflict: "id" });
       if (error) throw error;
       toast.success("Disimpan");
     } catch (err: any) {
-      toast.error(err.message ?? "Gagal simpan");
+      console.error("SingletonEditor save failed:", err);
+      toast.error(err?.message ?? "Gagal simpan");
     } finally {
       setSaving(false);
     }

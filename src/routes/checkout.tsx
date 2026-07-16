@@ -62,6 +62,8 @@ function CheckoutPage() {
         return;
       }
 
+      const storeName = settings?.site_name || "The Black Prince";
+
       const lines: string[] = [];
       lines.push(settings?.whatsapp_greeting || "Halo admin The Black Prince, saya mau order:");
       lines.push("");
@@ -79,7 +81,7 @@ function CheckoutPage() {
         lines.push(`Catatan: ${note.trim()}`);
       }
       lines.push("");
-      lines.push("Sumber: theblackprince.lovable.app");
+      lines.push(`Pesanan dari: ${storeName}`);
 
       const url = `https://wa.me/${wa}?text=${encodeURIComponent(lines.join("\n"))}`;
       window.open(url, "_blank", "noopener,noreferrer");

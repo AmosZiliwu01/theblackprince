@@ -1,15 +1,25 @@
-import { ImageIcon } from "lucide-react";
+import { ImageIcon, Apple, Wrench, UserCircle2 } from "lucide-react";
 
 interface Props {
   src?: string | null;
   alt?: string | null;
   className?: string;
   ratio?: "square" | "video" | "portrait";
+  /** Used to pick a sensible fallback icon when no image is set */
+  kind?: "fruit" | "joki" | "account";
 }
 
-export function ProductImage({ src, alt, className = "", ratio = "square" }: Props) {
+const FALLBACK_ICON: Record<string, typeof ImageIcon> = {
+  fruit: Apple,
+  joki: Wrench,
+  account: UserCircle2,
+};
+
+export function ProductImage({ src, alt, className = "", ratio = "square", kind }: Props) {
   const ratioClass =
     ratio === "square" ? "aspect-square" : ratio === "video" ? "aspect-video" : "aspect-[3/4]";
+  const FallbackIcon = (kind && FALLBACK_ICON[kind]) || ImageIcon;
+
   return (
     <div
       className={
@@ -32,7 +42,7 @@ export function ProductImage({ src, alt, className = "", ratio = "square" }: Pro
         />
       ) : (
         <div className="flex h-full w-full items-center justify-center text-muted-foreground/40">
-          <ImageIcon className="h-10 w-10" />
+          <FallbackIcon className="h-10 w-10" />
         </div>
       )}
     </div>

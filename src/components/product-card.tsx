@@ -1,6 +1,6 @@
 import { ShoppingCart, Zap } from "lucide-react";
 import { toast } from "sonner";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { ProductImage } from "./product-image";
 import { useCart, type CartKind } from "@/lib/cart-context";
 
@@ -18,6 +18,12 @@ interface ProductCardProps {
   meta?: string;
   description?: string | null;
 }
+
+const DETAIL_ROUTE: Record<CartKind, "/fruits/$id" | "/joki/$id" | "/accounts/$id"> = {
+  fruit: "/fruits/$id",
+  joki: "/joki/$id",
+  account: "/accounts/$id",
+};
 
 export function ProductCard(p: ProductCardProps) {
   const cart = useCart();
@@ -52,8 +58,12 @@ export function ProductCard(p: ProductCardProps) {
           : "border-border hover:-translate-y-0.5 hover:border-primary/60 hover:shadow-neon")
       }
     >
-      <div className="relative">
-        <ProductImage src={p.image_url} alt={p.alt_text || p.name} />
+      <Link
+        to={DETAIL_ROUTE[p.kind]}
+        params={{ id: p.id }}
+        className="relative block"
+      >
+        <ProductImage src={p.image_url} alt={p.alt_text || p.name} kind={p.kind} />
         {p.category && (
           <span className="absolute left-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white backdrop-blur">
             {p.category}
@@ -71,10 +81,16 @@ export function ProductCard(p: ProductCardProps) {
             </span>
           </span>
         )}
-      </div>
+      </Link>
 
       <div className="flex flex-1 flex-col gap-1 p-3">
-        <p className="line-clamp-1 text-sm font-bold">{p.name}</p>
+        <Link
+          to={DETAIL_ROUTE[p.kind]}
+          params={{ id: p.id }}
+          className="min-w-0"
+        >
+          <p className="line-clamp-1 text-sm font-bold hover:text-primary">{p.name}</p>
+        </Link>
         {p.meta && <p className="line-clamp-1 text-[11px] text-muted-foreground">{p.meta}</p>}
         <p className="mt-auto text-base font-black text-primary">
           Rp {Number(p.price).toLocaleString("id-ID")}

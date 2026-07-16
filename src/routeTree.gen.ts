@@ -11,9 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as LiveRouteImport } from './routes/live'
-import { Route as JokiRouteImport } from './routes/joki'
 import { Route as GiveawayRouteImport } from './routes/giveaway'
-import { Route as FruitsRouteImport } from './routes/fruits'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as CommunityRouteImport } from './routes/community'
@@ -21,9 +19,14 @@ import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AccountsRouteImport } from './routes/accounts'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as JokiIndexRouteImport } from './routes/joki/index'
+import { Route as FruitsIndexRouteImport } from './routes/fruits/index'
+import { Route as AccountsIndexRouteImport } from './routes/accounts/index'
+import { Route as JokiIdRouteImport } from './routes/joki/$id'
+import { Route as FruitsIdRouteImport } from './routes/fruits/$id'
+import { Route as AccountsIdRouteImport } from './routes/accounts/$id'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedAdminWebsiteRouteImport } from './routes/_authenticated/admin/website'
@@ -51,19 +54,9 @@ const LiveRoute = LiveRouteImport.update({
   path: '/live',
   getParentRoute: () => rootRouteImport,
 } as any)
-const JokiRoute = JokiRouteImport.update({
-  id: '/joki',
-  path: '/joki',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const GiveawayRoute = GiveawayRouteImport.update({
   id: '/giveaway',
   path: '/giveaway',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FruitsRoute = FruitsRouteImport.update({
-  id: '/fruits',
-  path: '/fruits',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqRoute = FaqRouteImport.update({
@@ -101,11 +94,6 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AccountsRoute = AccountsRouteImport.update({
-  id: '/accounts',
-  path: '/accounts',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -113,6 +101,36 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JokiIndexRoute = JokiIndexRouteImport.update({
+  id: '/joki/',
+  path: '/joki/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FruitsIndexRoute = FruitsIndexRouteImport.update({
+  id: '/fruits/',
+  path: '/fruits/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountsIndexRoute = AccountsIndexRouteImport.update({
+  id: '/accounts/',
+  path: '/accounts/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JokiIdRoute = JokiIdRouteImport.update({
+  id: '/joki/$id',
+  path: '/joki/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FruitsIdRoute = FruitsIdRouteImport.update({
+  id: '/fruits/$id',
+  path: '/fruits/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountsIdRoute = AccountsIdRouteImport.update({
+  id: '/accounts/$id',
+  path: '/accounts/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
@@ -208,7 +226,6 @@ const AuthenticatedAdminAccountsRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/accounts': typeof AccountsRoute
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/chat': typeof ChatRoute
@@ -216,12 +233,16 @@ export interface FileRoutesByFullPath {
   '/community': typeof CommunityRoute
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
-  '/fruits': typeof FruitsRoute
   '/giveaway': typeof GiveawayRoute
-  '/joki': typeof JokiRoute
   '/live': typeof LiveRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/accounts/$id': typeof AccountsIdRoute
+  '/fruits/$id': typeof FruitsIdRoute
+  '/joki/$id': typeof JokiIdRoute
+  '/accounts/': typeof AccountsIndexRoute
+  '/fruits/': typeof FruitsIndexRoute
+  '/joki/': typeof JokiIndexRoute
   '/admin/accounts': typeof AuthenticatedAdminAccountsRoute
   '/admin/ai-settings': typeof AuthenticatedAdminAiSettingsRoute
   '/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
@@ -240,7 +261,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/accounts': typeof AccountsRoute
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/chat': typeof ChatRoute
@@ -248,11 +268,15 @@ export interface FileRoutesByTo {
   '/community': typeof CommunityRoute
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
-  '/fruits': typeof FruitsRoute
   '/giveaway': typeof GiveawayRoute
-  '/joki': typeof JokiRoute
   '/live': typeof LiveRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/accounts/$id': typeof AccountsIdRoute
+  '/fruits/$id': typeof FruitsIdRoute
+  '/joki/$id': typeof JokiIdRoute
+  '/accounts': typeof AccountsIndexRoute
+  '/fruits': typeof FruitsIndexRoute
+  '/joki': typeof JokiIndexRoute
   '/admin/accounts': typeof AuthenticatedAdminAccountsRoute
   '/admin/ai-settings': typeof AuthenticatedAdminAiSettingsRoute
   '/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
@@ -273,7 +297,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/accounts': typeof AccountsRoute
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/chat': typeof ChatRoute
@@ -281,12 +304,16 @@ export interface FileRoutesById {
   '/community': typeof CommunityRoute
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
-  '/fruits': typeof FruitsRoute
   '/giveaway': typeof GiveawayRoute
-  '/joki': typeof JokiRoute
   '/live': typeof LiveRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/accounts/$id': typeof AccountsIdRoute
+  '/fruits/$id': typeof FruitsIdRoute
+  '/joki/$id': typeof JokiIdRoute
+  '/accounts/': typeof AccountsIndexRoute
+  '/fruits/': typeof FruitsIndexRoute
+  '/joki/': typeof JokiIndexRoute
   '/_authenticated/admin/accounts': typeof AuthenticatedAdminAccountsRoute
   '/_authenticated/admin/ai-settings': typeof AuthenticatedAdminAiSettingsRoute
   '/_authenticated/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
@@ -307,7 +334,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/accounts'
     | '/auth'
     | '/cart'
     | '/chat'
@@ -315,12 +341,16 @@ export interface FileRouteTypes {
     | '/community'
     | '/events'
     | '/faq'
-    | '/fruits'
     | '/giveaway'
-    | '/joki'
     | '/live'
     | '/sitemap.xml'
     | '/admin'
+    | '/accounts/$id'
+    | '/fruits/$id'
+    | '/joki/$id'
+    | '/accounts/'
+    | '/fruits/'
+    | '/joki/'
     | '/admin/accounts'
     | '/admin/ai-settings'
     | '/admin/announcements'
@@ -339,7 +369,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/accounts'
     | '/auth'
     | '/cart'
     | '/chat'
@@ -347,11 +376,15 @@ export interface FileRouteTypes {
     | '/community'
     | '/events'
     | '/faq'
-    | '/fruits'
     | '/giveaway'
-    | '/joki'
     | '/live'
     | '/sitemap.xml'
+    | '/accounts/$id'
+    | '/fruits/$id'
+    | '/joki/$id'
+    | '/accounts'
+    | '/fruits'
+    | '/joki'
     | '/admin/accounts'
     | '/admin/ai-settings'
     | '/admin/announcements'
@@ -371,7 +404,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
-    | '/accounts'
     | '/auth'
     | '/cart'
     | '/chat'
@@ -379,12 +411,16 @@ export interface FileRouteTypes {
     | '/community'
     | '/events'
     | '/faq'
-    | '/fruits'
     | '/giveaway'
-    | '/joki'
     | '/live'
     | '/sitemap.xml'
     | '/_authenticated/admin'
+    | '/accounts/$id'
+    | '/fruits/$id'
+    | '/joki/$id'
+    | '/accounts/'
+    | '/fruits/'
+    | '/joki/'
     | '/_authenticated/admin/accounts'
     | '/_authenticated/admin/ai-settings'
     | '/_authenticated/admin/announcements'
@@ -405,7 +441,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  AccountsRoute: typeof AccountsRoute
   AuthRoute: typeof AuthRoute
   CartRoute: typeof CartRoute
   ChatRoute: typeof ChatRoute
@@ -413,11 +448,15 @@ export interface RootRouteChildren {
   CommunityRoute: typeof CommunityRoute
   EventsRoute: typeof EventsRoute
   FaqRoute: typeof FaqRoute
-  FruitsRoute: typeof FruitsRoute
   GiveawayRoute: typeof GiveawayRoute
-  JokiRoute: typeof JokiRoute
   LiveRoute: typeof LiveRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  AccountsIdRoute: typeof AccountsIdRoute
+  FruitsIdRoute: typeof FruitsIdRoute
+  JokiIdRoute: typeof JokiIdRoute
+  AccountsIndexRoute: typeof AccountsIndexRoute
+  FruitsIndexRoute: typeof FruitsIndexRoute
+  JokiIndexRoute: typeof JokiIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -436,25 +475,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LiveRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/joki': {
-      id: '/joki'
-      path: '/joki'
-      fullPath: '/joki'
-      preLoaderRoute: typeof JokiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/giveaway': {
       id: '/giveaway'
       path: '/giveaway'
       fullPath: '/giveaway'
       preLoaderRoute: typeof GiveawayRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/fruits': {
-      id: '/fruits'
-      path: '/fruits'
-      fullPath: '/fruits'
-      preLoaderRoute: typeof FruitsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faq': {
@@ -506,13 +531,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/accounts': {
-      id: '/accounts'
-      path: '/accounts'
-      fullPath: '/accounts'
-      preLoaderRoute: typeof AccountsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -525,6 +543,48 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/joki/': {
+      id: '/joki/'
+      path: '/joki'
+      fullPath: '/joki/'
+      preLoaderRoute: typeof JokiIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fruits/': {
+      id: '/fruits/'
+      path: '/fruits'
+      fullPath: '/fruits/'
+      preLoaderRoute: typeof FruitsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounts/': {
+      id: '/accounts/'
+      path: '/accounts'
+      fullPath: '/accounts/'
+      preLoaderRoute: typeof AccountsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/joki/$id': {
+      id: '/joki/$id'
+      path: '/joki/$id'
+      fullPath: '/joki/$id'
+      preLoaderRoute: typeof JokiIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fruits/$id': {
+      id: '/fruits/$id'
+      path: '/fruits/$id'
+      fullPath: '/fruits/$id'
+      preLoaderRoute: typeof FruitsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounts/$id': {
+      id: '/accounts/$id'
+      path: '/accounts/$id'
+      fullPath: '/accounts/$id'
+      preLoaderRoute: typeof AccountsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -698,7 +758,6 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  AccountsRoute: AccountsRoute,
   AuthRoute: AuthRoute,
   CartRoute: CartRoute,
   ChatRoute: ChatRoute,
@@ -706,11 +765,15 @@ const rootRouteChildren: RootRouteChildren = {
   CommunityRoute: CommunityRoute,
   EventsRoute: EventsRoute,
   FaqRoute: FaqRoute,
-  FruitsRoute: FruitsRoute,
   GiveawayRoute: GiveawayRoute,
-  JokiRoute: JokiRoute,
   LiveRoute: LiveRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  AccountsIdRoute: AccountsIdRoute,
+  FruitsIdRoute: FruitsIdRoute,
+  JokiIdRoute: JokiIdRoute,
+  AccountsIndexRoute: AccountsIndexRoute,
+  FruitsIndexRoute: FruitsIndexRoute,
+  JokiIndexRoute: JokiIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

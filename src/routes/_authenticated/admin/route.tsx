@@ -30,8 +30,8 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 const menu = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/admin/fruits", label: "Harga Fruit", icon: Apple },
   { to: "/admin/categories", label: "Kategori", icon: Tags },
+  { to: "/admin/fruits", label: "Harga Fruit", icon: Apple },
   { to: "/admin/joki", label: "Harga Joki", icon: Wrench },
   { to: "/admin/accounts", label: "Harga Akun", icon: UserCircle2 },
   { to: "/admin/community", label: "Komunitas", icon: Users },

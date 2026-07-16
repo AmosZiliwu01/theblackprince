@@ -11,6 +11,11 @@ export const Route = createFileRoute("/_authenticated/admin/chats")({
   component: ChatsPage,
 });
 
+function truncate(text: string, max = 48) {
+  const clean = text.trim().replace(/\s+/g, " ");
+  return clean.length > max ? clean.slice(0, max) + "…" : clean;
+}
+
 function ChatsPage() {
   const qc = useQueryClient();
   const [q, setQ] = useState("");
@@ -24,6 +29,27 @@ function ChatsPage() {
       return data as any[];
     },
   }).data ?? [];
+
+  // First user message per session, used as a human-readable title in the list.
+  const previews = useQuery({
+    queryKey: ["admin", "chat_previews", sessions.map((s: any) => s.session_key).join(",")],
+    enabled: sessions.length > 0,
+    queryFn: async () => {
+      const keys = sessions.map((s: any) => s.session_key);
+      const { data, error } = await sb
+        .from("chat_messages")
+        .select("session_key,content,role,created_at")
+        .in("session_key", keys)
+        .eq("role", "user")
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      const map: Record<string, string> = {};
+      for (const m of data ?? []) {
+        if (!map[m.session_key]) map[m.session_key] = m.content;
+      }
+      return map;
+    },
+  }).data ?? {};
 
   const messages = useQuery({
     queryKey: ["admin", "chat_messages", selected],
@@ -51,7 +77,11 @@ function ChatsPage() {
     },
   });
 
-  const filtered = sessions.filter((s: any) => !q || s.session_key.includes(q));
+  const filtered = sessions.filter((s: any) => {
+    if (!q) return true;
+    const preview = previews[s.session_key] ?? "";
+    return s.session_key.includes(q) || preview.toLowerCase().includes(q.toLowerCase());
+  });
 
   function exportJson() {
     const data = { session: selected, messages };
@@ -64,6 +94,8 @@ function ChatsPage() {
     URL.revokeObjectURL(url);
   }
 
+  const selectedPreview = selected ? previews[selected] : null;
+
   return (
     <div className="grid gap-4 lg:grid-cols-[300px_1fr]">
       <div className="rounded-2xl border border-border bg-card p-3">
@@ -72,7 +104,7 @@ function ChatsPage() {
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Cari session..."
+            placeholder="Cari session atau isi pesan..."
             className="w-full rounded-xl border border-border bg-background py-2 pl-9 pr-3 text-sm outline-none"
           />
         </div>
@@ -80,23 +112,29 @@ function ChatsPage() {
           {filtered.length === 0 && (
             <p className="p-3 text-xs text-muted-foreground">Belum ada sesi chat.</p>
           )}
-          {filtered.map((s: any) => (
-            <button
-              key={s.session_key}
-              onClick={() => setSelected(s.session_key)}
-              className={
-                "block w-full rounded-lg border p-2 text-left text-xs transition " +
-                (selected === s.session_key
-                  ? "border-primary bg-primary/10"
-                  : "border-border bg-background/40 hover:border-primary/40")
-              }
-            >
-              <p className="truncate font-mono text-[11px]">{s.session_key}</p>
-              <p className="text-[10px] text-muted-foreground">
-                {new Date(s.updated_at).toLocaleString("id-ID")}
-              </p>
-            </button>
-          ))}
+          {filtered.map((s: any) => {
+            const preview = previews[s.session_key];
+            return (
+              <button
+                key={s.session_key}
+                onClick={() => setSelected(s.session_key)}
+                className={
+                  "block w-full rounded-lg border p-2 text-left text-xs transition " +
+                  (selected === s.session_key
+                    ? "border-primary bg-primary/10"
+                    : "border-border bg-background/40 hover:border-primary/40")
+                }
+              >
+                <p className="truncate text-[13px] font-semibold text-foreground">
+                  {preview ? truncate(preview) : <span className="italic text-muted-foreground">Belum ada pesan</span>}
+                </p>
+                <p className="mt-0.5 truncate font-mono text-[10px] text-muted-foreground">{s.session_key}</p>
+                <p className="text-[10px] text-muted-foreground">
+                  {new Date(s.updated_at).toLocaleString("id-ID")}
+                </p>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -107,9 +145,14 @@ function ChatsPage() {
           </div>
         ) : (
           <>
-            <div className="mb-3 flex items-center justify-between border-b border-border pb-3">
-              <p className="truncate font-mono text-xs">{selected}</p>
-              <div className="flex gap-2">
+            <div className="mb-3 flex items-center justify-between gap-3 border-b border-border pb-3">
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold">
+                  {selectedPreview ? truncate(selectedPreview, 64) : "Sesi Chat"}
+                </p>
+                <p className="truncate font-mono text-[10px] text-muted-foreground">{selected}</p>
+              </div>
+              <div className="flex shrink-0 gap-2">
                 <button
                   onClick={exportJson}
                   className="rounded-md border border-border bg-background px-3 py-1.5 text-xs"

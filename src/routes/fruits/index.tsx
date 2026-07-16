@@ -6,7 +6,7 @@ import { SiteLayout } from "@/components/site/site-layout";
 import { fruitsQO, categoriesQO } from "@/lib/site-queries";
 import { ProductCard } from "@/components/product-card";
 
-export const Route = createFileRoute("/fruits")({
+export const Route = createFileRoute("/fruits/")({
   head: () => ({
     meta: [
       { title: "Harga Fruit Blox Fruits — The Black Prince" },

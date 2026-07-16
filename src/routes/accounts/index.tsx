@@ -4,7 +4,7 @@ import { SiteLayout } from "@/components/site/site-layout";
 import { accountsQO } from "@/lib/site-queries";
 import { ProductCard } from "@/components/product-card";
 
-export const Route = createFileRoute("/accounts")({
+export const Route = createFileRoute("/accounts/")({
   head: () => ({
     meta: [
       { title: "Harga Akun Blox Fruits — The Black Prince" },

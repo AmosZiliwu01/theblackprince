@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Send, Loader2, Bot, User, Crown, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
@@ -241,8 +242,26 @@ function MessageBubble({ message }: { message: Message }) {
         {isUser ? (
           <p className="whitespace-pre-wrap">{message.content}</p>
         ) : (
-          <div className="prose prose-invert prose-sm max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_code]:rounded [&_code]:bg-black/40 [&_code]:px-1 [&_code]:py-0.5 [&_pre]:rounded-lg [&_pre]:bg-black/40 [&_pre]:p-2 [&_a]:text-primary [&_a]:underline">
-            <ReactMarkdown>{message.content}</ReactMarkdown>
+          <div
+            className="prose prose-invert prose-sm max-w-none
+              [&>*]:my-1.5 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0
+              [&_p]:my-1.5 [&_p]:leading-relaxed
+              [&_ul]:my-1.5 [&_ul]:pl-4 [&_ol]:my-1.5 [&_ol]:pl-4
+              [&_li]:my-0.5
+              [&_code]:rounded [&_code]:bg-black/40 [&_code]:px-1 [&_code]:py-0.5 [&_code]:text-xs
+              [&_pre]:my-1.5 [&_pre]:rounded-lg [&_pre]:bg-black/40 [&_pre]:p-2
+              [&_a]:text-primary [&_a]:underline [&_a]:break-all hover:[&_a]:opacity-80"
+          >
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                a: ({ node, ...props }) => (
+                  <a {...props} target="_blank" rel="noopener noreferrer" />
+                ),
+              }}
+            >
+              {message.content}
+            </ReactMarkdown>
           </div>
         )}
       </div>
