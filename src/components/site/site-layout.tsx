@@ -79,7 +79,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           <Link to="/" className="flex min-w-0 shrink-0 items-center gap-2 font-black tracking-tight">
             <LogoMark logoUrl={settings?.logo_url} />
             <span className="truncate text-sm leading-none sm:text-lg">
-              THE <span className="text-gradient">BLACK PRINCE</span>
+              THE <span className="text-gradient">BLACK PRINCE <br></br> STORE</span>
             </span>
           </Link>
           <nav className="ml-2 hidden min-w-0 flex-1 items-center gap-0.5 overflow-x-auto whitespace-nowrap lg:flex">
