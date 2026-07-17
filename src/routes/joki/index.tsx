@@ -38,6 +38,7 @@ function JokiPage() {
                 kind="joki"
                 name={j.name}
                 price={Number(j.price)}
+                priceRm={j.price_rm != null ? Number(j.price_rm) : null}
                 image_url={j.image_url}
                 alt_text={j.alt_text}
                 stock={stock}

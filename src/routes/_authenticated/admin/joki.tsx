@@ -13,6 +13,7 @@ export const Route = createFileRoute("/_authenticated/admin/joki")({
         { key: "name", label: "Nama Layanan", type: "text", required: true },
         { key: "category", label: "Kategori", type: "text", placeholder: "Level / Race / Raid / Awaken" },
         { key: "price", label: "Harga (Rp)", type: "number", required: true },
+        { key: "price_rm", label: "Harga (RM)", type: "number", placeholder: "Opsional, misal 3" },
         { key: "estimation", label: "Estimasi", type: "text", placeholder: "1-2 hari" },
         { key: "stock", label: "Slot (opsional)", type: "number", placeholder: "Kosongkan = unlimited" },
         { key: "active", label: "Aktif", type: "boolean", defaultValue: true },
@@ -35,7 +36,8 @@ export const Route = createFileRoute("/_authenticated/admin/joki")({
         {
           key: "price",
           label: "Harga",
-          render: (r) => "Rp " + Number(r.price).toLocaleString("id-ID"),
+          render: (r) =>
+            "Rp " + Number(r.price).toLocaleString("id-ID") + (r.price_rm ? ` | RM ${Number(r.price_rm).toLocaleString("en-MY", { minimumFractionDigits: 2 })}` : ""),
         },
         { key: "estimation", label: "Estimasi" },
         { key: "stock", label: "Slot" },

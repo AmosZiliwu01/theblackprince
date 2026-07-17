@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 import { SiteLayout } from "@/components/site/site-layout";
 import { chatWithAssistant } from "@/lib/ai-chat.functions";
-import { aiSettingsQO, liveStatusQO } from "@/lib/site-queries";
+import { aiSettingsQO, liveStatusQO, websiteSettingsQO } from "@/lib/site-queries";
 
 type Message = { role: "user" | "assistant"; content: string; ts: number };
 
@@ -32,6 +32,7 @@ export const Route = createFileRoute("/chat")({
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(aiSettingsQO);
     context.queryClient.ensureQueryData(liveStatusQO);
+    context.queryClient.ensureQueryData(websiteSettingsQO);
   },
   component: ChatPage,
 });
@@ -47,10 +48,34 @@ const QUICK_PROMPTS = [
   "Cara awaken buah?",
 ];
 
+function AvatarMark({ logoUrl, size = "h-8 w-8" }: { logoUrl?: string | null; size?: string }) {
+  if (logoUrl) {
+    return (
+      <span className={`grid ${size} shrink-0 place-items-center overflow-hidden rounded-full gradient-primary`}>
+        <img
+          src={logoUrl}
+          alt="Admin"
+          className="h-full w-full object-cover"
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).style.display = "none";
+          }}
+        />
+      </span>
+    );
+  }
+  return (
+    <span className={`grid ${size} shrink-0 place-items-center rounded-full gradient-primary text-primary-foreground`}>
+      <Crown className={size === "h-11 w-11" ? "h-5 w-5" : "h-4 w-4"} />
+    </span>
+  );
+}
+
 function ChatPage() {
   const settings = useQuery(aiSettingsQO).data as any;
   const live = useQuery(liveStatusQO).data as any;
+  const siteSettings = useQuery(websiteSettingsQO).data as any;
   const chatFn = useServerFn(chatWithAssistant);
+  const logoUrl = siteSettings?.logo_url;
 
   const [sessionKey] = useState(() => {
     if (typeof window === "undefined") return makeKey();
@@ -128,8 +153,8 @@ function ChatPage() {
       <div className="mx-auto flex h-[calc(100vh-10rem)] max-w-3xl flex-col px-3 py-3 md:h-[calc(100vh-8rem)]">
         {/* Header */}
         <div className="mb-3 flex items-center gap-3 rounded-2xl border border-border bg-card p-3">
-          <span className="relative grid h-11 w-11 place-items-center rounded-xl gradient-primary shadow-neon">
-            <Crown className="h-5 w-5 text-primary-foreground" />
+          <span className="relative">
+            <AvatarMark logoUrl={logoUrl} size="h-11 w-11" />
             <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full border-2 border-card bg-emerald-400" />
           </span>
           <div className="min-w-0 flex-1">
@@ -150,8 +175,19 @@ function ChatPage() {
         <div className="flex-1 space-y-3 overflow-y-auto rounded-2xl border border-border bg-card/40 p-3">
           {messages.length === 0 && (
             <div className="mx-auto max-w-md pt-6 text-center">
-              <span className="mx-auto mb-3 grid h-16 w-16 place-items-center rounded-2xl gradient-primary shadow-neon animate-pulse-neon">
-                <Sparkles className="h-8 w-8 text-primary-foreground" />
+              <span className="mx-auto mb-3 grid h-16 w-16 place-items-center rounded-2xl gradient-primary shadow-neon animate-pulse-neon overflow-hidden">
+                {logoUrl ? (
+                  <img
+                    src={logoUrl}
+                    alt="Admin"
+                    className="h-full w-full object-cover"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).style.display = "none";
+                    }}
+                  />
+                ) : (
+                  <Sparkles className="h-8 w-8 text-primary-foreground" />
+                )}
               </span>
               <p className="text-sm text-muted-foreground">{greeting}</p>
               <div className="mt-4 grid grid-cols-2 gap-2">
@@ -169,7 +205,7 @@ function ChatPage() {
           )}
 
           {messages.map((m, i) => (
-            <MessageBubble key={i} message={m} />
+            <MessageBubble key={i} message={m} logoUrl={logoUrl} />
           ))}
 
           {loading && (
@@ -222,15 +258,11 @@ function ChatPage() {
   );
 }
 
-function MessageBubble({ message }: { message: Message }) {
+function MessageBubble({ message, logoUrl }: { message: Message; logoUrl?: string | null }) {
   const isUser = message.role === "user";
   return (
     <div className={"flex gap-2 " + (isUser ? "justify-end" : "justify-start")}>
-      {!isUser && (
-        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full gradient-primary text-primary-foreground">
-          <Crown className="h-4 w-4" />
-        </span>
-      )}
+      {!isUser && <AvatarMark logoUrl={logoUrl} />}
       <div
         className={
           "max-w-[80%] rounded-2xl px-3.5 py-2 text-sm leading-relaxed " +

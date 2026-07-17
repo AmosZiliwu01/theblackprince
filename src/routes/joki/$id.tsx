@@ -6,6 +6,7 @@ import { SiteLayout } from "@/components/site/site-layout";
 import { jokiQO } from "@/lib/site-queries";
 import { ProductImage } from "@/components/product-image";
 import { useCart } from "@/lib/cart-context";
+import { formatDualPrice } from "@/lib/currency";
 
 export const Route = createFileRoute("/joki/$id")({
   loader: ({ context }) => context.queryClient.ensureQueryData(jokiQO),
@@ -71,7 +72,7 @@ function JokiDetailPage() {
             )}
             <h1 className="mt-2 text-2xl font-black">{j.name}</h1>
             <p className="mt-2 text-2xl font-black text-primary">
-              Rp {Number(j.price).toLocaleString("id-ID")}
+              {formatDualPrice(Number(j.price), j.price_rm != null ? Number(j.price_rm) : null)}
             </p>
             <p className={"mt-1 text-sm font-bold " + (soldOut ? "text-red-400" : "text-emerald-400")}>
               {soldOut ? "TIDAK TERSEDIA" : `TERSEDIA${stock != null ? ` — Slot: ${stock}` : ""}`}

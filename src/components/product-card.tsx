@@ -3,12 +3,14 @@ import { toast } from "sonner";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ProductImage } from "./product-image";
 import { useCart, type CartKind } from "@/lib/cart-context";
+import { formatDualPrice } from "@/lib/currency";
 
 interface ProductCardProps {
   id: string;
   kind: CartKind;
   name: string;
   price: number;
+  priceRm?: number | null;
   image_url?: string | null;
   alt_text?: string | null;
   stock: number | null; // null = unlimited slot (joki)
@@ -92,8 +94,8 @@ export function ProductCard(p: ProductCardProps) {
           <p className="line-clamp-1 text-sm font-bold hover:text-primary">{p.name}</p>
         </Link>
         {p.meta && <p className="line-clamp-1 text-[11px] text-muted-foreground">{p.meta}</p>}
-        <p className="mt-auto text-base font-black text-primary">
-          Rp {Number(p.price).toLocaleString("id-ID")}
+        <p className="mt-auto text-sm font-black text-primary">
+          {formatDualPrice(p.price, p.priceRm)}
         </p>
         <div className="flex items-center justify-between text-[11px]">
           <span className={soldOut ? "text-red-400" : "text-emerald-400"}>

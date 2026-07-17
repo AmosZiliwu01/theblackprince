@@ -6,6 +6,7 @@ import { SiteLayout } from "@/components/site/site-layout";
 import { fruitsQO } from "@/lib/site-queries";
 import { ProductImage } from "@/components/product-image";
 import { useCart } from "@/lib/cart-context";
+import { formatDualPrice } from "@/lib/currency";
 
 export const Route = createFileRoute("/fruits/$id")({
   loader: ({ context }) => context.queryClient.ensureQueryData(fruitsQO),
@@ -70,7 +71,7 @@ function FruitDetailPage() {
             )}
             <h1 className="mt-2 text-2xl font-black">{f.name}</h1>
             <p className="mt-2 text-2xl font-black text-primary">
-              Rp {Number(f.price).toLocaleString("id-ID")}
+              {formatDualPrice(Number(f.price), f.price_rm != null ? Number(f.price_rm) : null)}
             </p>
             <p className={"mt-1 text-sm font-bold " + (soldOut ? "text-red-400" : "text-emerald-400")}>
               {soldOut ? "SOLD OUT" : `READY${f.stock ? ` — Stok: ${f.stock}` : ""}`}

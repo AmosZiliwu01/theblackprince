@@ -46,6 +46,7 @@ function AccountsPage() {
                 kind="account"
                 name={a.name}
                 price={Number(a.price)}
+                priceRm={a.price_rm != null ? Number(a.price_rm) : null}
                 image_url={a.image_url}
                 alt_text={a.alt_text}
                 stock={stock}

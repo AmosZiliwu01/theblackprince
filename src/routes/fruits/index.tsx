@@ -72,6 +72,7 @@ function FruitsPage() {
               kind="fruit"
               name={f.name}
               price={Number(f.price)}
+              priceRm={f.price_rm != null ? Number(f.price_rm) : null}
               image_url={f.image_url}
               alt_text={f.alt_text}
               stock={Number(f.stock ?? 0)}

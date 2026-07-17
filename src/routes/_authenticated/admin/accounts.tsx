@@ -14,6 +14,7 @@ export const Route = createFileRoute("/_authenticated/admin/accounts")({
         { key: "race", label: "Race", type: "text", placeholder: "Human V4, Ghoul V4, ..." },
         { key: "fruit", label: "Fruit", type: "text" },
         { key: "price", label: "Harga (Rp)", type: "number", required: true },
+        { key: "price_rm", label: "Harga (RM)", type: "number", placeholder: "Opsional, misal 3" },
         {
           key: "status",
           label: "Status",
@@ -46,7 +47,8 @@ export const Route = createFileRoute("/_authenticated/admin/accounts")({
         {
           key: "price",
           label: "Harga",
-          render: (r) => "Rp " + Number(r.price).toLocaleString("id-ID"),
+          render: (r) =>
+            "Rp " + Number(r.price).toLocaleString("id-ID") + (r.price_rm ? ` | RM ${Number(r.price_rm).toLocaleString("en-MY", { minimumFractionDigits: 2 })}` : ""),
         },
         { key: "status", label: "Status" },
       ]}

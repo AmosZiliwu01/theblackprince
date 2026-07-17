@@ -14,6 +14,7 @@ export const Route = createFileRoute("/_authenticated/admin/fruits")({
         { key: "name", label: "Nama", type: "text", required: true },
         { key: "category", label: "Kategori", type: "text", placeholder: "Common / Rare / Legendary / Mythical / Gomu" },
         { key: "price", label: "Harga (Rp)", type: "number", required: true, defaultValue: 0 },
+        { key: "price_rm", label: "Harga (RM)", type: "number", placeholder: "Opsional, misal 3" },
         { key: "stock", label: "Stok", type: "number", defaultValue: 0 },
         { key: "ready", label: "Ready", type: "boolean", defaultValue: true },
         { key: "sort_order", label: "Urutan", type: "number", defaultValue: 0 },
@@ -35,7 +36,8 @@ export const Route = createFileRoute("/_authenticated/admin/fruits")({
         {
           key: "price",
           label: "Harga",
-          render: (r) => "Rp " + Number(r.price).toLocaleString("id-ID"),
+          render: (r) =>
+            "Rp " + Number(r.price).toLocaleString("id-ID") + (r.price_rm ? ` | RM ${Number(r.price_rm).toLocaleString("en-MY", { minimumFractionDigits: 2 })}` : ""),
         },
         { key: "stock", label: "Stok" },
         { key: "ready", label: "Ready" },
