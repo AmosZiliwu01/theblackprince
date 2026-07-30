@@ -133,6 +133,18 @@ async function buildContext(): Promise<string> {
     parts.push(`- ${e.title} — ${e.description ?? ""} — ${e.event_date ?? ""}`);
   }
 
+  sec("Pengumuman Aktif");
+  if ((announcements.data ?? []).length === 0) parts.push("Tidak ada pengumuman aktif.");
+  for (const a of announcements.data ?? []) parts.push(`- ${a.message}`);
+
+  sec("Promo Aktif");
+  if ((promotions.data ?? []).length === 0) parts.push("Tidak ada promo aktif.");
+  for (const p of promotions.data ?? []) {
+    parts.push(
+      `- ${p.title} — diskon ${p.discount_percent}% — cakupan: ${p.scope}${p.target_kind ? `/${p.target_kind}` : ""}${p.target_category ? `/${p.target_category}` : ""} — berakhir: ${p.ends_at ?? "-"}`,
+    );
+  }
+
   sec("FAQ");
   for (const q of faqs.data ?? []) {
     parts.push(`Q: ${q.question}\nA: ${q.answer}`);
@@ -145,9 +157,14 @@ async function buildContext(): Promise<string> {
     settings?.forbidden_words
       ? `\nJangan pernah menggunakan atau membahas kata/topik ini: ${settings.forbidden_words}`
       : "",
-    "\n\nSelalu gunakan DATA REAL di bawah untuk menjawab harga, stok, link, status. Jangan mengarang.\n\n",
+    "\n\nATURAN DATA (WAJIB):\n" +
+      "1. Data di bawah baru saja di-query langsung dari database dan merupakan satu-satunya sumber kebenaran.\n" +
+      "2. ABAIKAN semua harga, stok, estimasi, status live, promo, atau info lain yang pernah kamu sebutkan di pesan sebelumnya dalam percakapan ini jika berbeda dengan data di bawah.\n" +
+      "3. Jika data berubah dibanding jawaban sebelumnya, gunakan data terbaru ini dan boleh sebutkan bahwa datanya baru diperbarui.\n" +
+      "4. Jangan mengarang data yang tidak ada di bawah.\n\n",
     parts.join("\n"),
   ].join("");
+
 
   return sys;
 }
