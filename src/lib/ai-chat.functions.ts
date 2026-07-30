@@ -54,10 +54,12 @@ async function buildContext(): Promise<string> {
     faqs,
     aiRes,
     site,
+    announcements,
+    promotions,
   ] = await Promise.all([
-    sb.from("fruits").select("name,price,stock,ready,category").order("sort_order"),
-    sb.from("joki_services").select("name,price,description,estimation,active").order("sort_order"),
-    sb.from("accounts").select("name,level,race,fruit,price,status,description").order("sort_order"),
+    sb.from("fruits").select("name,price,price_rm,stock,ready,category,description").order("sort_order"),
+    sb.from("joki_services").select("name,price,price_rm,description,estimation,active,stock,category").order("sort_order"),
+    sb.from("accounts").select("name,level,race,fruit,price,price_rm,status,description").order("sort_order"),
     sb.from("community_links").select("platform,label,url,active").eq("active", true).order("sort_order"),
     sb.from("live_status").select("*").eq("id", 1).maybeSingle(),
     sb.from("giveaways").select("name,description,prize,how_to_join,ends_at,active").eq("active", true),
@@ -65,6 +67,12 @@ async function buildContext(): Promise<string> {
     sb.from("faqs").select("question,answer").order("sort_order"),
     sb.from("ai_settings").select("*").eq("id", 1).maybeSingle(),
     sb.from("website_settings").select("*").eq("id", 1).maybeSingle(),
+    sb.from("announcements").select("message,active").eq("active", true),
+    sb
+      .from("promotions")
+      .select("title,subtitle,discount_percent,scope,target_kind,target_category,starts_at,ends_at,active")
+      .eq("active", true)
+      .order("sort_order"),
   ]);
 
   const parts: string[] = [];
@@ -73,6 +81,11 @@ async function buildContext(): Promise<string> {
 
   parts.push(`# INFO TOKO: ${site.data?.site_name ?? "The Black Prince"}`);
   parts.push(site.data?.tagline ?? "");
+  parts.push(
+    `(Snapshot database diambil langsung saat pertanyaan ini: ${new Date().toISOString()} — ini data paling baru.)`,
+  );
+  if (site.data?.whatsapp_number) parts.push(`WhatsApp admin: ${site.data.whatsapp_number}`);
+
 
   sec("Daftar Fruit (Blox Fruits)");
   for (const f of fruits.data ?? []) {
