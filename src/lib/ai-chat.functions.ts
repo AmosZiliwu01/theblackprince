@@ -87,22 +87,27 @@ async function buildContext(): Promise<string> {
   if (site.data?.whatsapp_number) parts.push(`WhatsApp admin: ${site.data.whatsapp_number}`);
 
 
-  sec("Daftar Fruit (Blox Fruits)");
+  sec("KATEGORI 1 — FRUIT (item buah, dijual satuan). Hanya pakai bagian ini kalau user tanya FRUIT/buah.");
   for (const f of fruits.data ?? []) {
     const stok = f.ready ? (f.stock > 0 ? `stok ${f.stock}` : "ready (PO)") : "SOLD OUT";
-    parts.push(`- ${f.name} [${f.category ?? "-"}] — ${fmtIDR(f.price)} — ${stok}`);
+    parts.push(`- [FRUIT] ${f.name} [${f.category ?? "-"}] — ${fmtIDR(f.price)} — ${stok}`);
   }
 
-  sec("Jasa Joki");
+  sec("KATEGORI 2 — JASA JOKI (layanan pengerjaan di AKUN MILIK USER SENDIRI). Hanya pakai bagian ini kalau user tanya JOKI/jasa/unlock/farming.");
   for (const j of joki.data ?? []) {
     if (!j.active) continue;
-    parts.push(`- ${j.name} — ${fmtIDR(j.price)} — ${j.estimation ?? ""} — ${j.description ?? ""}`);
+    parts.push(
+      `- [JOKI] ${j.name} — ${fmtIDR(j.price)} — estimasi ${j.estimation ?? "-"} — ${j.description ?? ""}`,
+    );
+  }
+  if ((joki.data ?? []).filter((j: any) => j.active).length === 0) {
+    parts.push("Belum ada jasa joki yang aktif.");
   }
 
-  sec("Akun Blox Fruits");
+  sec("KATEGORI 3 — AKUN SIAP PAKAI (jual akun jadi, BUKAN jasa joki). Hanya pakai bagian ini kalau user tanya AKUN.");
   for (const a of accounts.data ?? []) {
     parts.push(
-      `- ${a.name} — Lv ${a.level ?? "?"} — Race ${a.race ?? "?"} — Fruit ${a.fruit ?? "?"} — ${fmtIDR(a.price)} — status ${a.status} — ${a.description ?? ""}`,
+      `- [AKUN] ${a.name} — Lv ${a.level ?? "?"} — Race ${a.race ?? "?"} — Fruit ${a.fruit ?? "?"} — ${fmtIDR(a.price)} — status ${a.status} — ${a.description ?? ""}`,
     );
   }
 
@@ -161,7 +166,12 @@ async function buildContext(): Promise<string> {
       "1. Data di bawah baru saja di-query langsung dari database dan merupakan satu-satunya sumber kebenaran.\n" +
       "2. ABAIKAN semua harga, stok, estimasi, status live, promo, atau info lain yang pernah kamu sebutkan di pesan sebelumnya dalam percakapan ini jika berbeda dengan data di bawah.\n" +
       "3. Jika data berubah dibanding jawaban sebelumnya, gunakan data terbaru ini dan boleh sebutkan bahwa datanya baru diperbarui.\n" +
-      "4. Jangan mengarang data yang tidak ada di bawah.\n\n",
+      "4. Jangan mengarang data yang tidak ada di bawah.\n" +
+      "5. JANGAN PERNAH MENCAMPUR KATEGORI. Item [FRUIT], [JOKI], dan [AKUN] adalah produk yang benar-benar berbeda walaupun namanya mirip.\n" +
+      "   - User tanya JOKI (contoh: \"joki god human berapa\") -> jawab HANYA dari daftar [JOKI]. Dilarang menyebut item [AKUN] atau [FRUIT].\n" +
+      "   - User tanya AKUN -> jawab HANYA dari daftar [AKUN].\n" +
+      "   - User tanya FRUIT -> jawab HANYA dari daftar [FRUIT].\n" +
+      "6. Kalau item yang ditanya tidak ada di kategori tersebut, katakan terus terang belum tersedia di kategori itu. Baru setelah itu boleh menawarkan alternatif dari kategori lain dengan menyebut jelas kategorinya.\n\n",
     parts.join("\n"),
   ].join("");
 
