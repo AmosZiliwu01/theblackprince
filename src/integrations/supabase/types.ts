@@ -25,6 +25,7 @@ export type Database = {
           level: number | null
           name: string
           price: number
+          price_rm: number | null
           race: string | null
           sort_order: number
           status: string
@@ -41,6 +42,7 @@ export type Database = {
           level?: number | null
           name: string
           price?: number
+          price_rm?: number | null
           race?: string | null
           sort_order?: number
           status?: string
@@ -57,6 +59,7 @@ export type Database = {
           level?: number | null
           name?: string
           price?: number
+          price_rm?: number | null
           race?: string | null
           sort_order?: number
           status?: string
@@ -331,6 +334,7 @@ export type Database = {
           image_url: string | null
           name: string
           price: number
+          price_rm: number | null
           ready: boolean
           sort_order: number
           stock: number
@@ -347,6 +351,7 @@ export type Database = {
           image_url?: string | null
           name: string
           price?: number
+          price_rm?: number | null
           ready?: boolean
           sort_order?: number
           stock?: number
@@ -363,6 +368,7 @@ export type Database = {
           image_url?: string | null
           name?: string
           price?: number
+          price_rm?: number | null
           ready?: boolean
           sort_order?: number
           stock?: number
@@ -419,6 +425,7 @@ export type Database = {
           image_url: string | null
           name: string
           price: number
+          price_rm: number | null
           sort_order: number
           stock: number | null
           thumbnail_url: string | null
@@ -435,6 +442,7 @@ export type Database = {
           image_url?: string | null
           name: string
           price?: number
+          price_rm?: number | null
           sort_order?: number
           stock?: number | null
           thumbnail_url?: string | null
@@ -451,6 +459,7 @@ export type Database = {
           image_url?: string | null
           name?: string
           price?: number
+          price_rm?: number | null
           sort_order?: number
           stock?: number | null
           thumbnail_url?: string | null
@@ -484,6 +493,60 @@ export type Database = {
           link?: string | null
           live_time?: string | null
           title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      promotions: {
+        Row: {
+          active: boolean
+          created_at: string
+          discount_percent: number
+          ends_at: string | null
+          id: string
+          image_url: string | null
+          scope: string
+          sort_order: number
+          starts_at: string | null
+          subtitle: string | null
+          target_category: string | null
+          target_kind: string | null
+          target_product_ids: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          discount_percent: number
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          scope: string
+          sort_order?: number
+          starts_at?: string | null
+          subtitle?: string | null
+          target_category?: string | null
+          target_kind?: string | null
+          target_product_ids?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          discount_percent?: number
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          scope?: string
+          sort_order?: number
+          starts_at?: string | null
+          subtitle?: string | null
+          target_category?: string | null
+          target_kind?: string | null
+          target_product_ids?: string[] | null
+          title?: string
           updated_at?: string
         }
         Relationships: []
@@ -550,6 +613,14 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      insert_chat_message: {
+        Args: { p_content: string; p_role: string; p_session_key: string }
+        Returns: undefined
+      }
+      upsert_chat_session: {
+        Args: { p_session_key: string }
+        Returns: undefined
       }
     }
     Enums: {
