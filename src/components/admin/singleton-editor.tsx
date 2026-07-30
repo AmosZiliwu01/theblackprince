@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -19,6 +20,7 @@ export function SingletonEditor({
 }) {
   const [row, setRow] = useState<any>(null);
   const [saving, setSaving] = useState(false);
+  const qc = useQueryClient();
 
   useEffect(() => {
     (async () => {
@@ -49,6 +51,9 @@ export function SingletonEditor({
       }
       const { error } = await sb.from(table).upsert(payload, { onConflict: "id" });
       if (error) throw error;
+      // Buang seluruh cache data publik agar situs & AI langsung memakai data baru.
+      await qc.invalidateQueries({ queryKey: ["public"] });
+      await qc.invalidateQueries({ queryKey: ["admin"] });
       toast.success("Disimpan");
     } catch (err: any) {
       console.error("SingletonEditor save failed:", err);

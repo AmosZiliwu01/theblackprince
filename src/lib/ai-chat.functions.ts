@@ -12,11 +12,23 @@ const InputSchema = z.object({
   messages: z.array(MessageSchema).min(1).max(30),
 });
 
+// Supabase adalah SINGLE SOURCE OF TRUTH untuk AI.
+// Client dibuat baru setiap request dan semua fetch memakai `no-store`
+// + header anti-cache agar tidak ada layer cache (Worker/CDN/PostgREST)
+// yang mengembalikan data lama setelah admin mengubah data.
 function serverSb() {
   const url = process.env.SUPABASE_URL!;
   const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
   return createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
+    global: {
+      fetch: (input: any, init: any = {}) => {
+        const headers = new Headers(init.headers ?? {});
+        headers.set("Cache-Control", "no-cache, no-store, max-age=0");
+        headers.set("Pragma", "no-cache");
+        return fetch(input, { ...init, headers, cache: "no-store" });
+      },
+    },
   });
 }
 
@@ -42,10 +54,12 @@ async function buildContext(): Promise<string> {
     faqs,
     aiRes,
     site,
+    announcements,
+    promotions,
   ] = await Promise.all([
-    sb.from("fruits").select("name,price,stock,ready,category").order("sort_order"),
-    sb.from("joki_services").select("name,price,description,estimation,active").order("sort_order"),
-    sb.from("accounts").select("name,level,race,fruit,price,status,description").order("sort_order"),
+    sb.from("fruits").select("name,price,price_rm,stock,ready,category,description").order("sort_order"),
+    sb.from("joki_services").select("name,price,price_rm,description,estimation,active,stock,category").order("sort_order"),
+    sb.from("accounts").select("name,level,race,fruit,price,price_rm,status,description").order("sort_order"),
     sb.from("community_links").select("platform,label,url,active").eq("active", true).order("sort_order"),
     sb.from("live_status").select("*").eq("id", 1).maybeSingle(),
     sb.from("giveaways").select("name,description,prize,how_to_join,ends_at,active").eq("active", true),
@@ -53,6 +67,12 @@ async function buildContext(): Promise<string> {
     sb.from("faqs").select("question,answer").order("sort_order"),
     sb.from("ai_settings").select("*").eq("id", 1).maybeSingle(),
     sb.from("website_settings").select("*").eq("id", 1).maybeSingle(),
+    sb.from("announcements").select("message,active").eq("active", true),
+    sb
+      .from("promotions")
+      .select("title,subtitle,discount_percent,scope,target_kind,target_category,starts_at,ends_at,active")
+      .eq("active", true)
+      .order("sort_order"),
   ]);
 
   const parts: string[] = [];
@@ -61,6 +81,11 @@ async function buildContext(): Promise<string> {
 
   parts.push(`# INFO TOKO: ${site.data?.site_name ?? "The Black Prince"}`);
   parts.push(site.data?.tagline ?? "");
+  parts.push(
+    `(Snapshot database diambil langsung saat pertanyaan ini: ${new Date().toISOString()} — ini data paling baru.)`,
+  );
+  if (site.data?.whatsapp_number) parts.push(`WhatsApp admin: ${site.data.whatsapp_number}`);
+
 
   sec("Daftar Fruit (Blox Fruits)");
   for (const f of fruits.data ?? []) {
@@ -108,6 +133,18 @@ async function buildContext(): Promise<string> {
     parts.push(`- ${e.title} — ${e.description ?? ""} — ${e.event_date ?? ""}`);
   }
 
+  sec("Pengumuman Aktif");
+  if ((announcements.data ?? []).length === 0) parts.push("Tidak ada pengumuman aktif.");
+  for (const a of announcements.data ?? []) parts.push(`- ${a.message}`);
+
+  sec("Promo Aktif");
+  if ((promotions.data ?? []).length === 0) parts.push("Tidak ada promo aktif.");
+  for (const p of promotions.data ?? []) {
+    parts.push(
+      `- ${p.title} — diskon ${p.discount_percent}% — cakupan: ${p.scope}${p.target_kind ? `/${p.target_kind}` : ""}${p.target_category ? `/${p.target_category}` : ""} — berakhir: ${p.ends_at ?? "-"}`,
+    );
+  }
+
   sec("FAQ");
   for (const q of faqs.data ?? []) {
     parts.push(`Q: ${q.question}\nA: ${q.answer}`);
@@ -120,9 +157,14 @@ async function buildContext(): Promise<string> {
     settings?.forbidden_words
       ? `\nJangan pernah menggunakan atau membahas kata/topik ini: ${settings.forbidden_words}`
       : "",
-    "\n\nSelalu gunakan DATA REAL di bawah untuk menjawab harga, stok, link, status. Jangan mengarang.\n\n",
+    "\n\nATURAN DATA (WAJIB):\n" +
+      "1. Data di bawah baru saja di-query langsung dari database dan merupakan satu-satunya sumber kebenaran.\n" +
+      "2. ABAIKAN semua harga, stok, estimasi, status live, promo, atau info lain yang pernah kamu sebutkan di pesan sebelumnya dalam percakapan ini jika berbeda dengan data di bawah.\n" +
+      "3. Jika data berubah dibanding jawaban sebelumnya, gunakan data terbaru ini dan boleh sebutkan bahwa datanya baru diperbarui.\n" +
+      "4. Jangan mengarang data yang tidak ada di bawah.\n\n",
     parts.join("\n"),
   ].join("");
+
 
   return sys;
 }
