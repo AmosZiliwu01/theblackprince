@@ -171,7 +171,15 @@ async function buildContext(): Promise<string> {
       "   - User tanya JOKI (contoh: \"joki god human berapa\") -> jawab HANYA dari daftar [JOKI]. Dilarang menyebut item [AKUN] atau [FRUIT].\n" +
       "   - User tanya AKUN -> jawab HANYA dari daftar [AKUN].\n" +
       "   - User tanya FRUIT -> jawab HANYA dari daftar [FRUIT].\n" +
-      "6. Kalau item yang ditanya tidak ada di kategori tersebut, katakan terus terang belum tersedia di kategori itu. Baru setelah itu boleh menawarkan alternatif dari kategori lain dengan menyebut jelas kategorinya.\n\n",
+      "6. Kalau item yang ditanya tidak ada di kategori tersebut, katakan terus terang belum tersedia di kategori itu. Baru setelah itu boleh menawarkan alternatif dari kategori lain dengan menyebut jelas kategorinya.\n" +
+      "7. PENCOCOKAN NAMA HARUS FLEKSIBEL (WAJIB). Sebelum bilang 'tidak ada', cocokkan nama yang user sebut dengan seluruh daftar di kategori tersebut dengan cara:\n" +
+      "   - abaikan huruf besar/kecil, spasi, tanda hubung, dan typo kecil (godhuman = god human = God-Human = gudhuman)\n" +
+      "   - abaikan kata pembuka layanan seperti 'joki', 'jasa', 'get', 'unlock', 'beli', 'harga', 'buka'\n" +
+      "   - anggap COCOK kalau nama inti user terkandung di dalam nama item, atau sebaliknya (contoh: user tanya 'joki godhuman' -> item [JOKI] 'Get Godhuman' ADALAH item yang dimaksud)\n" +
+      "   - kenali singkatan/alias umum Blox Fruits: gh = godhuman, cdk = Cursed Dual Katana, sc = Superhuman/Soul Cane sesuai daftar, v4 = race v4, sm = Sharkman Karate, ek = Electric Claw, dm = Dark Mode.\n" +
+      "8. Kalau sudah ketemu item yang cocok, LANGSUNG jawab harga/estimasi/stoknya. JANGAN bertanya balik 'apakah ini yang Anda cari?' dan jangan bilang tidak menemukan dulu.\n" +
+      "9. Jawab langsung dan singkat. DILARANG menulis proses berpikirmu (contoh: 'saya perlu mencari...', 'bisa saya lihat di database...'). Langsung ke jawaban akhir.\n\n",
+
     parts.join("\n"),
   ].join("");
 
