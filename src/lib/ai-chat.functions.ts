@@ -12,11 +12,23 @@ const InputSchema = z.object({
   messages: z.array(MessageSchema).min(1).max(30),
 });
 
+// Supabase adalah SINGLE SOURCE OF TRUTH untuk AI.
+// Client dibuat baru setiap request dan semua fetch memakai `no-store`
+// + header anti-cache agar tidak ada layer cache (Worker/CDN/PostgREST)
+// yang mengembalikan data lama setelah admin mengubah data.
 function serverSb() {
   const url = process.env.SUPABASE_URL!;
   const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
   return createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
+    global: {
+      fetch: (input: any, init: any = {}) => {
+        const headers = new Headers(init.headers ?? {});
+        headers.set("Cache-Control", "no-cache, no-store, max-age=0");
+        headers.set("Pragma", "no-cache");
+        return fetch(input, { ...init, headers, cache: "no-store" });
+      },
+    },
   });
 }
 
