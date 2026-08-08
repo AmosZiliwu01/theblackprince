@@ -34,7 +34,7 @@ const drawerLinks = [
   { to: "/fruits", label: "Harga Fruit", icon: Apple },
   { to: "/joki", label: "Jasa Joki", icon: Wrench },
   { to: "/accounts", label: "Harga Akun", icon: UserCircle2 },
-  { to: "/community", label: "Komunitas", icon: Users },
+  { to: "/community", label: "Link", icon: Users },
   { to: "/live", label: "Live TikTok", icon: Radio },
   { to: "/giveaway", label: "Giveaway", icon: Gift },
   { to: "/events", label: "Event", icon: CalendarRange },
