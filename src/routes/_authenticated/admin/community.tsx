@@ -5,7 +5,7 @@ export const Route = createFileRoute("/_authenticated/admin/community")({
   component: () => (
     <AdminCrud
       table="community_links"
-      title="Link Komunitas & Sosial"
+      title="Link & Sosial"
       fields={[
         {
           key: "platform",

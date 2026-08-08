@@ -34,7 +34,7 @@ const menu = [
   { to: "/admin/fruits", label: "Harga Fruit", icon: Apple },
   { to: "/admin/joki", label: "Harga Joki", icon: Wrench },
   { to: "/admin/accounts", label: "Harga Akun", icon: UserCircle2 },
-  { to: "/admin/community", label: "Komunitas", icon: Users },
+  { to: "/admin/community", label: "Link", icon: Users },
   { to: "/admin/live", label: "Status Live", icon: Radio },
   { to: "/admin/giveaways", label: "Giveaway", icon: Gift },
   { to: "/admin/events", label: "Event", icon: CalendarRange },
