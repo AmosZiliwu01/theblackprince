@@ -21,6 +21,18 @@ export const Route = createFileRoute("/joki/")({
 
 function JokiPage() {
   const joki = (useQuery(jokiQO).data ?? []).filter((j: any) => j.active);
+  const [q, setQ] = useState("");
+
+  const filtered = useMemo(() => {
+    const s = q.trim().toLowerCase();
+    if (!s) return joki;
+    return joki.filter((j: any) =>
+      [j.name, j.category, j.estimation, j.description]
+        .filter((v: any) => v != null && v !== "")
+        .some((v: any) => String(v).toLowerCase().includes(s)),
+    );
+  }, [joki, q]);
+
   return (
     <SiteLayout>
       <section className="mx-auto max-w-6xl px-4 py-6">
@@ -29,8 +41,18 @@ function JokiPage() {
         </h1>
         <p className="text-sm text-muted-foreground">Level, race, awaken, raid — tinggal titip akun.</p>
 
+        <div className="relative mt-4">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Cari joki... (nama, kategori)"
+            className="w-full rounded-xl border border-border bg-card py-2.5 pl-10 pr-3 text-sm outline-none focus:border-primary/60"
+          />
+        </div>
+
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          {joki.map((j: any) => {
+          {filtered.map((j: any) => {
             const stock = j.stock == null ? null : Number(j.stock);
             const ready = Boolean(j.active) && (stock == null || stock > 0);
             return (
