@@ -72,9 +72,9 @@ function JokiPage() {
               />
             );
           })}
-          {joki.length === 0 && (
+          {filtered.length === 0 && (
             <div className="col-span-full rounded-xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">
-              Belum ada layanan joki aktif.
+              {joki.length === 0 ? "Belum ada layanan joki aktif." : "Nggak ada joki yang cocok."}
             </div>
           )}
         </div>
