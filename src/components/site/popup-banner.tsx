@@ -5,7 +5,6 @@ import { Link } from "@tanstack/react-router";
 import { bannersQO } from "@/lib/site-queries";
 
 const DISMISS_KEY = "tbp_popup_dismissed";
-const AUTO_CLOSE_MS = 5000;
 
 export function PopupBanner() {
   const { data: banners } = useQuery(bannersQO);
@@ -38,13 +37,6 @@ export function PopupBanner() {
     }
   }
 
-  // Auto-close after AUTO_CLOSE_MS once the popup is actually shown
-  useEffect(() => {
-    if (!open) return;
-    const t = setTimeout(close, AUTO_CLOSE_MS);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
 
   if (!popup || !open || dismissedId === popup.id) return null;
 

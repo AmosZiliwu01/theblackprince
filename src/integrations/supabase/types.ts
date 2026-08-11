@@ -509,7 +509,7 @@ export type Database = {
           sort_order: number
           starts_at: string | null
           subtitle: string | null
-          target_category: string | null
+          target_categories: string[] | null
           target_kind: string | null
           target_product_ids: string[] | null
           title: string
@@ -526,7 +526,7 @@ export type Database = {
           sort_order?: number
           starts_at?: string | null
           subtitle?: string | null
-          target_category?: string | null
+          target_categories?: string[] | null
           target_kind?: string | null
           target_product_ids?: string[] | null
           title: string
@@ -543,7 +543,7 @@ export type Database = {
           sort_order?: number
           starts_at?: string | null
           subtitle?: string | null
-          target_category?: string | null
+          target_categories?: string[] | null
           target_kind?: string | null
           target_product_ids?: string[] | null
           title?: string
