@@ -38,13 +38,6 @@ export function PopupBanner() {
     }
   }
 
-  // Auto-close after AUTO_CLOSE_MS once the popup is actually shown
-  useEffect(() => {
-    if (!open) return;
-    const t = setTimeout(close, AUTO_CLOSE_MS);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
 
   if (!popup || !open || dismissedId === popup.id) return null;
 

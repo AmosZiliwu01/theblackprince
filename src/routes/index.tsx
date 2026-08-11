@@ -54,7 +54,9 @@ function HomePage() {
   const live = useQuery(liveStatusQO).data as any;
   const giveaways = (useQuery(giveawaysQO).data ?? []).filter((g: any) => g.active);
 
-  const hero = banners.find((b: any) => b.type === "hero" && b.active) || banners.find((b: any) => b.active);
+  const hero =
+    banners.find((b: any) => b.type === "hero" && b.active) ||
+    banners.find((b: any) => b.type === "promo" && b.active);
   const featuredFruits = fruits.filter((f: any) => f.ready).slice(0, 6);
   const featuredJoki = joki.filter((j: any) => j.active).slice(0, 4);
 
