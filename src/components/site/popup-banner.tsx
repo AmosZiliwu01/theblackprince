@@ -5,7 +5,6 @@ import { Link } from "@tanstack/react-router";
 import { bannersQO } from "@/lib/site-queries";
 
 const DISMISS_KEY = "tbp_popup_dismissed";
-const AUTO_CLOSE_MS = 5000;
 
 export function PopupBanner() {
   const { data: banners } = useQuery(bannersQO);
