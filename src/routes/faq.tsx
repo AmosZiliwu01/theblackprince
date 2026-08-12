@@ -42,8 +42,8 @@ function FaqPage() {
               <AccordionTrigger className="text-left text-sm font-semibold hover:no-underline">
                 {f.question}
               </AccordionTrigger>
-              <AccordionContent className="whitespace-pre-line text-sm text-muted-foreground">
-                {f.answer}
+              <AccordionContent>
+                <DescriptionRenderer text={f.answer} className="pb-1 text-muted-foreground" />
               </AccordionContent>
             </AccordionItem>
           ))}

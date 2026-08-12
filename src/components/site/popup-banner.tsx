@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { bannersQO } from "@/lib/site-queries";
+import { DescriptionRenderer } from "@/components/site/description";
 
 const DISMISS_KEY = "tbp_popup_dismissed";
 
@@ -68,11 +69,9 @@ export function PopupBanner() {
           />
         )}
 
-        <div className="p-5 text-center">
-          {popup.title && <h2 className="text-xl font-black">{popup.title}</h2>}
-          {popup.subtitle && (
-            <p className="mt-2 text-sm text-muted-foreground">{popup.subtitle}</p>
-          )}
+        <div className="max-h-[70vh] overflow-y-auto p-5">
+          {popup.title && <h2 className="text-center text-xl font-black">{popup.title}</h2>}
+          <DescriptionRenderer text={popup.subtitle} className="mt-3 text-left text-muted-foreground" />
 
           <div className="mt-4 flex flex-col gap-2">
             {popup.link && (

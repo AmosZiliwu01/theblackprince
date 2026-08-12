@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Gift } from "lucide-react";
 import { SiteLayout } from "@/components/site/site-layout";
 import { giveawaysQO } from "@/lib/site-queries";
+import { DescriptionRenderer } from "@/components/site/description";
 
 export const Route = createFileRoute("/giveaway")({
   head: () => ({
@@ -32,17 +33,17 @@ function GiveawayPage() {
                 <Gift className="h-6 w-6 shrink-0 text-primary" />
                 <div className="min-w-0 flex-1">
                   <p className="text-lg font-black">{g.name}</p>
-                  {g.description && <p className="mt-1 text-sm text-muted-foreground">{g.description}</p>}
-                  <div className="mt-3 rounded-xl border border-border bg-background/50 p-3">
+                  <DescriptionRenderer text={g.description} className="mt-3 text-muted-foreground" />
+                  <div className="mt-4 rounded-xl border border-border bg-background/50 p-3">
                     <p className="text-xs font-bold uppercase text-primary">🎁 Hadiah</p>
-                    <p className="text-sm">{g.prize}</p>
+                    <DescriptionRenderer text={g.prize} className="mt-1" />
                   </div>
                   <div className="mt-2 rounded-xl border border-border bg-background/50 p-3">
                     <p className="text-xs font-bold uppercase text-primary">📋 Cara Ikut</p>
-                    <p className="whitespace-pre-line text-sm">{g.how_to_join}</p>
+                    <DescriptionRenderer text={g.how_to_join} className="mt-1" />
                   </div>
                   {g.ends_at && (
-                    <p className="mt-2 text-xs text-muted-foreground">
+                    <p className="mt-3 text-xs text-muted-foreground">
                       Deadline: {new Date(g.ends_at).toLocaleString("id-ID")}
                     </p>
                   )}

@@ -53,9 +53,9 @@ function LivePage() {
               <p className="mt-4 text-lg font-semibold">{live.title}</p>
               {live.live_time && <p className="text-sm text-muted-foreground">Jam: {live.live_time}</p>}
               {live.ai_message && (
-                <p className="mt-3 rounded-xl border border-primary/40 bg-primary/10 p-3 text-sm">
-                  {live.ai_message}
-                </p>
+                <div className="mt-3 rounded-xl border border-primary/40 bg-primary/10 p-3">
+                  <DescriptionRenderer text={live.ai_message} />
+                </div>
               )}
               {live.link && (
                 <a

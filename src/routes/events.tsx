@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { CalendarRange } from "lucide-react";
 import { SiteLayout } from "@/components/site/site-layout";
 import { eventsQO } from "@/lib/site-queries";
+import { DescriptionRenderer } from "@/components/site/description";
 
 export const Route = createFileRoute("/events")({
   head: () => ({
@@ -33,10 +34,10 @@ function EventsPage() {
                   <CalendarRange className="h-5 w-5 text-primary-foreground" />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="font-bold">{e.title}</p>
-                  {e.description && <p className="mt-1 text-sm text-muted-foreground">{e.description}</p>}
+                  <p className="text-lg font-bold">{e.title}</p>
+                  <DescriptionRenderer text={e.description} className="mt-3 text-muted-foreground" />
                   {e.event_date && (
-                    <p className="mt-2 text-xs text-muted-foreground">
+                    <p className="mt-4 text-xs text-muted-foreground">
                       {new Date(e.event_date).toLocaleString("id-ID")}
                     </p>
                   )}
