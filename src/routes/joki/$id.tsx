@@ -1,3 +1,4 @@
+import { DescriptionRenderer } from "@/components/site/description";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, ShoppingCart, Zap } from "lucide-react";
@@ -80,9 +81,7 @@ function JokiDetailPage() {
             {j.estimation && (
               <p className="mt-2 text-sm text-muted-foreground">Estimasi: {j.estimation}</p>
             )}
-            {j.description && (
-              <p className="mt-4 whitespace-pre-line text-sm text-muted-foreground">{j.description}</p>
-            )}
+            <DescriptionRenderer text={j.description} className="mt-4 text-muted-foreground" />
 
             <div className="mt-6 grid grid-cols-2 gap-2">
               <button
