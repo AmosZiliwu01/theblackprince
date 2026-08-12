@@ -30,7 +30,9 @@ export function PromoStrip() {
             <p className="truncate text-base font-black text-white sm:text-lg">{promo.title}</p>
           )}
           {promo.subtitle && (
-            <p className="mt-0.5 truncate text-xs text-white/80 sm:text-sm">{promo.subtitle}</p>
+            <p className="mt-0.5 truncate text-xs text-white/80 sm:text-sm">
+              {String(promo.subtitle).split(/\n+/).map((s: string) => s.trim()).filter(Boolean).join(" • ")}
+            </p>
           )}
         </div>
         {promo.link && (

@@ -1,3 +1,4 @@
+import { DescriptionRenderer } from "@/components/site/description";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -72,10 +73,13 @@ function HomePage() {
             <span className="block">Blox Fruits</span>
             <span className="text-gradient">Marketplace #1</span>
           </h1>
-          <p className="mt-3 max-w-xl text-sm text-muted-foreground md:text-base">
-            {hero?.subtitle ??
-              "Jual Fruit, Akun, Jasa Joki, Komunitas, Live TikTok & Giveaway. Semua di The Black Prince."}
-          </p>
+          <DescriptionRenderer
+            text={
+              hero?.subtitle ??
+              "Jual Fruit, Akun, Jasa Joki, Komunitas, Live TikTok & Giveaway. Semua di The Black Prince."
+            }
+            className="mt-3 max-w-xl text-muted-foreground"
+          />
 
           <div className="mt-6 flex flex-wrap gap-2">
             <Link

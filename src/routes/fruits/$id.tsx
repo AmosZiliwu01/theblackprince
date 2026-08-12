@@ -1,3 +1,4 @@
+import { DescriptionRenderer } from "@/components/site/description";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, ShoppingCart, Zap } from "lucide-react";
@@ -76,9 +77,7 @@ function FruitDetailPage() {
             <p className={"mt-1 text-sm font-bold " + (soldOut ? "text-red-400" : "text-emerald-400")}>
               {soldOut ? "SOLD OUT" : `READY${f.stock ? ` — Stok: ${f.stock}` : ""}`}
             </p>
-            {f.description && (
-              <p className="mt-4 whitespace-pre-line text-sm text-muted-foreground">{f.description}</p>
-            )}
+            <DescriptionRenderer text={f.description} className="mt-4 text-muted-foreground" />
 
             <div className="mt-6 grid grid-cols-2 gap-2">
               <button
