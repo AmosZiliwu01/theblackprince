@@ -1,3 +1,4 @@
+import { DescriptionRenderer } from "@/components/site/description";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/site/site-layout";
