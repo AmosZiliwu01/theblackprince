@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { CartItem } from "./cart-context";
+import { discountedRp, priceWithPromo, type Promotion } from "./discount";
 
 const sb = supabase as any;
 
@@ -17,6 +18,8 @@ export interface StockCheckResult {
 
 export async function revalidateCart(items: CartItem[]): Promise<StockCheckResult> {
   const issues: StockCheckResult["issues"] = [];
+  const { data: promoRows } = await sb.from("promotions").select("*");
+  const promos: Promotion[] = (promoRows ?? []) as Promotion[];
   const byKind: Record<string, CartItem[]> = {};
   for (const it of items) {
     (byKind[it.kind] ??= []).push(it);
@@ -33,14 +36,24 @@ export async function revalidateCart(items: CartItem[]): Promise<StockCheckResul
   const jokiRows = await loadRows("joki_services", (byKind.joki ?? []).map((i) => i.id));
   const accRows = await loadRows("accounts", (byKind.account ?? []).map((i) => i.id));
 
-  const check = (item: CartItem, row: any, opts: { stockField?: string | null; readyCheck: (r: any) => boolean }) => {
+  const check = (
+    item: CartItem,
+    row: any,
+    opts: { stockField?: string | null; readyCheck: (r: any) => boolean; category?: (r: any) => string | null },
+  ) => {
     if (!row) {
       issues.push({ item, reason: "Produk sudah tidak tersedia.", latestStock: 0, latestPrice: null, exists: false, ready: false });
       return;
     }
     const stock = opts.stockField ? (row[opts.stockField] ?? null) : null;
     const ready = opts.readyCheck(row);
-    const price = Number(row.price ?? 0);
+    // Harga terbaru = harga DB saat ini + diskon yang sedang berlaku saat ini.
+    const price = priceWithPromo(
+      promos,
+      { id: item.id, kind: item.kind, category: opts.category ? opts.category(row) : null },
+      Number(row.price ?? 0),
+      row.price_rm != null ? Number(row.price_rm) : null,
+    ).price;
     if (!ready) {
       issues.push({ item, reason: "Produk sudah tidak aktif / sold out.", latestStock: stock ?? 0, latestPrice: price, exists: true, ready: false });
       return;
@@ -56,13 +69,18 @@ export async function revalidateCart(items: CartItem[]): Promise<StockCheckResul
 
   for (const it of byKind.fruit ?? []) {
     const r = fruitRows.find((x: any) => x.id === it.id);
-    check(it, r, { stockField: "stock", readyCheck: (r) => Boolean(r.ready) && Number(r.stock ?? 0) > 0 });
+    check(it, r, {
+      stockField: "stock",
+      readyCheck: (r) => Boolean(r.ready) && Number(r.stock ?? 0) > 0,
+      category: (r) => r.category ?? null,
+    });
   }
   for (const it of byKind.joki ?? []) {
     const r = jokiRows.find((x: any) => x.id === it.id);
     check(it, r, {
       stockField: "stock",
       readyCheck: (r) => Boolean(r.active) && (r.stock == null || Number(r.stock) > 0),
+      category: (r) => r.category ?? null,
     });
   }
   for (const it of byKind.account ?? []) {
@@ -70,6 +88,7 @@ export async function revalidateCart(items: CartItem[]): Promise<StockCheckResul
     check(it, r, {
       stockField: null,
       readyCheck: (r) => r.status === "ready" || r.status === "limited",
+      category: (r) => r.status ?? null,
     });
   }
 
