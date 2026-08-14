@@ -7,7 +7,9 @@ import { SiteLayout } from "@/components/site/site-layout";
 import { accountsQO } from "@/lib/site-queries";
 import { ProductImage } from "@/components/product-image";
 import { useCart } from "@/lib/cart-context";
-import { formatDualPrice } from "@/lib/currency";
+import { PriceTag } from "@/components/price-tag";
+import { promotionsQO } from "@/lib/site-queries";
+import { priceWithPromo } from "@/lib/discount";
 
 export const Route = createFileRoute("/accounts/$id")({
   loader: ({ context }) => context.queryClient.ensureQueryData(accountsQO),
@@ -18,6 +20,7 @@ function AccountDetailPage() {
   const { id } = Route.useParams();
   const accounts = useQuery(accountsQO).data ?? [];
   const cart = useCart();
+  const promos = useQuery(promotionsQO).data ?? [];
   const navigate = useNavigate();
   const a = accounts.find((x: any) => x.id === id);
 
@@ -34,6 +37,12 @@ function AccountDetailPage() {
     );
   }
 
+  const priced = priceWithPromo(
+    promos as any,
+    { id: a.id, kind: "account", category: a.status },
+    Number(a.price),
+    a.price_rm != null ? Number(a.price_rm) : null,
+  );
   const ready = a.status === "ready" || a.status === "limited";
   const soldOut = !ready;
   const meta = [
@@ -53,7 +62,11 @@ function AccountDetailPage() {
       id: a.id,
       kind: "account",
       name: a.name,
-      price: Number(a.price),
+      price: priced.price,
+      priceRm: priced.priceRm,
+      originalPrice: priced.originalPrice,
+      originalPriceRm: priced.originalPriceRm,
+      discountPercent: priced.percent,
       image_url: a.image_url,
       maxStock: 1,
       meta: meta || a.description,
@@ -80,9 +93,15 @@ function AccountDetailPage() {
             )}
             <h1 className="mt-2 text-2xl font-black">{a.name}</h1>
             {meta && <p className="mt-1 text-sm text-muted-foreground">{meta}</p>}
-            <p className="mt-2 text-2xl font-black text-primary">
-              {formatDualPrice(Number(a.price), a.price_rm != null ? Number(a.price_rm) : null)}
-            </p>
+            <PriceTag
+              className="mt-2"
+              size="lg"
+              price={priced.price}
+              priceRm={priced.priceRm}
+              originalPrice={priced.originalPrice}
+              originalPriceRm={priced.originalPriceRm}
+              percent={priced.percent}
+            />
             <p className={"mt-1 text-sm font-bold " + (soldOut ? "text-red-400" : "text-emerald-400")}>
               {soldOut ? "SOLD" : "READY"}
             </p>
