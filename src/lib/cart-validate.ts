@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { CartItem } from "./cart-context";
-import { discountedRp, priceWithPromo, type Promotion } from "./discount";
+import { priceWithPromo, type Promotion } from "./discount";
 
 const sb = supabase as any;
 
