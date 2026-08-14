@@ -61,3 +61,8 @@ export const aiSettingsQO = queryOptions({
   },
 });
 export const categoriesQO = queryOptions({ ...fresh, queryKey: ["public", "categories"], queryFn: () => selectAll("fruit_categories") });
+export const promotionsQO = queryOptions({
+  ...fresh,
+  queryKey: ["public", "promotions"],
+  queryFn: () => selectAll("promotions"),
+});
