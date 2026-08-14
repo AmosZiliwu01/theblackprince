@@ -76,6 +76,7 @@ function AccountsPage() {
                 stock={stock}
                 ready={ready}
                 category={a.status === "limited" ? "LIMITED" : "AKUN"}
+                promoCategory={a.status}
                 badge={a.status === "limited" ? "LIMITED" : null}
                 meta={meta || a.description}
               />

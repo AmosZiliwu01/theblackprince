@@ -68,6 +68,7 @@ function JokiPage() {
                 stock={stock}
                 ready={ready}
                 category={j.category || j.estimation}
+                promoCategory={j.category}
                 meta={j.description}
               />
             );
