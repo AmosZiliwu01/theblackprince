@@ -5,6 +5,8 @@ import { SiteLayout } from "@/components/site/site-layout";
 import { useCart } from "@/lib/cart-context";
 import { websiteSettingsQO } from "@/lib/site-queries";
 import { ProductImage } from "@/components/product-image";
+import { PriceTag } from "@/components/price-tag";
+import { formatDualPrice } from "@/lib/currency";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({
@@ -18,7 +20,7 @@ export const Route = createFileRoute("/cart")({
 });
 
 function CartPage() {
-  const { items, updateQty, remove, totalItems, totalPrice, clear } = useCart();
+  const { items, updateQty, remove, totalItems, totalPrice, totalPriceRm, clear } = useCart();
   const settings = useQuery(websiteSettingsQO).data as any;
   const navigate = useNavigate();
 
@@ -61,9 +63,14 @@ function CartPage() {
                       <p className="line-clamp-1 text-sm font-bold">{it.name}</p>
                       <p className="text-[11px] uppercase text-muted-foreground">{it.kind}</p>
                       {it.meta && <p className="line-clamp-1 text-[11px] text-muted-foreground">{it.meta}</p>}
-                      <p className="mt-1 text-sm font-black text-primary">
-                        Rp {Number(it.price).toLocaleString("id-ID")}
-                      </p>
+                      <PriceTag
+                        className="mt-1"
+                        price={Number(it.price)}
+                        priceRm={it.priceRm ?? null}
+                        originalPrice={it.originalPrice ?? Number(it.price)}
+                        originalPriceRm={it.originalPriceRm ?? null}
+                        percent={it.discountPercent ?? 0}
+                      />
                       <div className="mt-2 flex items-center justify-between">
                         <div className="inline-flex items-center rounded-lg border border-border bg-background">
                           <button
@@ -117,12 +124,12 @@ function CartPage() {
               </div>
               <div className="mt-1 flex justify-between text-sm">
                 <span>Subtotal</span>
-                <span className="font-bold">Rp {totalPrice.toLocaleString("id-ID")}</span>
+                <span className="font-bold">{formatDualPrice(totalPrice, totalPriceRm)}</span>
               </div>
               <div className="mt-3 border-t border-border pt-3 text-sm">
                 <div className="flex justify-between font-black">
                   <span>Total</span>
-                  <span className="text-primary">Rp {totalPrice.toLocaleString("id-ID")}</span>
+                  <span className="text-primary">{formatDualPrice(totalPrice, totalPriceRm)}</span>
                 </div>
               </div>
               <button

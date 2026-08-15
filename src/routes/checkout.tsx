@@ -7,6 +7,7 @@ import { SiteLayout } from "@/components/site/site-layout";
 import { useCart } from "@/lib/cart-context";
 import { revalidateCart } from "@/lib/cart-validate";
 import { websiteSettingsQO } from "@/lib/site-queries";
+import { formatDualPrice } from "@/lib/currency";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -20,7 +21,7 @@ export const Route = createFileRoute("/checkout")({
 });
 
 function CheckoutPage() {
-  const { items, totalItems, totalPrice, updateQty, remove } = useCart();
+  const { items, totalItems, totalPrice, totalPriceRm, updateQty, remove } = useCart();
   const settings = useQuery(websiteSettingsQO).data as any;
   const navigate = useNavigate();
   const [busy, setBusy] = useState(false);
@@ -72,10 +73,12 @@ function CheckoutPage() {
       lines.push("*Detail Pesanan:*");
       items.forEach((it, idx) => {
         const sub = it.qty * Number(it.price);
-        lines.push(`${idx + 1}. ${it.name} (${it.kind}) x${it.qty} = Rp ${sub.toLocaleString("id-ID")}`);
+        const subRm = it.priceRm != null && it.priceRm !== 0 ? Math.round(it.qty * Number(it.priceRm) * 100) / 100 : null;
+        const disc = it.discountPercent ? ` [PROMO -${Math.round(it.discountPercent)}%]` : "";
+        lines.push(`${idx + 1}. ${it.name} (${it.kind}) x${it.qty} = ${formatDualPrice(sub, subRm)}${disc}`);
       });
       lines.push("");
-      lines.push(`*Total: Rp ${totalPrice.toLocaleString("id-ID")}*`);
+      lines.push(`*Total: ${formatDualPrice(totalPrice, totalPriceRm)}*`);
       if (note.trim()) {
         lines.push("");
         lines.push(`Catatan: ${note.trim()}`);
@@ -172,12 +175,17 @@ function CheckoutPage() {
               <span className="line-clamp-1">
                 {it.name} <span className="text-muted-foreground">x{it.qty}</span>
               </span>
-              <span className="font-semibold">Rp {(it.qty * Number(it.price)).toLocaleString("id-ID")}</span>
+              <span className="font-semibold">
+                {formatDualPrice(
+                  it.qty * Number(it.price),
+                  it.priceRm != null && it.priceRm !== 0 ? Math.round(it.qty * Number(it.priceRm) * 100) / 100 : null,
+                )}
+              </span>
             </div>
           ))}
           <div className="mt-2 flex justify-between border-t border-border pt-2 text-base font-black">
             <span>Total ({totalItems} item)</span>
-            <span className="text-primary">Rp {totalPrice.toLocaleString("id-ID")}</span>
+            <span className="text-primary">{formatDualPrice(totalPrice, totalPriceRm)}</span>
           </div>
         </div>
 
