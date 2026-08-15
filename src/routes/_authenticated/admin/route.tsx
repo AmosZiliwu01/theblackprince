@@ -20,6 +20,7 @@ import {
   Menu,
   X,
   Tags,
+  Percent,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -40,6 +41,7 @@ const menu = [
   { to: "/admin/events", label: "Event", icon: CalendarRange },
   { to: "/admin/faqs", label: "FAQ", icon: HelpCircle },
   { to: "/admin/ai-settings", label: "Pengaturan AI", icon: Bot },
+  { to: "/admin/promotions", label: "Promo & Diskon", icon: Percent },
   { to: "/admin/banners", label: "Banner", icon: ImageIcon },
   { to: "/admin/announcements", label: "Announcement", icon: Megaphone },
   { to: "/admin/website", label: "Pengaturan Website", icon: Settings },
