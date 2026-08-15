@@ -7,6 +7,10 @@ export interface CartItem {
   kind: CartKind;
   name: string;
   price: number;
+  priceRm?: number | null;
+  originalPrice?: number;
+  originalPriceRm?: number | null;
+  discountPercent?: number;
   image_url?: string | null;
   qty: number;
   maxStock: number | null; // null = unlimited (joki tanpa slot terbatas)
@@ -21,6 +25,7 @@ interface CartContextValue {
   clear: () => void;
   totalItems: number;
   totalPrice: number;
+  totalPriceRm: number | null;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -84,7 +89,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const value = useMemo<CartContextValue>(() => {
     const totalItems = items.reduce((s, i) => s + i.qty, 0);
     const totalPrice = items.reduce((s, i) => s + i.qty * Number(i.price || 0), 0);
-    return { items, add, remove, updateQty, clear, totalItems, totalPrice };
+    const anyRm = items.some((i) => i.priceRm != null && i.priceRm !== 0);
+    const totalPriceRm = anyRm
+      ? Math.round(items.reduce((s, i) => s + i.qty * Number(i.priceRm || 0), 0) * 100) / 100
+      : null;
+    return { items, add, remove, updateQty, clear, totalItems, totalPrice, totalPriceRm };
   }, [items, add, remove, updateQty, clear]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

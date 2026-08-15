@@ -7,7 +7,9 @@ import { SiteLayout } from "@/components/site/site-layout";
 import { fruitsQO } from "@/lib/site-queries";
 import { ProductImage } from "@/components/product-image";
 import { useCart } from "@/lib/cart-context";
-import { formatDualPrice } from "@/lib/currency";
+import { PriceTag } from "@/components/price-tag";
+import { promotionsQO } from "@/lib/site-queries";
+import { priceWithPromo } from "@/lib/discount";
 
 export const Route = createFileRoute("/fruits/$id")({
   loader: ({ context }) => context.queryClient.ensureQueryData(fruitsQO),
@@ -18,6 +20,7 @@ function FruitDetailPage() {
   const { id } = Route.useParams();
   const fruits = useQuery(fruitsQO).data ?? [];
   const cart = useCart();
+  const promos = useQuery(promotionsQO).data ?? [];
   const navigate = useNavigate();
   const f = fruits.find((x: any) => x.id === id);
 
@@ -34,6 +37,13 @@ function FruitDetailPage() {
     );
   }
 
+  const priced = priceWithPromo(
+    promos as any,
+    { id: f.id, kind: "fruit", category: f.category },
+    Number(f.price),
+    f.price_rm != null ? Number(f.price_rm) : null,
+  );
+
   const soldOut = !f.ready || Number(f.stock ?? 0) <= 0;
 
   function add(silent = false) {
@@ -45,7 +55,11 @@ function FruitDetailPage() {
       id: f.id,
       kind: "fruit",
       name: f.name,
-      price: Number(f.price),
+      price: priced.price,
+      priceRm: priced.priceRm,
+      originalPrice: priced.originalPrice,
+      originalPriceRm: priced.originalPriceRm,
+      discountPercent: priced.percent,
       image_url: f.image_url,
       maxStock: Number(f.stock ?? 0),
       meta: f.category,
@@ -71,9 +85,15 @@ function FruitDetailPage() {
               </span>
             )}
             <h1 className="mt-2 text-2xl font-black">{f.name}</h1>
-            <p className="mt-2 text-2xl font-black text-primary">
-              {formatDualPrice(Number(f.price), f.price_rm != null ? Number(f.price_rm) : null)}
-            </p>
+            <PriceTag
+              className="mt-2"
+              size="lg"
+              price={priced.price}
+              priceRm={priced.priceRm}
+              originalPrice={priced.originalPrice}
+              originalPriceRm={priced.originalPriceRm}
+              percent={priced.percent}
+            />
             <p className={"mt-1 text-sm font-bold " + (soldOut ? "text-red-400" : "text-emerald-400")}>
               {soldOut ? "SOLD OUT" : `READY${f.stock ? ` — Stok: ${f.stock}` : ""}`}
             </p>

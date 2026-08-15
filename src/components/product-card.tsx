@@ -2,8 +2,11 @@ import { ShoppingCart, Zap } from "lucide-react";
 import { toast } from "sonner";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ProductImage } from "./product-image";
+import { useQuery } from "@tanstack/react-query";
 import { useCart, type CartKind } from "@/lib/cart-context";
-import { formatDualPrice } from "@/lib/currency";
+import { PriceTag } from "./price-tag";
+import { promotionsQO } from "@/lib/site-queries";
+import { priceWithPromo } from "@/lib/discount";
 
 interface ProductCardProps {
   id: string;
@@ -17,6 +20,7 @@ interface ProductCardProps {
   ready: boolean;
   category?: string | null;
   badge?: string | null;
+  promoCategory?: string | null;
   meta?: string;
   description?: string | null;
 }
@@ -30,6 +34,13 @@ const DETAIL_ROUTE: Record<CartKind, "/fruits/$id" | "/joki/$id" | "/accounts/$i
 export function ProductCard(p: ProductCardProps) {
   const cart = useCart();
   const navigate = useNavigate();
+  const promos = useQuery(promotionsQO).data ?? [];
+  const priced = priceWithPromo(
+    promos as any,
+    { id: p.id, kind: p.kind, category: p.promoCategory ?? p.category ?? null },
+    p.price,
+    p.priceRm ?? null,
+  );
 
   const soldOut = !p.ready || (p.stock != null && p.stock <= 0);
 
@@ -42,7 +53,11 @@ export function ProductCard(p: ProductCardProps) {
       id: p.id,
       kind: p.kind,
       name: p.name,
-      price: p.price,
+      price: priced.price,
+      priceRm: priced.priceRm,
+      originalPrice: priced.originalPrice,
+      originalPriceRm: priced.originalPriceRm,
+      discountPercent: priced.percent,
       image_url: p.image_url,
       maxStock: p.stock,
       meta: p.meta,
@@ -71,6 +86,11 @@ export function ProductCard(p: ProductCardProps) {
             {p.category}
           </span>
         )}
+        {priced.discounted && (
+          <span className="absolute left-2 bottom-2 rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-black text-white shadow-neon">
+            -{Math.round(priced.percent)}%
+          </span>
+        )}
         {p.badge && (
           <span className="absolute right-2 top-2 rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase text-primary-foreground shadow-neon">
             {p.badge}
@@ -94,9 +114,14 @@ export function ProductCard(p: ProductCardProps) {
           <p className="line-clamp-1 text-sm font-bold hover:text-primary">{p.name}</p>
         </Link>
         {p.meta && <p className="line-clamp-1 text-[11px] text-muted-foreground">{p.meta}</p>}
-        <p className="mt-auto text-sm font-black text-primary">
-          {formatDualPrice(p.price, p.priceRm)}
-        </p>
+        <PriceTag
+          className="mt-auto"
+          price={priced.price}
+          priceRm={priced.priceRm}
+          originalPrice={priced.originalPrice}
+          originalPriceRm={priced.originalPriceRm}
+          percent={priced.percent}
+        />
         <div className="flex items-center justify-between text-[11px]">
           <span className={soldOut ? "text-red-400" : "text-emerald-400"}>
             {soldOut ? "SOLD" : "READY"}

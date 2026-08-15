@@ -17,6 +17,9 @@ import {
 } from "lucide-react";
 
 import { SiteLayout } from "@/components/site/site-layout";
+import { PromoBanner } from "@/components/site/promo-banner";
+import { PriceTag } from "@/components/price-tag";
+import { priceWithPromo } from "@/lib/discount";
 import { ProductImage } from "@/components/product-image";
 import {
   bannersQO,
@@ -24,6 +27,7 @@ import {
   jokiQO,
   liveStatusQO,
   giveawaysQO,
+  promotionsQO,
 } from "@/lib/site-queries";
 
 export const Route = createFileRoute("/")({
@@ -33,6 +37,7 @@ export const Route = createFileRoute("/")({
     context.queryClient.ensureQueryData(jokiQO);
     context.queryClient.ensureQueryData(liveStatusQO);
     context.queryClient.ensureQueryData(giveawaysQO);
+    context.queryClient.ensureQueryData(promotionsQO);
   },
   component: HomePage,
 });
@@ -58,6 +63,7 @@ function HomePage() {
   const hero =
     banners.find((b: any) => b.type === "hero" && b.active) ||
     banners.find((b: any) => b.type === "promo" && b.active);
+  const promos = (useQuery(promotionsQO).data ?? []) as any;
   const featuredFruits = fruits.filter((f: any) => f.ready).slice(0, 6);
   const featuredJoki = joki.filter((j: any) => j.active).slice(0, 4);
 
@@ -162,6 +168,8 @@ function HomePage() {
         </section>
       )}
 
+      <PromoBanner />
+
       {/* FEATURED FRUITS */}
       <section className="mx-auto max-w-6xl px-4 py-6">
         <div className="mb-3 flex items-center justify-between">
@@ -188,7 +196,19 @@ function HomePage() {
               <div className="p-2.5">
                 <p className="truncate text-sm font-bold">{f.name}</p>
                 <p className="text-[11px] uppercase text-muted-foreground">{f.category}</p>
-                <p className="mt-1 text-sm font-black text-primary">Rp {Number(f.price).toLocaleString("id-ID")}</p>
+                {(() => {
+                  const pr = priceWithPromo(promos, { id: f.id, kind: "fruit", category: f.category }, Number(f.price), f.price_rm != null ? Number(f.price_rm) : null);
+                  return (
+                    <PriceTag
+                      className="mt-1"
+                      price={pr.price}
+                      priceRm={pr.priceRm}
+                      originalPrice={pr.originalPrice}
+                      originalPriceRm={pr.originalPriceRm}
+                      percent={pr.percent}
+                    />
+                  );
+                })()}
                 <p className="text-[11px] text-muted-foreground">
                   {f.stock > 0 ? `Stok: ${f.stock}` : "PO 1-3 hari"}
                 </p>
@@ -222,9 +242,19 @@ function HomePage() {
                 <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{j.description}</p>
                 <p className="mt-2 text-xs text-muted-foreground">Estimasi: {j.estimation}</p>
               </div>
-              <p className="shrink-0 text-right text-sm font-black text-primary">
-                Rp {Number(j.price).toLocaleString("id-ID")}
-              </p>
+              {(() => {
+                const pr = priceWithPromo(promos, { id: j.id, kind: "joki", category: j.category }, Number(j.price), j.price_rm != null ? Number(j.price_rm) : null);
+                return (
+                  <PriceTag
+                    className="shrink-0 justify-end text-right"
+                    price={pr.price}
+                    priceRm={pr.priceRm}
+                    originalPrice={pr.originalPrice}
+                    originalPriceRm={pr.originalPriceRm}
+                    percent={pr.percent}
+                  />
+                );
+              })()}
             </Link>
           ))}
         </div>

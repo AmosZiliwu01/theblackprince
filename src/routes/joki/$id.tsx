@@ -7,7 +7,9 @@ import { SiteLayout } from "@/components/site/site-layout";
 import { jokiQO } from "@/lib/site-queries";
 import { ProductImage } from "@/components/product-image";
 import { useCart } from "@/lib/cart-context";
-import { formatDualPrice } from "@/lib/currency";
+import { PriceTag } from "@/components/price-tag";
+import { promotionsQO } from "@/lib/site-queries";
+import { priceWithPromo } from "@/lib/discount";
 
 export const Route = createFileRoute("/joki/$id")({
   loader: ({ context }) => context.queryClient.ensureQueryData(jokiQO),
@@ -18,6 +20,7 @@ function JokiDetailPage() {
   const { id } = Route.useParams();
   const joki = useQuery(jokiQO).data ?? [];
   const cart = useCart();
+  const promos = useQuery(promotionsQO).data ?? [];
   const navigate = useNavigate();
   const j = joki.find((x: any) => x.id === id);
 
@@ -34,6 +37,12 @@ function JokiDetailPage() {
     );
   }
 
+  const priced = priceWithPromo(
+    promos as any,
+    { id: j.id, kind: "joki", category: j.category },
+    Number(j.price),
+    j.price_rm != null ? Number(j.price_rm) : null,
+  );
   const stock = j.stock == null ? null : Number(j.stock);
   const soldOut = !j.active || (stock != null && stock <= 0);
 
@@ -46,7 +55,11 @@ function JokiDetailPage() {
       id: j.id,
       kind: "joki",
       name: j.name,
-      price: Number(j.price),
+      price: priced.price,
+      priceRm: priced.priceRm,
+      originalPrice: priced.originalPrice,
+      originalPriceRm: priced.originalPriceRm,
+      discountPercent: priced.percent,
       image_url: j.image_url,
       maxStock: stock,
       meta: j.description,
@@ -72,9 +85,15 @@ function JokiDetailPage() {
               </span>
             )}
             <h1 className="mt-2 text-2xl font-black">{j.name}</h1>
-            <p className="mt-2 text-2xl font-black text-primary">
-              {formatDualPrice(Number(j.price), j.price_rm != null ? Number(j.price_rm) : null)}
-            </p>
+            <PriceTag
+              className="mt-2"
+              size="lg"
+              price={priced.price}
+              priceRm={priced.priceRm}
+              originalPrice={priced.originalPrice}
+              originalPriceRm={priced.originalPriceRm}
+              percent={priced.percent}
+            />
             <p className={"mt-1 text-sm font-bold " + (soldOut ? "text-red-400" : "text-emerald-400")}>
               {soldOut ? "TIDAK TERSEDIA" : `TERSEDIA${stock != null ? ` — Slot: ${stock}` : ""}`}
             </p>
