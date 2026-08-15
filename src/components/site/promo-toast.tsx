@@ -37,7 +37,7 @@ export function PromoToast() {
   const count = live.length;
 
   const [visible, setVisible] = useState(false);
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(-1);
   const [closed, setClosed] = useState(false);
   const nextShowAt = useRef<number>(Date.now() + FIRST_DELAY_MS);
   const hideAt = useRef<number>(0);
@@ -84,7 +84,7 @@ export function PromoToast() {
 
   if (closed || hiddenHere || count === 0 || !visible) return null;
 
-  const p = live[index % count];
+  const p = live[((index % count) + count) % count];
   if (!p) return null;
 
   const start = fmtDate(p.starts_at);
