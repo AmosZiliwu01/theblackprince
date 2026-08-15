@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { AnnouncementBar } from "./announcement-bar";
 import { PopupBanner } from "./popup-banner";
+import { PromoToast } from "./promo-toast";
 import { useCart } from "@/lib/cart-context";
 import { websiteSettingsQO } from "@/lib/site-queries";
 
@@ -74,6 +75,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     <div className="flex min-h-screen flex-col">
       <AnnouncementBar />
       <PopupBanner />
+      <PromoToast />
       <header className="sticky top-0 z-40 border-b border-border/70 bg-background/80 backdrop-blur-lg">
         <div className="mx-auto flex h-14 max-w-6xl items-center gap-2 px-4">
           <Link to="/" className="flex min-w-0 shrink-0 items-center gap-2 font-black tracking-tight">
