@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { X, Percent, Clock } from "lucide-react";
+import { X, Clock } from "lucide-react";
 import { promotionsQO } from "@/lib/site-queries";
 import { isPromoLive, type Promotion } from "@/lib/discount";
 import { DescriptionRenderer } from "@/components/site/description";
