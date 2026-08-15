@@ -95,7 +95,7 @@ export function PromoToast() {
             <img
               src={p.image_url}
               alt={p.title}
-              className="w-full object-cover object-center"
+              className="mx-auto w-full object-contain"
               loading="lazy"
               style={{ maxHeight: "240px" }}
             />
