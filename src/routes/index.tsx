@@ -25,7 +25,9 @@ import {
   fruitsQO,
   jokiQO,
   liveStatusQO,
-  giveawaysQO,, promotionsQO } from "@/lib/site-queries";
+  giveawaysQO,
+  promotionsQO,
+} from "@/lib/site-queries";
 
 export const Route = createFileRoute("/")({
   loader: ({ context }) => {
