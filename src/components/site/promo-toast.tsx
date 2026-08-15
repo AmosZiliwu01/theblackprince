@@ -109,7 +109,6 @@ export function PromoToast() {
             </span>
             <div className="min-w-0 flex-1">
               <p className="text-sm font-black leading-snug">
-                <Percent className="mr-1 inline h-3.5 w-3.5 text-primary" />
                 {p.title}
               </p>
               {(start || end) && (
