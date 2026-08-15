@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { X, Percent, Clock } from "lucide-react";
+import { X, Clock } from "lucide-react";
 import { promotionsQO } from "@/lib/site-queries";
 import { isPromoLive, type Promotion } from "@/lib/discount";
 import { DescriptionRenderer } from "@/components/site/description";
@@ -91,12 +91,15 @@ export function PromoToast() {
         </button>
 
         {p.image_url && (
-          <img
-            src={p.image_url}
-            alt={p.title}
-            className="h-32 w-full object-cover"
-            loading="lazy"
-          />
+          <div className="relative w-full overflow-hidden rounded-t-2xl bg-black">
+            <img
+              src={p.image_url}
+              alt={p.title}
+              className="mx-auto w-full object-contain"
+              loading="lazy"
+              style={{ maxHeight: "240px" }}
+            />
+          </div>
         )}
 
         <div className="max-h-64 overflow-y-auto p-4">
@@ -106,7 +109,6 @@ export function PromoToast() {
             </span>
             <div className="min-w-0 flex-1">
               <p className="text-sm font-black leading-snug">
-                <Percent className="mr-1 inline h-3.5 w-3.5 text-primary" />
                 {p.title}
               </p>
               {(start || end) && (
