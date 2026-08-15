@@ -91,12 +91,15 @@ export function PromoToast() {
         </button>
 
         {p.image_url && (
-          <img
-            src={p.image_url}
-            alt={p.title}
-            className="h-32 w-full object-cover"
-            loading="lazy"
-          />
+          <div className="relative w-full overflow-hidden rounded-t-2xl bg-black">
+            <img
+              src={p.image_url}
+              alt={p.title}
+              className="w-full object-cover object-center"
+              loading="lazy"
+              style={{ maxHeight: "240px" }}
+            />
+          </div>
         )}
 
         <div className="max-h-64 overflow-y-auto p-4">
