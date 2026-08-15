@@ -81,7 +81,7 @@ export function PromoToast() {
       role="status"
       aria-live="polite"
     >
-      <div className="pointer-events-auto w-full max-w-sm animate-fade-in overflow-hidden rounded-2xl border border-primary/40 bg-card shadow-neon md:w-80">
+      <div className="pointer-events-auto relative w-full max-w-sm animate-fade-in overflow-hidden rounded-2xl border border-primary/40 bg-card shadow-neon md:w-80">
         <button
           onClick={close}
           aria-label="Tutup promo"
