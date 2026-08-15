@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 
 import { SiteLayout } from "@/components/site/site-layout";
+import { PromoBanner } from "@/components/site/promo-banner";
 import { PriceTag } from "@/components/price-tag";
 import { priceWithPromo } from "@/lib/discount";
 import { ProductImage } from "@/components/product-image";
@@ -36,6 +37,7 @@ export const Route = createFileRoute("/")({
     context.queryClient.ensureQueryData(jokiQO);
     context.queryClient.ensureQueryData(liveStatusQO);
     context.queryClient.ensureQueryData(giveawaysQO);
+    context.queryClient.ensureQueryData(promotionsQO);
   },
   component: HomePage,
 });
@@ -165,6 +167,8 @@ function HomePage() {
           </Link>
         </section>
       )}
+
+      <PromoBanner />
 
       {/* FEATURED FRUITS */}
       <section className="mx-auto max-w-6xl px-4 py-6">
