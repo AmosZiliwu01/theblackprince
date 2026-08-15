@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useRouterState } from "@tanstack/react-router";
 import { X, Clock } from "lucide-react";
 import { promotionsQO } from "@/lib/site-queries";
 import { isPromoLive, type Promotion } from "@/lib/discount";
@@ -7,7 +8,10 @@ import { DescriptionRenderer } from "@/components/site/description";
 
 const SHOW_MS = 10_000; // tampil 10 detik
 const CYCLE_MS = 60_000; // muncul tiap 1 menit
+const FIRST_DELAY_MS = 3_000;
 const CLOSED_KEY = "tbp_promo_toast_closed";
+// Halaman yang tidak boleh diganggu popup promo
+const HIDDEN_PATHS = ["/cart", "/checkout"];
 
 function fmtDate(v?: string | null) {
   if (!v) return null;
@@ -21,14 +25,22 @@ function fmtDate(v?: string | null) {
 }
 
 export function PromoToast() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const hiddenHere = HIDDEN_PATHS.some(
+    (p) => pathname === p || pathname.startsWith(p + "/"),
+  );
+
   const promos = (useQuery(promotionsQO).data ?? []) as Promotion[];
   const live = promos
     .filter((p) => isPromoLive(p))
     .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+  const count = live.length;
 
   const [visible, setVisible] = useState(false);
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(-1);
   const [closed, setClosed] = useState(false);
+  const nextShowAt = useRef<number>(Date.now() + FIRST_DELAY_MS);
+  const hideAt = useRef<number>(0);
 
   useEffect(() => {
     try {
@@ -36,32 +48,43 @@ export function PromoToast() {
     } catch {}
   }, []);
 
+  // Timestamp-based scheduler: tahan terhadap throttling timer di mobile/PWA
   useEffect(() => {
-    if (closed || live.length === 0) return;
+    if (closed || count === 0 || hiddenHere) {
+      setVisible(false);
+      return;
+    }
 
-    let hideTimer: ReturnType<typeof setTimeout>;
-
-    const show = () => {
-      setVisible(true);
-      hideTimer = setTimeout(() => {
+    const tick = () => {
+      const now = Date.now();
+      if (hideAt.current && now >= hideAt.current) {
+        hideAt.current = 0;
+        nextShowAt.current = now + CYCLE_MS - SHOW_MS;
         setVisible(false);
-        setIndex((i) => (i + 1) % Math.max(live.length, 1));
-      }, SHOW_MS);
+        return;
+      }
+      if (!hideAt.current && now >= nextShowAt.current) {
+        // Rotasi ke promo berikutnya setiap kali tampil
+        setIndex((i) => (i + 1) % count);
+        hideAt.current = now + SHOW_MS;
+        setVisible(true);
+      }
     };
 
-    const first = setTimeout(show, 3000); // tampil pertama setelah 3 detik
-    const cycle = setInterval(show, CYCLE_MS);
-
+    const id = setInterval(tick, 1000);
+    const onVis = () => {
+      if (document.visibilityState === "visible") tick();
+    };
+    document.addEventListener("visibilitychange", onVis);
     return () => {
-      clearTimeout(first);
-      clearTimeout(hideTimer);
-      clearInterval(cycle);
+      clearInterval(id);
+      document.removeEventListener("visibilitychange", onVis);
     };
-  }, [closed, live.length]);
+  }, [closed, count, hiddenHere]);
 
-  if (closed || live.length === 0 || !visible) return null;
+  if (closed || hiddenHere || count === 0 || !visible) return null;
 
-  const p = live[index % live.length];
+  const p = live[((index % count) + count) % count];
   if (!p) return null;
 
   const start = fmtDate(p.starts_at);
@@ -70,10 +93,12 @@ export function PromoToast() {
   function close() {
     setVisible(false);
     setClosed(true);
+    hideAt.current = 0;
     try {
       sessionStorage.setItem(CLOSED_KEY, "1");
     } catch {}
   }
+
 
   return (
     <div
