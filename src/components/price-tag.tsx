@@ -26,15 +26,11 @@ export function PriceTag({
         {formatDualPrice(price, priceRm)}
       </span>
       {discounted && (
-        <>
-          <span className={(size === "lg" ? "text-sm" : "text-[11px]") + " text-muted-foreground line-through"}>
-            {formatDualPrice(originalPrice ?? price, originalPriceRm)}
-          </span>
-          <span className="rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-black text-white">
-            -{Math.round(percent)}%
-          </span>
-        </>
+        <span className={(size === "lg" ? "text-sm" : "text-[11px]") + " text-muted-foreground line-through"}>
+          {formatDualPrice(originalPrice ?? price, originalPriceRm)}
+        </span>
       )}
     </div>
   );
+
 }

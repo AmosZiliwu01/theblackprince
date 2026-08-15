@@ -87,15 +87,16 @@ export function ProductCard(p: ProductCardProps) {
           </span>
         )}
         {priced.discounted && (
-          <span className="absolute left-2 bottom-2 rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-black text-white shadow-neon">
+          <span className="absolute right-2 top-2 rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-black text-white shadow-neon">
             -{Math.round(priced.percent)}%
           </span>
         )}
         {p.badge && (
-          <span className="absolute right-2 top-2 rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase text-primary-foreground shadow-neon">
+          <span className="absolute left-2 bottom-2 rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase text-primary-foreground shadow-neon">
             {p.badge}
           </span>
         )}
+
         {soldOut && (
           <span className="absolute inset-0 grid place-items-center bg-black/60">
             <span className="rounded-full bg-red-500/90 px-3 py-1 text-xs font-black uppercase tracking-widest text-white">
