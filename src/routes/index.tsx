@@ -6,7 +6,7 @@ import {
   Wrench,
   UserCircle2,
   Users,
-  Radio,
+  ArrowLeftRight,
   Gift,
   CalendarRange,
   HelpCircle,
@@ -24,7 +24,6 @@ import {
   bannersQO,
   fruitsQO,
   jokiQO,
-  liveStatusQO,
   giveawaysQO,
   promotionsQO,
 } from "@/lib/site-queries";
@@ -34,7 +33,6 @@ export const Route = createFileRoute("/")({
     context.queryClient.ensureQueryData(bannersQO);
     context.queryClient.ensureQueryData(fruitsQO);
     context.queryClient.ensureQueryData(jokiQO);
-    context.queryClient.ensureQueryData(liveStatusQO);
     context.queryClient.ensureQueryData(giveawaysQO);
     context.queryClient.ensureQueryData(promotionsQO);
   },
@@ -46,7 +44,7 @@ const quickMenu = [
   { to: "/joki", label: "Jasa Joki", icon: Wrench, color: "from-orange-500/40 to-red-600/40" },
   { to: "/accounts", label: "Harga Akun", icon: UserCircle2, color: "from-orange-500/40 to-red-600/40" },
   { to: "/community", label: "Link", icon: Users, color: "from-orange-500/40 to-red-600/40" },
-  { to: "/live", label: "TikTok Live", icon: Radio, color: "from-orange-500/40 to-red-600/40" },
+  { to: "/trade", label: "Trade Fruits", icon: ArrowLeftRight, color: "from-orange-500/40 to-red-600/40" },
   { to: "/giveaway", label: "Giveaway", icon: Gift, color: "from-orange-500/40 to-red-600/40" },
   { to: "/events", label: "Event", icon: CalendarRange, color: "from-orange-500/40 to-red-600/40" },
   { to: "/faq", label: "FAQ", icon: HelpCircle, color: "from-orange-500/40 to-red-600/40" },
@@ -56,7 +54,6 @@ function HomePage() {
   const banners = useQuery(bannersQO).data ?? [];
   const fruits = useQuery(fruitsQO).data ?? [];
   const joki = useQuery(jokiQO).data ?? [];
-  const live = useQuery(liveStatusQO).data as any;
   const giveaways = (useQuery(giveawaysQO).data ?? []).filter((g: any) => g.active);
 
   const hero =
@@ -81,7 +78,7 @@ function HomePage() {
           <DescriptionRenderer
             text={
               hero?.subtitle ??
-              "Jual Fruit, Akun, Jasa Joki, Komunitas, Live TikTok & Giveaway. Semua di The Black Prince."
+              "Jual Fruit, Akun, Jasa Joki, Trade Calculator, Komunitas & Giveaway. Semua di The Black Prince."
             }
             className="mt-3 max-w-xl text-muted-foreground"
           />
@@ -101,21 +98,6 @@ function HomePage() {
             </Link>
           </div>
 
-          {live?.is_live && (
-            <Link
-              to="/live"
-              className="mt-6 flex items-center gap-3 rounded-2xl border border-red-500/50 bg-red-500/10 p-4"
-            >
-              <span className="relative flex h-3 w-3">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75"></span>
-                <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
-              </span>
-              <div className="min-w-0">
-                <p className="text-xs font-semibold uppercase text-red-400">TikTok Live sekarang</p>
-                <p className="truncate text-sm">{live?.title ?? "Admin sedang live"}</p>
-              </div>
-            </Link>
-          )}
         </div>
       </section>
 
@@ -269,7 +251,7 @@ function HomePage() {
           <div className="min-w-0 flex-1 text-primary-foreground">
             <p className="text-xs font-bold uppercase opacity-90">Assistant Admin AI</p>
             <p className="text-lg font-black">Tanya apa aja, jawab realtime sesuai data</p>
-            <p className="text-xs opacity-90">Harga · Stok · PS · Live · Giveaway · Event · FAQ</p>
+            <p className="text-xs opacity-90">Harga · Stok · PS · Trade · Giveaway · Event · FAQ</p>
           </div>
           <Crown className="hidden h-10 w-10 text-primary-foreground/70 md:block" />
         </Link>

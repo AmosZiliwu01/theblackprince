@@ -1,6 +1,6 @@
 # The Black Prince — Blox Fruits Shop
 
-> Marketplace Blox Fruits: jual fruit, akun, jasa joki, komunitas, event, giveaway, live TikTok, dan AI Assistant Admin 24/7.
+> Marketplace Blox Fruits: jual fruit, akun, jasa joki, komunitas, event, giveaway, trade calculator, dan AI Assistant Admin 24/7.
 
 ## Pages
 - [Home](/): Landing page dan quick menu
@@ -8,7 +8,7 @@
 - [Jasa Joki](/joki): Jasa joki level, race V4, awaken, raid
 - [Harga Akun](/accounts): Akun Blox Fruits siap pakai
 - [Komunitas](/community): Link WhatsApp, Discord, TikTok
-- [Live TikTok](/live): Status live admin
+- [Trade Blox Fruits](/trade): Kalkulator trade value item Blox Fruits
 - [Giveaway](/giveaway): Giveaway aktif
 - [Event](/events): Event komunitas
 - [FAQ](/faq): Pertanyaan yang sering ditanya

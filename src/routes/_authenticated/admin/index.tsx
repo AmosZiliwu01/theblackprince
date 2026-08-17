@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Apple, Wrench, UserCircle2, MessageSquare, Radio, Gift, CalendarRange } from "lucide-react";
+import { Apple, Wrench, UserCircle2, MessageSquare, ArrowLeftRight, Gift, CalendarRange } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   component: AdminHome,
@@ -13,14 +13,14 @@ function AdminHome() {
   const stats = useQuery({
     queryKey: ["admin", "stats"],
     queryFn: async () => {
-      const [fruits, joki, accounts, chats, giveaways, events, live] = await Promise.all([
+      const [fruits, joki, accounts, chats, giveaways, events, trade] = await Promise.all([
         sb.from("fruits").select("id,ready", { count: "exact" }),
         sb.from("joki_services").select("id", { count: "exact" }),
         sb.from("accounts").select("id", { count: "exact" }),
         sb.from("chat_messages").select("id", { count: "exact" }),
         sb.from("giveaways").select("id,active", { count: "exact" }),
         sb.from("events").select("id,active", { count: "exact" }),
-        sb.from("live_status").select("*").eq("id", 1).maybeSingle(),
+        sb.from("trade_items").select("id", { count: "exact" }),
       ]);
       return {
         fruitTotal: fruits.count ?? 0,
@@ -30,7 +30,7 @@ function AdminHome() {
         chats: chats.count ?? 0,
         giveaways: (giveaways.data ?? []).filter((g: any) => g.active).length,
         events: (events.data ?? []).filter((e: any) => e.active).length,
-        live: live.data?.is_live,
+        tradeItems: trade.count ?? 0,
       };
     },
   }).data;
@@ -50,20 +50,13 @@ function AdminHome() {
       <p className="text-sm text-muted-foreground">Ringkasan toko The Black Prince.</p>
 
       <div className="mt-5 rounded-2xl border border-border bg-card p-4">
-        <Link to="/admin/live" className="flex items-center gap-3">
-          <span
-            className={
-              "grid h-11 w-11 place-items-center rounded-xl " +
-              (stats?.live ? "bg-red-500/20" : "bg-muted")
-            }
-          >
-            <Radio className={stats?.live ? "h-5 w-5 text-red-400" : "h-5 w-5 text-muted-foreground"} />
+        <Link to="/admin/trade" className="flex items-center gap-3">
+          <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary/15">
+            <ArrowLeftRight className="h-5 w-5 text-primary" />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-xs uppercase text-muted-foreground">Status Live TikTok</p>
-            <p className="font-bold">
-              {stats?.live ? "🔴 SEDANG LIVE" : "Belum live — klik untuk aktifkan"}
-            </p>
+            <p className="text-xs uppercase text-muted-foreground">Trade Blox Fruits</p>
+            <p className="font-bold">{stats ? `${stats.tradeItems} item trade value` : "…"} — klik untuk kelola</p>
           </div>
         </Link>
       </div>
