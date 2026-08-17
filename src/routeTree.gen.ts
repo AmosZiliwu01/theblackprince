@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TradeRouteImport } from './routes/trade'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as GiveawayRouteImport } from './routes/giveaway'
 import { Route as FaqRouteImport } from './routes/faq'
@@ -43,6 +44,11 @@ import { Route as AuthenticatedAdminAnnouncementsRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminAiSettingsRouteImport } from './routes/_authenticated/admin/ai-settings'
 import { Route as AuthenticatedAdminAccountsRouteImport } from './routes/_authenticated/admin/accounts'
 
+const TradeRoute = TradeRouteImport.update({
+  id: '/trade',
+  path: '/trade',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -230,6 +236,7 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/giveaway': typeof GiveawayRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/trade': typeof TradeRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/accounts/$id': typeof AccountsIdRoute
   '/fruits/$id': typeof FruitsIdRoute
@@ -264,6 +271,7 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/giveaway': typeof GiveawayRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/trade': typeof TradeRoute
   '/accounts/$id': typeof AccountsIdRoute
   '/fruits/$id': typeof FruitsIdRoute
   '/joki/$id': typeof JokiIdRoute
@@ -299,6 +307,7 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/giveaway': typeof GiveawayRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/trade': typeof TradeRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/accounts/$id': typeof AccountsIdRoute
   '/fruits/$id': typeof FruitsIdRoute
@@ -335,6 +344,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/giveaway'
     | '/sitemap.xml'
+    | '/trade'
     | '/admin'
     | '/accounts/$id'
     | '/fruits/$id'
@@ -369,6 +379,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/giveaway'
     | '/sitemap.xml'
+    | '/trade'
     | '/accounts/$id'
     | '/fruits/$id'
     | '/joki/$id'
@@ -403,6 +414,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/giveaway'
     | '/sitemap.xml'
+    | '/trade'
     | '/_authenticated/admin'
     | '/accounts/$id'
     | '/fruits/$id'
@@ -439,6 +451,7 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   GiveawayRoute: typeof GiveawayRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TradeRoute: typeof TradeRoute
   AccountsIdRoute: typeof AccountsIdRoute
   FruitsIdRoute: typeof FruitsIdRoute
   JokiIdRoute: typeof JokiIdRoute
@@ -449,6 +462,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/trade': {
+      id: '/trade'
+      path: '/trade'
+      fullPath: '/trade'
+      preLoaderRoute: typeof TradeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -748,6 +768,7 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   GiveawayRoute: GiveawayRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TradeRoute: TradeRoute,
   AccountsIdRoute: AccountsIdRoute,
   FruitsIdRoute: FruitsIdRoute,
   JokiIdRoute: JokiIdRoute,

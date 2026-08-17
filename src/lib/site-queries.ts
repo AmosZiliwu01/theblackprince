@@ -66,3 +66,8 @@ export const promotionsQO = queryOptions({
   queryKey: ["public", "promotions"],
   queryFn: () => selectAll("promotions"),
 });
+export const tradeItemsQO = queryOptions({
+  ...fresh,
+  queryKey: ["public", "trade_items"],
+  queryFn: () => selectAll("trade_items", "name"),
+});
