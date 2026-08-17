@@ -511,6 +511,7 @@ export type Database = {
           subtitle: string | null
           target_categories: string[] | null
           target_kind: string | null
+          target_kinds: string[]
           target_product_ids: string[] | null
           title: string
           updated_at: string
@@ -528,6 +529,7 @@ export type Database = {
           subtitle?: string | null
           target_categories?: string[] | null
           target_kind?: string | null
+          target_kinds?: string[]
           target_product_ids?: string[] | null
           title: string
           updated_at?: string
@@ -545,8 +547,60 @@ export type Database = {
           subtitle?: string | null
           target_categories?: string[] | null
           target_kind?: string | null
+          target_kinds?: string[]
           target_product_ids?: string[] | null
           title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      trade_items: {
+        Row: {
+          created_at: string
+          demand: string | null
+          gamepass_value: number | null
+          id: string
+          image_url: string | null
+          name: string
+          permanent_value: number | null
+          regular_value: number | null
+          slug: string
+          source: string | null
+          source_updated_at: string | null
+          trend: string | null
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          demand?: string | null
+          gamepass_value?: number | null
+          id?: string
+          image_url?: string | null
+          name: string
+          permanent_value?: number | null
+          regular_value?: number | null
+          slug: string
+          source?: string | null
+          source_updated_at?: string | null
+          trend?: string | null
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          demand?: string | null
+          gamepass_value?: number | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          permanent_value?: number | null
+          regular_value?: number | null
+          slug?: string
+          source?: string | null
+          source_updated_at?: string | null
+          trend?: string | null
+          type?: string
           updated_at?: string
         }
         Relationships: []
