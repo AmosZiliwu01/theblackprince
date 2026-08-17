@@ -30,7 +30,6 @@ import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedAdminWebsiteRouteImport } from './routes/_authenticated/admin/website'
 import { Route as AuthenticatedAdminPromotionsRouteImport } from './routes/_authenticated/admin/promotions'
-import { Route as AuthenticatedAdminLiveRouteImport } from './routes/_authenticated/admin/live'
 import { Route as AuthenticatedAdminJokiRouteImport } from './routes/_authenticated/admin/joki'
 import { Route as AuthenticatedAdminGiveawaysRouteImport } from './routes/_authenticated/admin/giveaways'
 import { Route as AuthenticatedAdminFruitsRouteImport } from './routes/_authenticated/admin/fruits'
@@ -150,11 +149,6 @@ const AuthenticatedAdminPromotionsRoute =
     path: '/promotions',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
-const AuthenticatedAdminLiveRoute = AuthenticatedAdminLiveRouteImport.update({
-  id: '/live',
-  path: '/live',
-  getParentRoute: () => AuthenticatedAdminRouteRoute,
-} as any)
 const AuthenticatedAdminJokiRoute = AuthenticatedAdminJokiRouteImport.update({
   id: '/joki',
   path: '/joki',
@@ -255,7 +249,6 @@ export interface FileRoutesByFullPath {
   '/admin/fruits': typeof AuthenticatedAdminFruitsRoute
   '/admin/giveaways': typeof AuthenticatedAdminGiveawaysRoute
   '/admin/joki': typeof AuthenticatedAdminJokiRoute
-  '/admin/live': typeof AuthenticatedAdminLiveRoute
   '/admin/promotions': typeof AuthenticatedAdminPromotionsRoute
   '/admin/website': typeof AuthenticatedAdminWebsiteRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
@@ -289,7 +282,6 @@ export interface FileRoutesByTo {
   '/admin/fruits': typeof AuthenticatedAdminFruitsRoute
   '/admin/giveaways': typeof AuthenticatedAdminGiveawaysRoute
   '/admin/joki': typeof AuthenticatedAdminJokiRoute
-  '/admin/live': typeof AuthenticatedAdminLiveRoute
   '/admin/promotions': typeof AuthenticatedAdminPromotionsRoute
   '/admin/website': typeof AuthenticatedAdminWebsiteRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
@@ -326,7 +318,6 @@ export interface FileRoutesById {
   '/_authenticated/admin/fruits': typeof AuthenticatedAdminFruitsRoute
   '/_authenticated/admin/giveaways': typeof AuthenticatedAdminGiveawaysRoute
   '/_authenticated/admin/joki': typeof AuthenticatedAdminJokiRoute
-  '/_authenticated/admin/live': typeof AuthenticatedAdminLiveRoute
   '/_authenticated/admin/promotions': typeof AuthenticatedAdminPromotionsRoute
   '/_authenticated/admin/website': typeof AuthenticatedAdminWebsiteRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
@@ -363,7 +354,6 @@ export interface FileRouteTypes {
     | '/admin/fruits'
     | '/admin/giveaways'
     | '/admin/joki'
-    | '/admin/live'
     | '/admin/promotions'
     | '/admin/website'
     | '/admin/'
@@ -397,7 +387,6 @@ export interface FileRouteTypes {
     | '/admin/fruits'
     | '/admin/giveaways'
     | '/admin/joki'
-    | '/admin/live'
     | '/admin/promotions'
     | '/admin/website'
     | '/admin'
@@ -433,7 +422,6 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/fruits'
     | '/_authenticated/admin/giveaways'
     | '/_authenticated/admin/joki'
-    | '/_authenticated/admin/live'
     | '/_authenticated/admin/promotions'
     | '/_authenticated/admin/website'
     | '/_authenticated/admin/'
@@ -608,13 +596,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPromotionsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
-    '/_authenticated/admin/live': {
-      id: '/_authenticated/admin/live'
-      path: '/live'
-      fullPath: '/admin/live'
-      preLoaderRoute: typeof AuthenticatedAdminLiveRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
     '/_authenticated/admin/joki': {
       id: '/_authenticated/admin/joki'
       path: '/joki'
@@ -715,7 +696,6 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminFruitsRoute: typeof AuthenticatedAdminFruitsRoute
   AuthenticatedAdminGiveawaysRoute: typeof AuthenticatedAdminGiveawaysRoute
   AuthenticatedAdminJokiRoute: typeof AuthenticatedAdminJokiRoute
-  AuthenticatedAdminLiveRoute: typeof AuthenticatedAdminLiveRoute
   AuthenticatedAdminPromotionsRoute: typeof AuthenticatedAdminPromotionsRoute
   AuthenticatedAdminWebsiteRoute: typeof AuthenticatedAdminWebsiteRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
@@ -735,7 +715,6 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminFruitsRoute: AuthenticatedAdminFruitsRoute,
     AuthenticatedAdminGiveawaysRoute: AuthenticatedAdminGiveawaysRoute,
     AuthenticatedAdminJokiRoute: AuthenticatedAdminJokiRoute,
-    AuthenticatedAdminLiveRoute: AuthenticatedAdminLiveRoute,
     AuthenticatedAdminPromotionsRoute: AuthenticatedAdminPromotionsRoute,
     AuthenticatedAdminWebsiteRoute: AuthenticatedAdminWebsiteRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
