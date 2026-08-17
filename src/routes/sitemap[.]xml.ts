@@ -13,7 +13,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/joki", priority: "0.8", changefreq: "weekly" as const },
           { path: "/accounts", priority: "0.8", changefreq: "weekly" as const },
           { path: "/community", priority: "0.6", changefreq: "monthly" as const },
-          { path: "/live", priority: "0.6", changefreq: "daily" as const },
+          { path: "/trade", priority: "0.7", changefreq: "daily" as const },
           { path: "/giveaway", priority: "0.6", changefreq: "weekly" as const },
           { path: "/events", priority: "0.5", changefreq: "weekly" as const },
           { path: "/faq", priority: "0.5", changefreq: "monthly" as const },
