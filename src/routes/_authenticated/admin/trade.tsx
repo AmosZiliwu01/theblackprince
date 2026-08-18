@@ -6,7 +6,7 @@ import { Loader2, RefreshCw, Search } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { syncTradeItems } from "@/lib/trade.functions";
-import { TYPE_LABEL, formatValue, itemValue, type TradeItem } from "@/lib/trade";
+import { KIND_LABEL, displayValue, formatValue, itemKind, type TradeItem } from "@/lib/trade";
 
 const sb = supabase as any;
 
@@ -96,10 +96,10 @@ function AdminTrade() {
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-bold">{r.name}</p>
                 <p className="truncate text-[11px] text-muted-foreground">
-                  {TYPE_LABEL[r.type] ?? r.type} · Demand {r.demand ?? "N/A"} · Trend {r.trend ?? "N/A"}
+                  {KIND_LABEL[itemKind(r)] ?? r.type} · Demand {r.demand ?? "N/A"} · Trend {r.trend ?? "N/A"}
                 </p>
               </div>
-              <span className="shrink-0 text-sm font-black text-primary">{formatValue(itemValue(r))}</span>
+              <span className="shrink-0 text-sm font-black text-primary">{formatValue(displayValue(r))}</span>
             </div>
           ))}
         </div>

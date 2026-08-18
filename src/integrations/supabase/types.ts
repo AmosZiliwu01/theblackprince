@@ -556,6 +556,7 @@ export type Database = {
       }
       trade_items: {
         Row: {
+          category: string | null
           created_at: string
           demand: string | null
           gamepass_value: number | null
@@ -563,6 +564,8 @@ export type Database = {
           image_url: string | null
           name: string
           permanent_value: number | null
+          price: number | null
+          rarity: string | null
           regular_value: number | null
           slug: string
           source: string | null
@@ -572,6 +575,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          category?: string | null
           created_at?: string
           demand?: string | null
           gamepass_value?: number | null
@@ -579,6 +583,8 @@ export type Database = {
           image_url?: string | null
           name: string
           permanent_value?: number | null
+          price?: number | null
+          rarity?: string | null
           regular_value?: number | null
           slug: string
           source?: string | null
@@ -588,6 +594,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          category?: string | null
           created_at?: string
           demand?: string | null
           gamepass_value?: number | null
@@ -595,6 +602,8 @@ export type Database = {
           image_url?: string | null
           name?: string
           permanent_value?: number | null
+          price?: number | null
+          rarity?: string | null
           regular_value?: number | null
           slug?: string
           source?: string | null

@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TradeRouteImport } from './routes/trade'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as GiveawayRouteImport } from './routes/giveaway'
 import { Route as FaqRouteImport } from './routes/faq'
@@ -18,6 +17,7 @@ import { Route as CommunityRouteImport } from './routes/community'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as CartRouteImport } from './routes/cart'
+import { Route as CalculatorTradeRouteImport } from './routes/calculator-trade'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -45,11 +45,6 @@ import { Route as AuthenticatedAdminAnnouncementsRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminAiSettingsRouteImport } from './routes/_authenticated/admin/ai-settings'
 import { Route as AuthenticatedAdminAccountsRouteImport } from './routes/_authenticated/admin/accounts'
 
-const TradeRoute = TradeRouteImport.update({
-  id: '/trade',
-  path: '/trade',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -88,6 +83,11 @@ const ChatRoute = ChatRouteImport.update({
 const CartRoute = CartRouteImport.update({
   id: '/cart',
   path: '/cart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalculatorTradeRoute = CalculatorTradeRouteImport.update({
+  id: '/calculator-trade',
+  path: '/calculator-trade',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -234,6 +234,7 @@ const AuthenticatedAdminAccountsRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/calculator-trade': typeof CalculatorTradeRoute
   '/cart': typeof CartRoute
   '/chat': typeof ChatRoute
   '/checkout': typeof CheckoutRoute
@@ -242,7 +243,6 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/giveaway': typeof GiveawayRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/trade': typeof TradeRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/accounts/$id': typeof AccountsIdRoute
   '/fruits/$id': typeof FruitsIdRoute
@@ -270,6 +270,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/calculator-trade': typeof CalculatorTradeRoute
   '/cart': typeof CartRoute
   '/chat': typeof ChatRoute
   '/checkout': typeof CheckoutRoute
@@ -278,7 +279,6 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/giveaway': typeof GiveawayRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/trade': typeof TradeRoute
   '/accounts/$id': typeof AccountsIdRoute
   '/fruits/$id': typeof FruitsIdRoute
   '/joki/$id': typeof JokiIdRoute
@@ -307,6 +307,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/calculator-trade': typeof CalculatorTradeRoute
   '/cart': typeof CartRoute
   '/chat': typeof ChatRoute
   '/checkout': typeof CheckoutRoute
@@ -315,7 +316,6 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/giveaway': typeof GiveawayRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/trade': typeof TradeRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/accounts/$id': typeof AccountsIdRoute
   '/fruits/$id': typeof FruitsIdRoute
@@ -345,6 +345,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/calculator-trade'
     | '/cart'
     | '/chat'
     | '/checkout'
@@ -353,7 +354,6 @@ export interface FileRouteTypes {
     | '/faq'
     | '/giveaway'
     | '/sitemap.xml'
-    | '/trade'
     | '/admin'
     | '/accounts/$id'
     | '/fruits/$id'
@@ -381,6 +381,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/calculator-trade'
     | '/cart'
     | '/chat'
     | '/checkout'
@@ -389,7 +390,6 @@ export interface FileRouteTypes {
     | '/faq'
     | '/giveaway'
     | '/sitemap.xml'
-    | '/trade'
     | '/accounts/$id'
     | '/fruits/$id'
     | '/joki/$id'
@@ -417,6 +417,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/calculator-trade'
     | '/cart'
     | '/chat'
     | '/checkout'
@@ -425,7 +426,6 @@ export interface FileRouteTypes {
     | '/faq'
     | '/giveaway'
     | '/sitemap.xml'
-    | '/trade'
     | '/_authenticated/admin'
     | '/accounts/$id'
     | '/fruits/$id'
@@ -455,6 +455,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  CalculatorTradeRoute: typeof CalculatorTradeRoute
   CartRoute: typeof CartRoute
   ChatRoute: typeof ChatRoute
   CheckoutRoute: typeof CheckoutRoute
@@ -463,7 +464,6 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   GiveawayRoute: typeof GiveawayRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  TradeRoute: typeof TradeRoute
   AccountsIdRoute: typeof AccountsIdRoute
   FruitsIdRoute: typeof FruitsIdRoute
   JokiIdRoute: typeof JokiIdRoute
@@ -474,13 +474,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/trade': {
-      id: '/trade'
-      path: '/trade'
-      fullPath: '/trade'
-      preLoaderRoute: typeof TradeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -535,6 +528,13 @@ declare module '@tanstack/react-router' {
       path: '/cart'
       fullPath: '/cart'
       preLoaderRoute: typeof CartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calculator-trade': {
+      id: '/calculator-trade'
+      path: '/calculator-trade'
+      fullPath: '/calculator-trade'
+      preLoaderRoute: typeof CalculatorTradeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -781,6 +781,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  CalculatorTradeRoute: CalculatorTradeRoute,
   CartRoute: CartRoute,
   ChatRoute: ChatRoute,
   CheckoutRoute: CheckoutRoute,
@@ -789,7 +790,6 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   GiveawayRoute: GiveawayRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  TradeRoute: TradeRoute,
   AccountsIdRoute: AccountsIdRoute,
   FruitsIdRoute: FruitsIdRoute,
   JokiIdRoute: JokiIdRoute,

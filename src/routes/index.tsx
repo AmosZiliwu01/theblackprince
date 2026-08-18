@@ -44,7 +44,7 @@ const quickMenu = [
   { to: "/joki", label: "Jasa Joki", icon: Wrench, color: "from-orange-500/40 to-red-600/40" },
   { to: "/accounts", label: "Harga Akun", icon: UserCircle2, color: "from-orange-500/40 to-red-600/40" },
   { to: "/community", label: "Link", icon: Users, color: "from-orange-500/40 to-red-600/40" },
-  { to: "/trade", label: "Trade Fruits", icon: ArrowLeftRight, color: "from-orange-500/40 to-red-600/40" },
+  { to: "/calculator-trade", label: "Calculator Trade", icon: ArrowLeftRight, color: "from-orange-500/40 to-red-600/40" },
   { to: "/giveaway", label: "Giveaway", icon: Gift, color: "from-orange-500/40 to-red-600/40" },
   { to: "/events", label: "Event", icon: CalendarRange, color: "from-orange-500/40 to-red-600/40" },
   { to: "/faq", label: "FAQ", icon: HelpCircle, color: "from-orange-500/40 to-red-600/40" },
@@ -78,7 +78,7 @@ function HomePage() {
           <DescriptionRenderer
             text={
               hero?.subtitle ??
-              "Jual Fruit, Akun, Jasa Joki, Trade Calculator, Komunitas & Giveaway. Semua di The Black Prince."
+              "Jual Fruit, Akun, Jasa Joki, Calculator Trade, Komunitas & Giveaway. Semua di The Black Prince."
             }
             className="mt-3 max-w-xl text-muted-foreground"
           />

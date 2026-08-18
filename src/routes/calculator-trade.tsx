@@ -1,0 +1,449 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { ArrowLeftRight, Minus, Plus, Search, Trash2, X } from "lucide-react";
+import { SiteLayout } from "@/components/site/site-layout";
+import { tradeItemsQO } from "@/lib/site-queries";
+import { syncTradeItems } from "@/lib/trade.functions";
+import {
+  FAIR_TOLERANCE,
+  KIND_LABEL,
+  VARIANT_LABEL,
+  availableVariants,
+  demandScore,
+  displayValue,
+  formatValue,
+  itemKind,
+  rowKey,
+  sideSummary,
+  tradeResult,
+  variantValue,
+  type TradeItem,
+  type TradeSideRow,
+  type TradeVariant,
+} from "@/lib/trade";
+
+export const Route = createFileRoute("/calculator-trade")({
+  head: () => ({
+    meta: [
+      { title: "Calculator Trade Blox Fruits — The Black Prince" },
+      {
+        name: "description",
+        content:
+          "Calculator Trade Blox Fruits: bandingkan value dua sisi trade, fruit regular & permanent, gamepass, dan limited. Community trade value terbaru.",
+      },
+      { property: "og:title", content: "Calculator Trade — The Black Prince" },
+      { property: "og:description", content: "Hitung value trade Blox Fruits: WIN, FAIR, atau LOSE." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(tradeItemsQO),
+  component: CalculatorTradePage,
+});
+
+type Side = "p1" | "p2";
+
+function CalculatorTradePage() {
+  const qc = useQueryClient();
+  const items = (useQuery(tradeItemsQO).data ?? []) as TradeItem[];
+  const sync = useServerFn(syncTradeItems);
+
+  useEffect(() => {
+    let cancelled = false;
+    sync({ data: {} })
+      .then((r: any) => {
+        if (!cancelled && r?.synced > 0) qc.invalidateQueries({ queryKey: ["public", "trade_items"] });
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const [p1, setP1] = useState<TradeSideRow[]>([]);
+  const [p2, setP2] = useState<TradeSideRow[]>([]);
+  const [picker, setPicker] = useState<Side | null>(null);
+
+  const add = (side: Side, item: TradeItem, variant: TradeVariant, qty: number) => {
+    const setter = side === "p1" ? setP1 : setP2;
+    const key = rowKey(item, variant);
+    setter((rows) => {
+      const i = rows.findIndex((r) => r.key === key);
+      if (i >= 0) {
+        const next = [...rows];
+        next[i] = { ...next[i], qty: Math.min(99, next[i].qty + qty) };
+        return next;
+      }
+      return [...rows, { key, item, variant, qty }];
+    });
+    setPicker(null);
+  };
+
+  const t1 = sideSummary(p1);
+  const t2 = sideSummary(p2);
+  const diff = Math.abs(t2.total - t1.total);
+  const result = tradeResult(t1.total, t2.total);
+
+  const lastUpdated = useMemo(() => {
+    const ts = items
+      .map((i) => new Date(i.source_updated_at ?? i.updated_at).getTime())
+      .filter((n) => !Number.isNaN(n));
+    return ts.length ? new Date(Math.max(...ts)) : null;
+  }, [items]);
+
+  const resultStyle =
+    result === "WIN"
+      ? "border-emerald-500/50 bg-emerald-500/10"
+      : result === "LOSE"
+        ? "border-red-500/50 bg-red-500/10"
+        : "border-border bg-muted/40";
+
+  const resultText =
+    result === "WIN" ? "text-emerald-400" : result === "LOSE" ? "text-red-400" : "text-muted-foreground";
+
+  return (
+    <SiteLayout>
+      <section className="mx-auto max-w-5xl px-4 py-6">
+        <div className="flex items-center gap-3">
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl gradient-primary shadow-neon">
+            <ArrowLeftRight className="h-5 w-5 text-primary-foreground" />
+          </span>
+          <div className="min-w-0">
+            <h1 className="text-2xl font-black leading-tight md:text-3xl">
+              <span className="text-gradient">Calculator</span> Trade
+            </h1>
+            <p className="text-xs text-muted-foreground">
+              Community Trade Value Blox Fruits (bukan value resmi Roblox/Blox Fruits).
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
+          <SideCard title="Player 1" rows={p1} setRows={setP1} onAdd={() => setPicker("p1")} summary={t1} />
+          <SideCard title="Player 2" rows={p2} setRows={setP2} onAdd={() => setPicker("p2")} summary={t2} />
+        </div>
+
+        <div className={"mt-4 rounded-3xl border p-4 " + resultStyle}>
+          <div className="grid grid-cols-3 gap-2 text-center">
+            <div>
+              <p className="text-[11px] uppercase tracking-widest text-muted-foreground">Player 1</p>
+              <p className="text-lg font-black text-foreground">{formatValue(t1.total)}</p>
+            </div>
+            <div>
+              <p className="text-[11px] uppercase tracking-widest text-muted-foreground">Difference</p>
+              <p className="text-lg font-black text-foreground">{formatValue(diff)}</p>
+            </div>
+            <div>
+              <p className="text-[11px] uppercase tracking-widest text-muted-foreground">Player 2</p>
+              <p className="text-lg font-black text-foreground">{formatValue(t2.total)}</p>
+            </div>
+          </div>
+          <p className={"mt-3 text-center text-3xl font-black " + resultText}>{result}</p>
+          <p className="mt-1 text-center text-[11px] text-muted-foreground">
+            Dari sudut pandang Player 1 · FAIR bila selisih ≤ {Math.round(FAIR_TOLERANCE * 100)}% dari sisi terbesar
+            {(t1.hasUnknown || t2.hasUnknown) && " · beberapa item bernilai N/A dan tidak dihitung"}
+          </p>
+        </div>
+
+        <p className="mt-3 text-center text-[11px] text-muted-foreground">
+          Sumber: {items[0]?.source ?? "N/A"} · Last updated:{" "}
+          {lastUpdated ? lastUpdated.toLocaleString("id-ID") : "N/A"}
+        </p>
+      </section>
+
+      {picker && (
+        <ItemPicker
+          items={items}
+          onAdd={(it, variant, qty) => add(picker, it, variant, qty)}
+          onClose={() => setPicker(null)}
+        />
+      )}
+    </SiteLayout>
+  );
+}
+
+function SideCard({
+  title,
+  rows,
+  setRows,
+  onAdd,
+  summary,
+}: {
+  title: string;
+  rows: TradeSideRow[];
+  setRows: (fn: (r: TradeSideRow[]) => TradeSideRow[]) => void;
+  onAdd: () => void;
+  summary: { total: number; hasUnknown: boolean; price: number | null; demand: number | null };
+}) {
+  const setQty = (key: string, d: number) =>
+    setRows((r) => r.map((x) => (x.key === key ? { ...x, qty: Math.max(1, Math.min(99, x.qty + d)) } : x)));
+
+  return (
+    <div className="rounded-3xl border border-border bg-card p-3">
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <p className="font-black">{title}</p>
+        <button
+          onClick={onAdd}
+          className="inline-flex items-center gap-1 rounded-xl gradient-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-neon"
+        >
+          <Plus className="h-3.5 w-3.5" /> Add Item
+        </button>
+      </div>
+
+      {rows.length === 0 ? (
+        <p className="rounded-2xl border border-dashed border-border p-6 text-center text-xs text-muted-foreground">
+          Belum ada item.
+        </p>
+      ) : (
+        <div className="space-y-2">
+          {rows.map((r) => (
+            <div key={r.key} className="flex items-center gap-2 rounded-2xl border border-border bg-background p-2">
+              <img
+                src={r.item.image_url ?? ""}
+                alt={r.item.name}
+                loading="lazy"
+                className="h-10 w-10 shrink-0 rounded-lg bg-muted object-contain"
+                onError={(e) => ((e.currentTarget as HTMLImageElement).style.visibility = "hidden")}
+              />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-xs font-bold">{r.item.name}</p>
+                <p className="text-[10px] text-muted-foreground">
+                  {VARIANT_LABEL[r.variant]} · {formatValue(variantValue(r.item, r.variant))}
+                </p>
+              </div>
+              <div className="flex shrink-0 items-center gap-1">
+                <button onClick={() => setQty(r.key, -1)} className="rounded-md border border-border p-1" aria-label="Kurangi">
+                  <Minus className="h-3 w-3" />
+                </button>
+                <span className="w-6 text-center text-xs font-black">{r.qty}</span>
+                <button onClick={() => setQty(r.key, 1)} className="rounded-md border border-border p-1" aria-label="Tambah">
+                  <Plus className="h-3 w-3" />
+                </button>
+                <button
+                  onClick={() => setRows((rws) => rws.filter((x) => x.key !== r.key))}
+                  className="rounded-md p-1 text-red-400 hover:bg-red-500/10"
+                  aria-label="Hapus"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="mt-2 grid grid-cols-3 gap-2 rounded-2xl bg-muted/40 px-3 py-2 text-center">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Value</p>
+          <p className="text-sm font-black">{formatValue(summary.total)}</p>
+        </div>
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Price</p>
+          <p className="text-sm font-black">{summary.price == null ? "N/A" : formatValue(summary.price)}</p>
+        </div>
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Demand</p>
+          <p className="text-sm font-black">{summary.demand == null ? "N/A" : `${summary.demand}/10`}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const FILTERS = [
+  { key: "all", label: "All" },
+  { key: "fruit", label: "Fruits" },
+  { key: "gamepass", label: "Gamepasses" },
+  { key: "limited", label: "Limited" },
+] as const;
+
+function ItemPicker({
+  items,
+  onAdd,
+  onClose,
+}: {
+  items: TradeItem[];
+  onAdd: (it: TradeItem, variant: TradeVariant, qty: number) => void;
+  onClose: () => void;
+}) {
+  const [q, setQ] = useState("");
+  const [filter, setFilter] = useState<string>("all");
+  const [selected, setSelected] = useState<TradeItem | null>(null);
+  const [variant, setVariant] = useState<TradeVariant>("regular");
+  const [qty, setQty] = useState(1);
+
+  const term = q.trim().toLowerCase();
+  /** "perm buddha" → cari "buddha" + auto pilih Permanent. */
+  const wantsPerm = /^perm(anent)?\b/.test(term);
+  const cleanTerm = wantsPerm ? term.replace(/^perm(anent)?\s*/, "") : term;
+
+  const list = useMemo(() => {
+    return items
+      .filter((i) => (filter === "all" ? true : itemKind(i) === filter))
+      .filter((i) => (cleanTerm ? i.name.toLowerCase().includes(cleanTerm) || (i.slug ?? "").includes(cleanTerm) : true))
+      .sort((a, b) => (displayValue(b) ?? 0) - (displayValue(a) ?? 0));
+  }, [items, cleanTerm, filter]);
+
+  const pick = (it: TradeItem) => {
+    const vs = availableVariants(it);
+    setSelected(it);
+    setVariant(wantsPerm && vs.includes("permanent") ? "permanent" : vs[0]);
+    setQty(1);
+  };
+
+  const variants = selected ? availableVariants(selected) : [];
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-0 sm:items-center sm:p-4">
+      <div className="flex h-[85vh] max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl border border-border bg-card sm:h-auto sm:rounded-3xl">
+        {/* Header tetap */}
+        <div className="shrink-0 border-b border-border p-3">
+          <div className="mb-2 flex items-center justify-between">
+            <p className="font-black">{selected ? selected.name : "Pilih Item"}</p>
+            <button
+              onClick={() => (selected ? setSelected(null) : onClose())}
+              aria-label="Tutup"
+              className="rounded-lg p-1.5 hover:bg-accent"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+
+          {!selected && (
+            <>
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  autoFocus
+                  value={q}
+                  onChange={(e) => setQ(e.target.value)}
+                  placeholder="Cari item… (mis. Buddha)"
+                  className="w-full rounded-xl border border-border bg-background py-2 pl-9 pr-3 text-sm outline-none focus:border-primary/60"
+                />
+              </div>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {FILTERS.map((f) => (
+                  <button
+                    key={f.key}
+                    onClick={() => setFilter(f.key)}
+                    className={
+                      "rounded-full border px-3 py-1 text-xs font-bold " +
+                      (filter === f.key
+                        ? "border-primary bg-primary/20 text-primary"
+                        : "border-border text-muted-foreground")
+                    }
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Body scroll */}
+        {selected ? (
+          <div className="min-h-0 flex-1 overflow-y-auto p-3">
+            <div className="flex items-center gap-3 rounded-2xl border border-border bg-background p-3">
+              <img
+                src={selected.image_url ?? ""}
+                alt={selected.name}
+                className="h-16 w-16 shrink-0 rounded-xl bg-muted object-contain"
+                onError={(e) => ((e.currentTarget as HTMLImageElement).style.visibility = "hidden")}
+              />
+              <div className="min-w-0 text-xs">
+                <p className="text-sm font-black">{selected.name}</p>
+                <p className="text-muted-foreground">
+                  {KIND_LABEL[itemKind(selected)]} · Value {formatValue(variantValue(selected, variant))}
+                </p>
+                <p className="text-muted-foreground">
+                  Price {selected.price ? formatValue(selected.price) : "N/A"} · Demand{" "}
+                  {demandScore(selected) != null ? `${demandScore(selected)}/10` : (selected.demand ?? "N/A")} · Trend{" "}
+                  {selected.trend ?? "N/A"}
+                </p>
+              </div>
+            </div>
+
+            <p className="mt-4 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+              {itemKind(selected) === "fruit" ? "Fruit Type" : "Type"}
+            </p>
+            <div className="mt-1.5 flex flex-wrap gap-2">
+              {variants.map((v) => (
+                <button
+                  key={v}
+                  onClick={() => setVariant(v)}
+                  className={
+                    "rounded-xl border px-4 py-2 text-xs font-bold " +
+                    (variant === v ? "border-primary bg-primary/20 text-primary" : "border-border text-muted-foreground")
+                  }
+                >
+                  {VARIANT_LABEL[v]} · {formatValue(variantValue(selected, v))}
+                </button>
+              ))}
+            </div>
+
+            <p className="mt-4 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Quantity</p>
+            <div className="mt-1.5 flex items-center gap-3">
+              <button
+                onClick={() => setQty((n) => Math.max(1, n - 1))}
+                className="rounded-xl border border-border p-2"
+                aria-label="Kurangi"
+              >
+                <Minus className="h-4 w-4" />
+              </button>
+              <span className="w-8 text-center font-black">{qty}</span>
+              <button
+                onClick={() => setQty((n) => Math.min(99, n + 1))}
+                className="rounded-xl border border-border p-2"
+                aria-label="Tambah"
+              >
+                <Plus className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="min-h-0 flex-1 space-y-1.5 overflow-y-auto p-3">
+            {list.length === 0 && <p className="p-6 text-center text-xs text-muted-foreground">Item tidak ditemukan.</p>}
+            {list.map((it) => (
+              <button
+                key={it.id}
+                onClick={() => pick(it)}
+                className="flex w-full items-center gap-2 rounded-2xl border border-border bg-background p-2 text-left hover:border-primary/60"
+              >
+                <img
+                  src={it.image_url ?? ""}
+                  alt={it.name}
+                  loading="lazy"
+                  className="h-10 w-10 shrink-0 rounded-lg bg-muted object-contain"
+                  onError={(e) => ((e.currentTarget as HTMLImageElement).style.visibility = "hidden")}
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-xs font-bold">{it.name}</p>
+                  <p className="text-[10px] text-muted-foreground">
+                    {KIND_LABEL[itemKind(it)]} · Demand {it.demand ?? "N/A"} · Trend {it.trend ?? "N/A"}
+                  </p>
+                </div>
+                <span className="shrink-0 text-xs font-black text-primary">{formatValue(displayValue(it))}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Footer aksi */}
+        {selected && (
+          <div className="shrink-0 border-t border-border p-3">
+            <button
+              onClick={() => onAdd(selected, variant, qty)}
+              className="w-full rounded-2xl gradient-primary py-3 text-sm font-black text-primary-foreground shadow-neon"
+            >
+              Add to Calculator
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

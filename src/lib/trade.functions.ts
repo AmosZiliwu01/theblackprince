@@ -25,37 +25,47 @@ type SourceItem = {
   trend?: string;
   demand?: string;
   category?: string;
+  beli_price?: number;
   last_updated?: number;
 };
 
+/** Satu baris per item sumber. Regular & Permanent = varian dari item yang sama. */
 function toRows(items: SourceItem[]) {
   const rows: any[] = [];
+  const seen = new Set<string>();
+
   for (const it of items) {
     const name = String(it.name ?? "").trim();
     if (!name) continue;
+
+    const cat = String(it.category ?? "").toLowerCase();
+    const kind = cat.startsWith("gamepass") ? "gamepass" : cat.startsWith("limited") ? "limited" : "fruit";
+
     const slug = slugify(name);
-    const src_updated = it.last_updated ? new Date(Number(it.last_updated) * 1000).toISOString() : null;
-    const isGamepass = String(it.category ?? "").toLowerCase().startsWith("gamepass");
-    const base = {
+    const key = `${slug}|${kind}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+
+    const reg = Number(it.value_reg ?? 0) || null;
+    const perm = Number(it.value_perm ?? 0) || null;
+
+    rows.push({
+      name,
+      slug,
+      type: kind,
+      category: it.category ?? null,
+      rarity: it.rarity ?? null,
       image_url: it.image ?? null,
+      regular_value: kind === "fruit" ? reg : kind === "limited" ? reg : null,
+      permanent_value: kind === "fruit" ? perm : null,
+      gamepass_value: kind === "gamepass" ? reg : null,
+      price: Number(it.beli_price ?? 0) || null,
       demand: it.demand ?? null,
       trend: it.trend ?? null,
       source: SOURCE_NAME,
-      source_updated_at: src_updated,
+      source_updated_at: it.last_updated ? new Date(Number(it.last_updated) * 1000).toISOString() : null,
       updated_at: new Date().toISOString(),
-    };
-
-    if (isGamepass) {
-      rows.push({ ...base, name, slug, type: "gamepass", gamepass_value: Number(it.value_reg ?? 0) || null });
-      continue;
-    }
-
-    const reg = Number(it.value_reg ?? 0);
-    if (reg > 0) rows.push({ ...base, name, slug, type: "physical", regular_value: reg });
-
-    const perm = Number(it.value_perm ?? 0);
-    // Permanent adalah item TERPISAH dari physical fruit.
-    if (perm > 0) rows.push({ ...base, name: `Perm ${name}`, slug, type: "permanent", permanent_value: perm });
+    });
   }
   return rows;
 }
@@ -98,6 +108,14 @@ export const syncTradeItems = createServerFn({ method: "POST" })
 
     const { error } = await sb.from("trade_items").upsert(rows, { onConflict: "slug,type" });
     if (error) throw new Error(error.message);
+
+    // Bersihkan sisa item lama yang sudah tidak ada di sumber (mis. entri "Perm X" versi lama).
+    const keep = rows.map((r) => r.slug);
+    const { data: all } = await sb.from("trade_items").select("id,slug,type");
+    const stale = (all ?? []).filter(
+      (r: any) => !rows.some((x) => x.slug === r.slug && x.type === r.type) && keep.length > 0,
+    );
+    if (stale.length) await sb.from("trade_items").delete().in("id", stale.map((r: any) => r.id));
 
     return { synced: rows.length, skipped: false as const, source: SOURCE_NAME };
   });
