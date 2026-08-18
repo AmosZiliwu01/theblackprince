@@ -6,7 +6,7 @@ import { Loader2, RefreshCw, Search } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { syncTradeItems } from "@/lib/trade.functions";
-import { TYPE_LABEL, formatValue, itemValue, type TradeItem } from "@/lib/trade";
+import { KIND_LABEL, displayValue, formatValue, itemKind, type TradeItem } from "@/lib/trade";
 
 const sb = supabase as any;
 

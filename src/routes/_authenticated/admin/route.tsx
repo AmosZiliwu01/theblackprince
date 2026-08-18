@@ -36,7 +36,7 @@ const menu = [
   { to: "/admin/joki", label: "Harga Joki", icon: Wrench },
   { to: "/admin/accounts", label: "Harga Akun", icon: UserCircle2 },
   { to: "/admin/community", label: "Link", icon: Users },
-  { to: "/admin/trade", label: "Trade Items", icon: Radio },
+  { to: "/admin/trade", label: "Calculator Trade", icon: Radio },
   { to: "/admin/giveaways", label: "Giveaway", icon: Gift },
   { to: "/admin/events", label: "Event", icon: CalendarRange },
   { to: "/admin/faqs", label: "FAQ", icon: HelpCircle },
