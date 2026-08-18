@@ -96,10 +96,10 @@ function AdminTrade() {
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-bold">{r.name}</p>
                 <p className="truncate text-[11px] text-muted-foreground">
-                  {TYPE_LABEL[r.type] ?? r.type} · Demand {r.demand ?? "N/A"} · Trend {r.trend ?? "N/A"}
+                  {KIND_LABEL[itemKind(r)] ?? r.type} · Demand {r.demand ?? "N/A"} · Trend {r.trend ?? "N/A"}
                 </p>
               </div>
-              <span className="shrink-0 text-sm font-black text-primary">{formatValue(itemValue(r))}</span>
+              <span className="shrink-0 text-sm font-black text-primary">{formatValue(displayValue(r))}</span>
             </div>
           ))}
         </div>
