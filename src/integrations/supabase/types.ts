@@ -497,6 +497,63 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          link: string | null
+          read: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       promotions: {
         Row: {
           active: boolean
@@ -553,6 +610,41 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      trade_conversations: {
+        Row: {
+          buyer_id: string
+          created_at: string
+          id: string
+          offer_id: string
+          owner_id: string
+          updated_at: string
+        }
+        Insert: {
+          buyer_id: string
+          created_at?: string
+          id?: string
+          offer_id: string
+          owner_id: string
+          updated_at?: string
+        }
+        Update: {
+          buyer_id?: string
+          created_at?: string
+          id?: string
+          offer_id?: string
+          owner_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trade_conversations_offer_id_fkey"
+            columns: ["offer_id"]
+            isOneToOne: false
+            referencedRelation: "trade_offers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       trade_items: {
         Row: {
@@ -611,6 +703,131 @@ export type Database = {
           trend?: string | null
           type?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      trade_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trade_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "trade_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trade_offer_items: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          item_id: string | null
+          item_name: string
+          offer_id: string
+          qty: number
+          side: string
+          value: number | null
+          variant: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          item_id?: string | null
+          item_name: string
+          offer_id: string
+          qty?: number
+          side: string
+          value?: number | null
+          variant?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          item_id?: string | null
+          item_name?: string
+          offer_id?: string
+          qty?: number
+          side?: string
+          value?: number | null
+          variant?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trade_offer_items_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "trade_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trade_offer_items_offer_id_fkey"
+            columns: ["offer_id"]
+            isOneToOne: false
+            referencedRelation: "trade_offers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trade_offers: {
+        Row: {
+          contact: string | null
+          created_at: string
+          id: string
+          note: string | null
+          offer_value: number
+          request_value: number
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          contact?: string | null
+          created_at?: string
+          id?: string
+          note?: string | null
+          offer_value?: number
+          request_value?: number
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          contact?: string | null
+          created_at?: string
+          id?: string
+          note?: string | null
+          offer_value?: number
+          request_value?: number
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
