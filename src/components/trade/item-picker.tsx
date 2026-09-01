@@ -47,11 +47,18 @@ export function ItemPicker({
   const wantsPerm = /^perm(anent)?\b/.test(term);
   const cleanTerm = wantsPerm ? term.replace(/^perm(anent)?\s*/, "") : term;
 
+  /** Urutan di tab All: Fruits → Limited → Gamepasses, masing-masing value desc. */
+  const kindOrder: Record<string, number> = { fruit: 0, limited: 1, gamepass: 2 };
+
   const list = useMemo(() => {
     return items
       .filter((i) => (filter === "all" ? true : itemKind(i) === filter))
       .filter((i) => (cleanTerm ? i.name.toLowerCase().includes(cleanTerm) || (i.slug ?? "").includes(cleanTerm) : true))
-      .sort((a, b) => (displayValue(b) ?? 0) - (displayValue(a) ?? 0));
+      .sort((a, b) => {
+        const k = (kindOrder[itemKind(a)] ?? 9) - (kindOrder[itemKind(b)] ?? 9);
+        if (k !== 0) return k;
+        return (displayValue(b) ?? 0) - (displayValue(a) ?? 0);
+      });
   }, [items, cleanTerm, filter]);
 
   const pick = (it: TradeItem) => {
