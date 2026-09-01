@@ -25,6 +25,7 @@ import { Route as TradeIndexRouteImport } from './routes/trade/index'
 import { Route as JokiIndexRouteImport } from './routes/joki/index'
 import { Route as FruitsIndexRouteImport } from './routes/fruits/index'
 import { Route as AccountsIndexRouteImport } from './routes/accounts/index'
+import { Route as TradeNewRouteImport } from './routes/trade/new'
 import { Route as JokiIdRouteImport } from './routes/joki/$id'
 import { Route as FruitsIdRouteImport } from './routes/fruits/$id'
 import { Route as AccountsIdRouteImport } from './routes/accounts/$id'
@@ -123,6 +124,11 @@ const FruitsIndexRoute = FruitsIndexRouteImport.update({
 const AccountsIndexRoute = AccountsIndexRouteImport.update({
   id: '/accounts/',
   path: '/accounts/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TradeNewRoute = TradeNewRouteImport.update({
+  id: '/trade/new',
+  path: '/trade/new',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JokiIdRoute = JokiIdRouteImport.update({
@@ -253,6 +259,7 @@ export interface FileRoutesByFullPath {
   '/accounts/$id': typeof AccountsIdRoute
   '/fruits/$id': typeof FruitsIdRoute
   '/joki/$id': typeof JokiIdRoute
+  '/trade/new': typeof TradeNewRoute
   '/accounts/': typeof AccountsIndexRoute
   '/fruits/': typeof FruitsIndexRoute
   '/joki/': typeof JokiIndexRoute
@@ -289,6 +296,7 @@ export interface FileRoutesByTo {
   '/accounts/$id': typeof AccountsIdRoute
   '/fruits/$id': typeof FruitsIdRoute
   '/joki/$id': typeof JokiIdRoute
+  '/trade/new': typeof TradeNewRoute
   '/accounts': typeof AccountsIndexRoute
   '/fruits': typeof FruitsIndexRoute
   '/joki': typeof JokiIndexRoute
@@ -328,6 +336,7 @@ export interface FileRoutesById {
   '/accounts/$id': typeof AccountsIdRoute
   '/fruits/$id': typeof FruitsIdRoute
   '/joki/$id': typeof JokiIdRoute
+  '/trade/new': typeof TradeNewRoute
   '/accounts/': typeof AccountsIndexRoute
   '/fruits/': typeof FruitsIndexRoute
   '/joki/': typeof JokiIndexRoute
@@ -367,6 +376,7 @@ export interface FileRouteTypes {
     | '/accounts/$id'
     | '/fruits/$id'
     | '/joki/$id'
+    | '/trade/new'
     | '/accounts/'
     | '/fruits/'
     | '/joki/'
@@ -403,6 +413,7 @@ export interface FileRouteTypes {
     | '/accounts/$id'
     | '/fruits/$id'
     | '/joki/$id'
+    | '/trade/new'
     | '/accounts'
     | '/fruits'
     | '/joki'
@@ -441,6 +452,7 @@ export interface FileRouteTypes {
     | '/accounts/$id'
     | '/fruits/$id'
     | '/joki/$id'
+    | '/trade/new'
     | '/accounts/'
     | '/fruits/'
     | '/joki/'
@@ -479,6 +491,7 @@ export interface RootRouteChildren {
   AccountsIdRoute: typeof AccountsIdRoute
   FruitsIdRoute: typeof FruitsIdRoute
   JokiIdRoute: typeof JokiIdRoute
+  TradeNewRoute: typeof TradeNewRoute
   AccountsIndexRoute: typeof AccountsIndexRoute
   FruitsIndexRoute: typeof FruitsIndexRoute
   JokiIndexRoute: typeof JokiIndexRoute
@@ -597,6 +610,13 @@ declare module '@tanstack/react-router' {
       path: '/accounts'
       fullPath: '/accounts/'
       preLoaderRoute: typeof AccountsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trade/new': {
+      id: '/trade/new'
+      path: '/trade/new'
+      fullPath: '/trade/new'
+      preLoaderRoute: typeof TradeNewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/joki/$id': {
@@ -813,6 +833,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountsIdRoute: AccountsIdRoute,
   FruitsIdRoute: FruitsIdRoute,
   JokiIdRoute: JokiIdRoute,
+  TradeNewRoute: TradeNewRoute,
   AccountsIndexRoute: AccountsIndexRoute,
   FruitsIndexRoute: FruitsIndexRoute,
   JokiIndexRoute: JokiIndexRoute,
