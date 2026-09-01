@@ -21,6 +21,7 @@ import { Route as CalculatorTradeRouteImport } from './routes/calculator-trade'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TradeIndexRouteImport } from './routes/trade/index'
 import { Route as JokiIndexRouteImport } from './routes/joki/index'
 import { Route as FruitsIndexRouteImport } from './routes/fruits/index'
 import { Route as AccountsIndexRouteImport } from './routes/accounts/index'
@@ -102,6 +103,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TradeIndexRoute = TradeIndexRouteImport.update({
+  id: '/trade/',
+  path: '/trade/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JokiIndexRoute = JokiIndexRouteImport.update({
@@ -250,6 +256,7 @@ export interface FileRoutesByFullPath {
   '/accounts/': typeof AccountsIndexRoute
   '/fruits/': typeof FruitsIndexRoute
   '/joki/': typeof JokiIndexRoute
+  '/trade/': typeof TradeIndexRoute
   '/admin/accounts': typeof AuthenticatedAdminAccountsRoute
   '/admin/ai-settings': typeof AuthenticatedAdminAiSettingsRoute
   '/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
@@ -285,6 +292,7 @@ export interface FileRoutesByTo {
   '/accounts': typeof AccountsIndexRoute
   '/fruits': typeof FruitsIndexRoute
   '/joki': typeof JokiIndexRoute
+  '/trade': typeof TradeIndexRoute
   '/admin/accounts': typeof AuthenticatedAdminAccountsRoute
   '/admin/ai-settings': typeof AuthenticatedAdminAiSettingsRoute
   '/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
@@ -323,6 +331,7 @@ export interface FileRoutesById {
   '/accounts/': typeof AccountsIndexRoute
   '/fruits/': typeof FruitsIndexRoute
   '/joki/': typeof JokiIndexRoute
+  '/trade/': typeof TradeIndexRoute
   '/_authenticated/admin/accounts': typeof AuthenticatedAdminAccountsRoute
   '/_authenticated/admin/ai-settings': typeof AuthenticatedAdminAiSettingsRoute
   '/_authenticated/admin/announcements': typeof AuthenticatedAdminAnnouncementsRoute
@@ -361,6 +370,7 @@ export interface FileRouteTypes {
     | '/accounts/'
     | '/fruits/'
     | '/joki/'
+    | '/trade/'
     | '/admin/accounts'
     | '/admin/ai-settings'
     | '/admin/announcements'
@@ -396,6 +406,7 @@ export interface FileRouteTypes {
     | '/accounts'
     | '/fruits'
     | '/joki'
+    | '/trade'
     | '/admin/accounts'
     | '/admin/ai-settings'
     | '/admin/announcements'
@@ -433,6 +444,7 @@ export interface FileRouteTypes {
     | '/accounts/'
     | '/fruits/'
     | '/joki/'
+    | '/trade/'
     | '/_authenticated/admin/accounts'
     | '/_authenticated/admin/ai-settings'
     | '/_authenticated/admin/announcements'
@@ -470,6 +482,7 @@ export interface RootRouteChildren {
   AccountsIndexRoute: typeof AccountsIndexRoute
   FruitsIndexRoute: typeof FruitsIndexRoute
   JokiIndexRoute: typeof JokiIndexRoute
+  TradeIndexRoute: typeof TradeIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -556,6 +569,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trade/': {
+      id: '/trade/'
+      path: '/trade'
+      fullPath: '/trade/'
+      preLoaderRoute: typeof TradeIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/joki/': {
@@ -796,6 +816,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountsIndexRoute: AccountsIndexRoute,
   FruitsIndexRoute: FruitsIndexRoute,
   JokiIndexRoute: JokiIndexRoute,
+  TradeIndexRoute: TradeIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
