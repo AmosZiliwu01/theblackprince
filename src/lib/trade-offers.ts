@@ -137,3 +137,107 @@ export function matchScore(mine: TradeOffer, other: TradeOffer): number {
   }
   return score;
 }
+
+/* ---------------- Chat & profil ---------------- */
+
+export interface TradeConversation {
+  id: string;
+  offer_id: string;
+  owner_id: string;
+  buyer_id: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TradeMessage {
+  id: string;
+  conversation_id: string;
+  sender_id: string;
+  content: string;
+  created_at: string;
+}
+
+/** Semua percakapan pada satu penawaran yang boleh dilihat user (RLS yang menyaring). */
+export const conversationsQO = (offerId: string, userId: string | undefined) =>
+  queryOptions({
+    ...fresh,
+    enabled: !!userId && !!offerId,
+    queryKey: ["trade", "conversations", offerId, userId ?? "anon"],
+    queryFn: async (): Promise<TradeConversation[]> => {
+      const { data, error } = await sb
+        .from("trade_conversations")
+        .select("*")
+        .eq("offer_id", offerId)
+        .order("updated_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as TradeConversation[];
+    },
+  });
+
+export const messagesQO = (conversationId: string | undefined) =>
+  queryOptions({
+    ...fresh,
+    enabled: !!conversationId,
+    queryKey: ["trade", "messages", conversationId ?? "none"],
+    queryFn: async (): Promise<TradeMessage[]> => {
+      const { data, error } = await sb
+        .from("trade_messages")
+        .select("*")
+        .eq("conversation_id", conversationId)
+        .order("created_at", { ascending: true })
+        .limit(500);
+      if (error) throw error;
+      return (data ?? []) as TradeMessage[];
+    },
+  });
+
+export interface Profile {
+  id: string;
+  display_name: string | null;
+  avatar_url: string | null;
+}
+
+export const profileQO = (id: string | undefined) =>
+  queryOptions({
+    ...fresh,
+    enabled: !!id,
+    queryKey: ["profile", id ?? "none"],
+    queryFn: async (): Promise<Profile | null> => {
+      const { data, error } = await sb.from("profiles").select("id, display_name, avatar_url").eq("id", id).maybeSingle();
+      if (error) throw error;
+      return (data ?? null) as Profile | null;
+    },
+  });
+
+/**
+ * Buat / ambil percakapan antara buyer (user login) dan owner penawaran.
+ * RLS memastikan hanya buyer sendiri yang bisa membuat baris ini.
+ */
+export async function ensureConversation(offerId: string, ownerId: string, buyerId: string): Promise<TradeConversation> {
+  const { data: found, error: e0 } = await sb
+    .from("trade_conversations")
+    .select("*")
+    .eq("offer_id", offerId)
+    .eq("buyer_id", buyerId)
+    .maybeSingle();
+  if (e0) throw e0;
+  if (found) return found as TradeConversation;
+
+  const { data, error } = await sb
+    .from("trade_conversations")
+    .insert({ offer_id: offerId, owner_id: ownerId, buyer_id: buyerId })
+    .select("*")
+    .single();
+  if (error) throw error;
+  return data as TradeConversation;
+}
+
+/** Penawaran lain yang cocok dengan penawaran milik user (skor > 0), diurutkan. */
+export function potentialMatches(mine: TradeOffer, all: TradeOffer[]): { offer: TradeOffer; score: number }[] {
+  return all
+    .filter((o) => o.id !== mine.id && o.user_id !== mine.user_id && o.status === "active")
+    .map((o) => ({ offer: o, score: matchScore(mine, o) }))
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 12);
+}
