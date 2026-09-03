@@ -6,6 +6,8 @@ import { ArrowLeftRight, Minus, Plus, Search, Trash2, X } from "lucide-react";
 import { SiteLayout } from "@/components/site/site-layout";
 import { tradeItemsQO } from "@/lib/site-queries";
 import { syncTradeItems } from "@/lib/trade.functions";
+import { ItemPicker } from "@/components/trade/item-picker";
+import { TradeNav } from "@/components/trade/trade-nav";
 import {
   FAIR_TOLERANCE,
   KIND_LABEL,
