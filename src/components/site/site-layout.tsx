@@ -106,7 +106,9 @@ export function SiteLayout({ children }: { children: ReactNode }) {
             })}
           </nav>
           <div className="ml-auto flex shrink-0 items-center gap-2">
+            <NotificationBell />
             <Link
+
               to="/cart"
               aria-label="Keranjang"
               className="relative grid h-9 w-9 place-items-center rounded-md border border-border bg-card hover:bg-accent"
