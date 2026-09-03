@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Minus, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { SiteLayout } from "@/components/site/site-layout";
+import { TradeNav } from "@/components/trade/trade-nav";
 import { ItemPicker } from "@/components/trade/item-picker";
 import { tradeItemsQO } from "@/lib/site-queries";
 import { supabase } from "@/integrations/supabase/client";
@@ -143,6 +144,7 @@ function NewTradePage() {
   return (
     <SiteLayout>
       <section className="mx-auto max-w-3xl px-4 py-6">
+        <TradeNav />
         <h1 className="text-2xl font-black md:text-3xl">
           Buat <span className="text-gradient">Trade</span>
         </h1>
