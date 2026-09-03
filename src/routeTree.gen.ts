@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as GiveawayRouteImport } from './routes/giveaway'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EventsRouteImport } from './routes/events'
@@ -26,6 +27,7 @@ import { Route as JokiIndexRouteImport } from './routes/joki/index'
 import { Route as FruitsIndexRouteImport } from './routes/fruits/index'
 import { Route as AccountsIndexRouteImport } from './routes/accounts/index'
 import { Route as TradeNewRouteImport } from './routes/trade/new'
+import { Route as TradeMineRouteImport } from './routes/trade/mine'
 import { Route as TradeIdRouteImport } from './routes/trade/$id'
 import { Route as JokiIdRouteImport } from './routes/joki/$id'
 import { Route as FruitsIdRouteImport } from './routes/fruits/$id'
@@ -51,6 +53,11 @@ import { Route as AuthenticatedAdminAccountsRouteImport } from './routes/_authen
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GiveawayRoute = GiveawayRouteImport.update({
@@ -130,6 +137,11 @@ const AccountsIndexRoute = AccountsIndexRouteImport.update({
 const TradeNewRoute = TradeNewRouteImport.update({
   id: '/trade/new',
   path: '/trade/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TradeMineRoute = TradeMineRouteImport.update({
+  id: '/trade/mine',
+  path: '/trade/mine',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TradeIdRoute = TradeIdRouteImport.update({
@@ -260,12 +272,14 @@ export interface FileRoutesByFullPath {
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
   '/giveaway': typeof GiveawayRoute
+  '/notifications': typeof NotificationsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/accounts/$id': typeof AccountsIdRoute
   '/fruits/$id': typeof FruitsIdRoute
   '/joki/$id': typeof JokiIdRoute
   '/trade/$id': typeof TradeIdRoute
+  '/trade/mine': typeof TradeMineRoute
   '/trade/new': typeof TradeNewRoute
   '/accounts/': typeof AccountsIndexRoute
   '/fruits/': typeof FruitsIndexRoute
@@ -299,11 +313,13 @@ export interface FileRoutesByTo {
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
   '/giveaway': typeof GiveawayRoute
+  '/notifications': typeof NotificationsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/accounts/$id': typeof AccountsIdRoute
   '/fruits/$id': typeof FruitsIdRoute
   '/joki/$id': typeof JokiIdRoute
   '/trade/$id': typeof TradeIdRoute
+  '/trade/mine': typeof TradeMineRoute
   '/trade/new': typeof TradeNewRoute
   '/accounts': typeof AccountsIndexRoute
   '/fruits': typeof FruitsIndexRoute
@@ -339,12 +355,14 @@ export interface FileRoutesById {
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
   '/giveaway': typeof GiveawayRoute
+  '/notifications': typeof NotificationsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/accounts/$id': typeof AccountsIdRoute
   '/fruits/$id': typeof FruitsIdRoute
   '/joki/$id': typeof JokiIdRoute
   '/trade/$id': typeof TradeIdRoute
+  '/trade/mine': typeof TradeMineRoute
   '/trade/new': typeof TradeNewRoute
   '/accounts/': typeof AccountsIndexRoute
   '/fruits/': typeof FruitsIndexRoute
@@ -380,12 +398,14 @@ export interface FileRouteTypes {
     | '/events'
     | '/faq'
     | '/giveaway'
+    | '/notifications'
     | '/sitemap.xml'
     | '/admin'
     | '/accounts/$id'
     | '/fruits/$id'
     | '/joki/$id'
     | '/trade/$id'
+    | '/trade/mine'
     | '/trade/new'
     | '/accounts/'
     | '/fruits/'
@@ -419,11 +439,13 @@ export interface FileRouteTypes {
     | '/events'
     | '/faq'
     | '/giveaway'
+    | '/notifications'
     | '/sitemap.xml'
     | '/accounts/$id'
     | '/fruits/$id'
     | '/joki/$id'
     | '/trade/$id'
+    | '/trade/mine'
     | '/trade/new'
     | '/accounts'
     | '/fruits'
@@ -458,12 +480,14 @@ export interface FileRouteTypes {
     | '/events'
     | '/faq'
     | '/giveaway'
+    | '/notifications'
     | '/sitemap.xml'
     | '/_authenticated/admin'
     | '/accounts/$id'
     | '/fruits/$id'
     | '/joki/$id'
     | '/trade/$id'
+    | '/trade/mine'
     | '/trade/new'
     | '/accounts/'
     | '/fruits/'
@@ -499,11 +523,13 @@ export interface RootRouteChildren {
   EventsRoute: typeof EventsRoute
   FaqRoute: typeof FaqRoute
   GiveawayRoute: typeof GiveawayRoute
+  NotificationsRoute: typeof NotificationsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AccountsIdRoute: typeof AccountsIdRoute
   FruitsIdRoute: typeof FruitsIdRoute
   JokiIdRoute: typeof JokiIdRoute
   TradeIdRoute: typeof TradeIdRoute
+  TradeMineRoute: typeof TradeMineRoute
   TradeNewRoute: typeof TradeNewRoute
   AccountsIndexRoute: typeof AccountsIndexRoute
   FruitsIndexRoute: typeof FruitsIndexRoute
@@ -518,6 +544,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/giveaway': {
@@ -630,6 +663,13 @@ declare module '@tanstack/react-router' {
       path: '/trade/new'
       fullPath: '/trade/new'
       preLoaderRoute: typeof TradeNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trade/mine': {
+      id: '/trade/mine'
+      path: '/trade/mine'
+      fullPath: '/trade/mine'
+      preLoaderRoute: typeof TradeMineRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/trade/$id': {
@@ -849,11 +889,13 @@ const rootRouteChildren: RootRouteChildren = {
   EventsRoute: EventsRoute,
   FaqRoute: FaqRoute,
   GiveawayRoute: GiveawayRoute,
+  NotificationsRoute: NotificationsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AccountsIdRoute: AccountsIdRoute,
   FruitsIdRoute: FruitsIdRoute,
   JokiIdRoute: JokiIdRoute,
   TradeIdRoute: TradeIdRoute,
+  TradeMineRoute: TradeMineRoute,
   TradeNewRoute: TradeNewRoute,
   AccountsIndexRoute: AccountsIndexRoute,
   FruitsIndexRoute: FruitsIndexRoute,

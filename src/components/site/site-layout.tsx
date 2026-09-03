@@ -20,6 +20,8 @@ import { PopupBanner } from "./popup-banner";
 import { PromoToast } from "./promo-toast";
 import { useCart } from "@/lib/cart-context";
 import { websiteSettingsQO } from "@/lib/site-queries";
+import { NotificationBell } from "./notification-bell";
+
 
 // Mobile bottom nav: Home, Fruit, Joki, Akun, AI (no Cart — cart lives in header)
 const nav = [
@@ -37,10 +39,12 @@ const drawerLinks = [
   { to: "/accounts", label: "Harga Akun", icon: UserCircle2 },
   { to: "/community", label: "Link", icon: Users },
   { to: "/calculator-trade", label: "Calculator", icon: ArrowLeftRight },
+  { to: "/trade", label: "Trade", icon: ArrowLeftRight },
   { to: "/giveaway", label: "Giveaway", icon: Gift },
   { to: "/events", label: "Event", icon: CalendarRange },
   { to: "/faq", label: "FAQ", icon: HelpCircle },
 ];
+
 
 function LogoMark({ logoUrl }: { logoUrl?: string | null }) {
   if (logoUrl) {
@@ -104,7 +108,9 @@ export function SiteLayout({ children }: { children: ReactNode }) {
             })}
           </nav>
           <div className="ml-auto flex shrink-0 items-center gap-2">
+            <NotificationBell />
             <Link
+
               to="/cart"
               aria-label="Keranjang"
               className="relative grid h-9 w-9 place-items-center rounded-md border border-border bg-card hover:bg-accent"

@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeftRight, Loader2, Plus, Search } from "lucide-react";
 import { SiteLayout } from "@/components/site/site-layout";
+import { TradeNav } from "@/components/trade/trade-nav";
 import { activeOffersQO, myOffersQO, STATUS_LABEL, type TradeOffer } from "@/lib/trade-offers";
 import { formatValue } from "@/lib/trade";
 import { useAuthUser } from "@/hooks/use-auth";
@@ -51,6 +52,7 @@ function TradeListPage() {
   return (
     <SiteLayout>
       <section className="mx-auto max-w-5xl px-4 py-6">
+        <TradeNav />
         <div className="flex flex-wrap items-center gap-3">
           <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl gradient-primary shadow-neon">
             <ArrowLeftRight className="h-5 w-5 text-primary-foreground" />
