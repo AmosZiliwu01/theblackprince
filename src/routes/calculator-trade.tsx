@@ -109,6 +109,8 @@ function CalculatorTradePage() {
   return (
     <SiteLayout>
       <section className="mx-auto max-w-5xl px-4 py-6">
+        <TradeNav />
+
         <div className="flex items-center gap-3">
           <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl gradient-primary shadow-neon">
             <ArrowLeftRight className="h-5 w-5 text-primary-foreground" />
