@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as GiveawayRouteImport } from './routes/giveaway'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EventsRouteImport } from './routes/events'
@@ -52,6 +53,11 @@ import { Route as AuthenticatedAdminAccountsRouteImport } from './routes/_authen
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GiveawayRoute = GiveawayRouteImport.update({
@@ -266,6 +272,7 @@ export interface FileRoutesByFullPath {
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
   '/giveaway': typeof GiveawayRoute
+  '/notifications': typeof NotificationsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/accounts/$id': typeof AccountsIdRoute
@@ -306,6 +313,7 @@ export interface FileRoutesByTo {
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
   '/giveaway': typeof GiveawayRoute
+  '/notifications': typeof NotificationsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/accounts/$id': typeof AccountsIdRoute
   '/fruits/$id': typeof FruitsIdRoute
@@ -347,6 +355,7 @@ export interface FileRoutesById {
   '/events': typeof EventsRoute
   '/faq': typeof FaqRoute
   '/giveaway': typeof GiveawayRoute
+  '/notifications': typeof NotificationsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/accounts/$id': typeof AccountsIdRoute
@@ -389,6 +398,7 @@ export interface FileRouteTypes {
     | '/events'
     | '/faq'
     | '/giveaway'
+    | '/notifications'
     | '/sitemap.xml'
     | '/admin'
     | '/accounts/$id'
@@ -429,6 +439,7 @@ export interface FileRouteTypes {
     | '/events'
     | '/faq'
     | '/giveaway'
+    | '/notifications'
     | '/sitemap.xml'
     | '/accounts/$id'
     | '/fruits/$id'
@@ -469,6 +480,7 @@ export interface FileRouteTypes {
     | '/events'
     | '/faq'
     | '/giveaway'
+    | '/notifications'
     | '/sitemap.xml'
     | '/_authenticated/admin'
     | '/accounts/$id'
@@ -511,6 +523,7 @@ export interface RootRouteChildren {
   EventsRoute: typeof EventsRoute
   FaqRoute: typeof FaqRoute
   GiveawayRoute: typeof GiveawayRoute
+  NotificationsRoute: typeof NotificationsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AccountsIdRoute: typeof AccountsIdRoute
   FruitsIdRoute: typeof FruitsIdRoute
@@ -531,6 +544,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/giveaway': {
@@ -869,6 +889,7 @@ const rootRouteChildren: RootRouteChildren = {
   EventsRoute: EventsRoute,
   FaqRoute: FaqRoute,
   GiveawayRoute: GiveawayRoute,
+  NotificationsRoute: NotificationsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AccountsIdRoute: AccountsIdRoute,
   FruitsIdRoute: FruitsIdRoute,

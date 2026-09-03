@@ -37,10 +37,12 @@ const drawerLinks = [
   { to: "/accounts", label: "Harga Akun", icon: UserCircle2 },
   { to: "/community", label: "Link", icon: Users },
   { to: "/calculator-trade", label: "Calculator", icon: ArrowLeftRight },
+  { to: "/trade", label: "Trade", icon: ArrowLeftRight },
   { to: "/giveaway", label: "Giveaway", icon: Gift },
   { to: "/events", label: "Event", icon: CalendarRange },
   { to: "/faq", label: "FAQ", icon: HelpCircle },
 ];
+
 
 function LogoMark({ logoUrl }: { logoUrl?: string | null }) {
   if (logoUrl) {
