@@ -20,6 +20,8 @@ import { PopupBanner } from "./popup-banner";
 import { PromoToast } from "./promo-toast";
 import { useCart } from "@/lib/cart-context";
 import { websiteSettingsQO } from "@/lib/site-queries";
+import { NotificationBell } from "./notification-bell";
+
 
 // Mobile bottom nav: Home, Fruit, Joki, Akun, AI (no Cart — cart lives in header)
 const nav = [
