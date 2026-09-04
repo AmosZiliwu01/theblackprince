@@ -72,7 +72,7 @@ export function ItemPicker({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-0 sm:items-center sm:p-4">
-      <div className="flex h-[85vh] max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl border border-border bg-card sm:h-auto sm:rounded-3xl">
+      <div className="flex h-[85vh] max-h-[85vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl border border-border bg-card sm:h-[80vh] sm:rounded-3xl">
         {/* Header tetap */}
         <div className="shrink-0 border-b border-border p-3">
           <div className="mb-2 flex items-center justify-between">
@@ -179,30 +179,28 @@ export function ItemPicker({
             </div>
           </div>
         ) : (
-          <div className="min-h-0 flex-1 space-y-1.5 overflow-y-auto p-3">
+          <div className="min-h-0 flex-1 overflow-y-auto p-3">
             {list.length === 0 && <p className="p-6 text-center text-xs text-muted-foreground">Item tidak ditemukan.</p>}
-            {list.map((it) => (
-              <button
-                key={it.id}
-                onClick={() => pick(it)}
-                className="flex w-full items-center gap-2 rounded-2xl border border-border bg-background p-2 text-left hover:border-primary/60"
-              >
-                <img
-                  src={it.image_url ?? ""}
-                  alt={it.name}
-                  loading="lazy"
-                  className="h-10 w-10 shrink-0 rounded-lg bg-muted object-contain"
-                  onError={(e) => ((e.currentTarget as HTMLImageElement).style.visibility = "hidden")}
-                />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-xs font-bold">{it.name}</p>
-                  <p className="text-[10px] text-muted-foreground">
-                    {KIND_LABEL[itemKind(it)]} · Demand {it.demand ?? "N/A"} · Trend {it.trend ?? "N/A"}
-                  </p>
-                </div>
-                <span className="shrink-0 text-xs font-black text-primary">{formatValue(displayValue(it))}</span>
-              </button>
-            ))}
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              {list.map((it) => (
+                <button
+                  key={it.id}
+                  onClick={() => pick(it)}
+                  className="flex flex-col items-center gap-1 rounded-2xl border border-border bg-background p-2 text-center hover:border-primary/60"
+                >
+                  <img
+                    src={it.image_url ?? ""}
+                    alt={it.name}
+                    loading="lazy"
+                    className="h-14 w-14 rounded-lg bg-muted object-contain"
+                    onError={(e) => ((e.currentTarget as HTMLImageElement).style.visibility = "hidden")}
+                  />
+                  <p className="line-clamp-2 text-[11px] font-bold leading-tight">{it.name}</p>
+                  <p className="text-[10px] text-muted-foreground">{KIND_LABEL[itemKind(it)]}</p>
+                  <span className="text-[11px] font-black text-primary">{formatValue(displayValue(it))}</span>
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
