@@ -1,3 +1,4 @@
+import { TradeComingSoon } from "@/components/trade/coming-soon";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, Plus } from "lucide-react";
@@ -21,7 +22,7 @@ export const Route = createFileRoute("/trade/mine")({
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: MyTradePage,
+  component: TradeComingSoon,
 });
 
 function MyTradePage() {
