@@ -1,3 +1,4 @@
+import { TradeComingSoon } from "@/components/trade/coming-soon";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -40,7 +41,7 @@ export const Route = createFileRoute("/trade/$id")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: TradeDetailPage,
+  component: TradeComingSoon,
 });
 
 function TradeDetailPage() {

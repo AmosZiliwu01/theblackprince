@@ -1,3 +1,4 @@
+import { TradeComingSoon } from "@/components/trade/coming-soon";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/trade/new")({
     ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(tradeItemsQO),
-  component: NewTradePage,
+  component: TradeComingSoon,
 });
 
 type Side = "offer" | "request";
