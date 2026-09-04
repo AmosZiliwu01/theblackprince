@@ -202,16 +202,15 @@ function SideCard({
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {rows.map((r) => (
             <div key={r.key} className="flex flex-col items-center gap-1 rounded-2xl border border-border bg-background p-2 text-center">
-
               <img
                 src={r.item.image_url ?? ""}
                 alt={r.item.name}
                 loading="lazy"
-                className="h-10 w-10 shrink-0 rounded-lg bg-muted object-contain"
+                className="h-14 w-14 rounded-lg bg-muted object-contain"
                 onError={(e) => ((e.currentTarget as HTMLImageElement).style.visibility = "hidden")}
               />
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-bold">{r.item.name}</p>
+              <div className="w-full min-w-0">
+                <p className="line-clamp-2 text-[11px] font-bold leading-tight">{r.item.name}</p>
                 <p className="text-[10px] text-muted-foreground">
                   {VARIANT_LABEL[r.variant]} · {formatValue(variantValue(r.item, r.variant))}
                 </p>
