@@ -199,9 +199,10 @@ function SideCard({
           Belum ada item.
         </p>
       ) : (
-        <div className="space-y-2">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {rows.map((r) => (
-            <div key={r.key} className="flex items-center gap-2 rounded-2xl border border-border bg-background p-2">
+            <div key={r.key} className="flex flex-col items-center gap-1 rounded-2xl border border-border bg-background p-2 text-center">
+
               <img
                 src={r.item.image_url ?? ""}
                 alt={r.item.name}

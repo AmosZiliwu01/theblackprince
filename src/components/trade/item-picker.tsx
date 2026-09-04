@@ -72,7 +72,7 @@ export function ItemPicker({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-0 sm:items-center sm:p-4">
-      <div className="flex h-[85vh] max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl border border-border bg-card sm:h-auto sm:rounded-3xl">
+      <div className="flex h-[85vh] max-h-[85vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl border border-border bg-card sm:h-[80vh] sm:rounded-3xl">
         {/* Header tetap */}
         <div className="shrink-0 border-b border-border p-3">
           <div className="mb-2 flex items-center justify-between">
