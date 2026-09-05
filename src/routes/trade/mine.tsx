@@ -1,4 +1,3 @@
-import { TradeComingSoon } from "@/components/trade/coming-soon";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, Plus } from "lucide-react";
@@ -22,7 +21,7 @@ export const Route = createFileRoute("/trade/mine")({
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: TradeComingSoon,
+  component: MyTradePage,
 });
 
 function MyTradePage() {
@@ -53,7 +52,7 @@ function MyTradePage() {
           <Loader2 className="mt-6 h-5 w-5 animate-spin text-primary" />
         ) : user === null ? (
           <p className="mt-4 rounded-2xl border border-border bg-card p-4 text-sm text-muted-foreground">
-            <Link to="/auth" className="font-bold text-primary">
+            <Link to="/login" className="font-bold text-primary">
               Masuk
             </Link>{" "}
             untuk melihat dan mengelola trade milikmu.

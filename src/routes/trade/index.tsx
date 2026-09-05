@@ -1,4 +1,3 @@
-import { TradeComingSoon } from "@/components/trade/coming-soon";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -24,7 +23,7 @@ export const Route = createFileRoute("/trade/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: TradeComingSoon,
+  component: TradeListPage,
 });
 
 const PAGE = 12;
@@ -105,7 +104,7 @@ function TradeListPage() {
 
         {tab === "mine" && user === null && (
           <p className="mt-4 rounded-2xl border border-border bg-card p-4 text-sm text-muted-foreground">
-            <Link to="/auth" className="font-bold text-primary">
+            <Link to="/login" className="font-bold text-primary">
               Masuk
             </Link>{" "}
             untuk melihat trade milikmu.
