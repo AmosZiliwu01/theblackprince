@@ -1,4 +1,3 @@
-import { TradeComingSoon } from "@/components/trade/coming-soon";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -41,7 +40,7 @@ export const Route = createFileRoute("/trade/$id")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: TradeComingSoon,
+  component: TradeDetailPage,
 });
 
 function TradeDetailPage() {
@@ -285,7 +284,7 @@ function ChatSection({
   if (!userId) {
     return (
       <div className="mt-4 rounded-3xl border border-border bg-card p-4 text-center text-sm text-muted-foreground">
-        <Link to="/auth" className="font-bold text-primary">
+        <Link to="/login" className="font-bold text-primary">
           Masuk
         </Link>{" "}
         untuk chat dengan pemilik penawaran ini.

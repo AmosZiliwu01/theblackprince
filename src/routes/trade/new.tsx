@@ -1,4 +1,3 @@
-import { TradeComingSoon } from "@/components/trade/coming-soon";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -27,7 +26,7 @@ export const Route = createFileRoute("/trade/new")({
     ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(tradeItemsQO),
-  component: TradeComingSoon,
+  component: NewTradePage,
 });
 
 type Side = "offer" | "request";
@@ -38,9 +37,6 @@ function NewTradePage() {
   const qc = useQueryClient();
   const items = (useQuery(tradeItemsQO).data ?? []) as TradeItem[];
 
-  const [title, setTitle] = useState("");
-  const [note, setNote] = useState("");
-  const [contact, setContact] = useState("");
   const [give, setGive] = useState<DraftRow[]>([]);
   const [want, setWant] = useState<DraftRow[]>([]);
   const [picker, setPicker] = useState<Side | null>(null);
@@ -66,18 +62,25 @@ function NewTradePage() {
 
   async function submit() {
     if (!user) return;
-    if (!title.trim()) return toast.error("Judul penawaran wajib diisi");
     if (give.length === 0 || want.length === 0) return toast.error("Isi minimal 1 item di kedua sisi");
 
     setSaving(true);
     try {
+      const { data: prof } = await sb.from("profiles").select("display_name").eq("id", user.id).maybeSingle();
+      const who = (prof?.display_name as string | null) ?? "Trader";
+      const names = (rows: DraftRow[]) =>
+        rows
+          .slice(0, 2)
+          .map((r) => `${r.qty > 1 ? r.qty + "x " : ""}${VARIANT_LABEL[r.variant] === "Permanent" ? "Perm " : ""}${r.item.name}`)
+          .join(", ") + (rows.length > 2 ? ` +${rows.length - 2}` : "");
+      const autoTitle = `${who}: ${names(give)} → ${names(want)}`;
       const { data: offer, error } = await sb
         .from("trade_offers")
         .insert({
           user_id: user.id,
-          title: title.trim().slice(0, 120),
-          note: note.trim() ? note.trim().slice(0, 500) : null,
-          contact: contact.trim() ? contact.trim().slice(0, 120) : null,
+          title: autoTitle.slice(0, 120),
+          note: null,
+          contact: null,
           status: "active",
           offer_value: sum(give),
           request_value: sum(want),
@@ -132,7 +135,7 @@ function NewTradePage() {
             Penawaran trade terhubung ke akunmu supaya pembeli bisa chat langsung.
           </p>
           <Link
-            to="/auth"
+            to="/login"
             className="mt-4 inline-block rounded-2xl gradient-primary px-5 py-2.5 text-sm font-black text-primary-foreground shadow-neon"
           >
             Masuk / Daftar
@@ -150,35 +153,9 @@ function NewTradePage() {
           Buat <span className="text-gradient">Trade</span>
         </h1>
 
-        <div className="mt-4 space-y-3 rounded-3xl border border-border bg-card p-3">
-          <Field label="Judul">
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              maxLength={120}
-              placeholder="Contoh: Trade Perm Buddha cari Perm Dough"
-              className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary/60"
-            />
-          </Field>
-          <Field label="Catatan (opsional)">
-            <textarea
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              maxLength={500}
-              rows={3}
-              className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary/60"
-            />
-          </Field>
-          <Field label="Kontak (opsional)">
-            <input
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-              maxLength={120}
-              placeholder="Discord / WhatsApp / username Roblox"
-              className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary/60"
-            />
-          </Field>
-        </div>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Pilih item yang kamu berikan dan yang kamu cari. Judul penawaran dibuat otomatis dari namamu dan itemnya.
+        </p>
 
         <div className="mt-3 grid gap-3 md:grid-cols-2">
           <SideEditor title="Saya Memberi" rows={give} setRows={setGive} onAdd={() => setPicker("offer")} total={sum(give)} />
@@ -203,15 +180,6 @@ function NewTradePage() {
         />
       )}
     </SiteLayout>
-  );
-}
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <label className="block">
-      <span className="mb-1 block text-[11px] font-bold uppercase tracking-widest text-muted-foreground">{label}</span>
-      {children}
-    </label>
   );
 }
 

@@ -74,7 +74,7 @@ function NotificationsPage() {
           <Loader2 className="mt-6 h-5 w-5 animate-spin text-primary" />
         ) : user === null ? (
           <p className="mt-4 rounded-2xl border border-border bg-card p-4 text-sm text-muted-foreground">
-            <Link to="/auth" className="font-bold text-primary">
+            <Link to="/login" className="font-bold text-primary">
               Masuk
             </Link>{" "}
             untuk melihat notifikasimu.

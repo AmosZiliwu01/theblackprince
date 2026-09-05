@@ -120,62 +120,79 @@ export function ItemPicker({
 
         {/* Body scroll */}
         {selected ? (
-          <div className="min-h-0 flex-1 overflow-y-auto p-3">
-            <div className="flex items-center gap-3 rounded-2xl border border-border bg-background p-3">
-              <img
-                src={selected.image_url ?? ""}
-                alt={selected.name}
-                className="h-16 w-16 shrink-0 rounded-xl bg-muted object-contain"
-                onError={(e) => ((e.currentTarget as HTMLImageElement).style.visibility = "hidden")}
-              />
-              <div className="min-w-0 text-xs">
-                <p className="text-sm font-black">{selected.name}</p>
-                <p className="text-muted-foreground">
-                  {KIND_LABEL[itemKind(selected)]} · Value {formatValue(variantValue(selected, variant))}
-                </p>
-                <p className="text-muted-foreground">
-                  Price {selected.price ? formatValue(selected.price) : "N/A"} · Demand{" "}
-                  {demandScore(selected) != null ? `${demandScore(selected)}/10` : (selected.demand ?? "N/A")} · Trend{" "}
-                  {selected.trend ?? "N/A"}
-                </p>
+          <div className="min-h-0 flex-1 overflow-y-auto p-3 sm:p-4">
+            <div className="mx-auto w-full max-w-xl space-y-4">
+              <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 rounded-2xl border border-border bg-background p-3">
+                <img
+                  src={selected.image_url ?? ""}
+                  alt={selected.name}
+                  className="h-16 w-16 shrink-0 rounded-xl bg-muted object-contain sm:h-20 sm:w-20"
+                  onError={(e) => ((e.currentTarget as HTMLImageElement).style.visibility = "hidden")}
+                />
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-black sm:text-base">{selected.name}</p>
+                  <p className="text-[11px] text-muted-foreground">{KIND_LABEL[itemKind(selected)]}</p>
+                  <div className="mt-1.5 flex flex-wrap gap-1">
+                    <Chip label="Value" value={formatValue(variantValue(selected, variant))} />
+                    <Chip
+                      label="Demand"
+                      value={demandScore(selected) != null ? `${demandScore(selected)}/10` : (selected.demand ?? "N/A")}
+                    />
+                    <Chip label="Trend" value={selected.trend ?? "N/A"} />
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <p className="mt-4 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
-              {itemKind(selected) === "fruit" ? "Fruit Type" : "Type"}
-            </p>
-            <div className="mt-1.5 flex flex-wrap gap-2">
-              {variants.map((v) => (
-                <button
-                  key={v}
-                  onClick={() => setVariant(v)}
-                  className={
-                    "rounded-xl border px-4 py-2 text-xs font-bold " +
-                    (variant === v ? "border-primary bg-primary/20 text-primary" : "border-border text-muted-foreground")
-                  }
-                >
-                  {VARIANT_LABEL[v]} · {formatValue(variantValue(selected, v))}
-                </button>
-              ))}
-            </div>
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {itemKind(selected) === "fruit" ? "Fruit Type" : "Type"}
+                </p>
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                  {variants.map((v) => (
+                    <button
+                      key={v}
+                      onClick={() => setVariant(v)}
+                      className={
+                        "rounded-2xl border px-3 py-2.5 text-left transition-colors " +
+                        (variant === v
+                          ? "border-primary bg-primary/15 text-primary"
+                          : "border-border text-muted-foreground hover:border-primary/40")
+                      }
+                    >
+                      <span className="block text-xs font-black">{VARIANT_LABEL[v]}</span>
+                      <span className="block text-[11px] opacity-80">{formatValue(variantValue(selected, v))}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-            <p className="mt-4 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Quantity</p>
-            <div className="mt-1.5 flex items-center gap-3">
-              <button
-                onClick={() => setQty((n) => Math.max(1, n - 1))}
-                className="rounded-xl border border-border p-2"
-                aria-label="Kurangi"
-              >
-                <Minus className="h-4 w-4" />
-              </button>
-              <span className="w-8 text-center font-black">{qty}</span>
-              <button
-                onClick={() => setQty((n) => Math.min(99, n + 1))}
-                className="rounded-xl border border-border p-2"
-                aria-label="Tambah"
-              >
-                <Plus className="h-4 w-4" />
-              </button>
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Quantity</p>
+                <div className="mt-2 flex items-center justify-between gap-3 rounded-2xl border border-border bg-background p-2">
+                  <button
+                    onClick={() => setQty((n) => Math.max(1, n - 1))}
+                    className="grid h-10 w-10 place-items-center rounded-xl border border-border hover:bg-accent"
+                    aria-label="Kurangi"
+                  >
+                    <Minus className="h-4 w-4" />
+                  </button>
+                  <span className="text-lg font-black">{qty}</span>
+                  <button
+                    onClick={() => setQty((n) => Math.min(99, n + 1))}
+                    className="grid h-10 w-10 place-items-center rounded-xl border border-border hover:bg-accent"
+                    aria-label="Tambah"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between rounded-2xl bg-muted/40 px-3 py-2 text-xs">
+                <span className="text-muted-foreground">Total value</span>
+                <span className="font-black text-primary">
+                  {formatValue((variantValue(selected, variant) ?? 0) * qty)}
+                </span>
+              </div>
             </div>
           </div>
         ) : (
@@ -217,5 +234,13 @@ export function ItemPicker({
         )}
       </div>
     </div>
+  );
+}
+
+function Chip({ label, value }: { label: string; value: string | number }) {
+  return (
+    <span className="rounded-full bg-muted/60 px-2 py-0.5 text-[10px] font-bold text-muted-foreground">
+      {label} <span className="text-foreground">{value}</span>
+    </span>
   );
 }
