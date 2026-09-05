@@ -23,13 +23,13 @@ import { websiteSettingsQO } from "@/lib/site-queries";
 import { NotificationBell } from "./notification-bell";
 
 
-// Mobile bottom nav: Home, Fruit, Joki, Akun, AI (no Cart — cart lives in header)
+// Mobile bottom nav: Home, Fruit, Joki, Akun, Trade (no Cart — cart lives in header)
 const nav = [
   { to: "/", label: "Home", icon: Home },
   { to: "/fruits", label: "Fruit", icon: Apple },
   { to: "/joki", label: "Joki", icon: Wrench },
   { to: "/accounts", label: "Akun", icon: UserCircle2 },
-  { to: "/chat", label: "AI", icon: MessageCircle },
+  { to: "/calculator-trade", label: "Trade", icon: ArrowLeftRight },
 ];
 
 // Desktop nav — single row, no duplicate AI Assistant/Chat AI entry
@@ -122,10 +122,10 @@ export function SiteLayout({ children }: { children: ReactNode }) {
               )}
             </Link>
             <Link
-              to="/chat"
+              to="/trade"
               className="hidden shrink-0 rounded-md gradient-primary px-3 py-1.5 text-sm font-semibold text-primary-foreground shadow-neon sm:inline-flex"
             >
-              Chat AI
+              Trade
             </Link>
           </div>
         </div>
