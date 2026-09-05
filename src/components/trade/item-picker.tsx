@@ -236,3 +236,11 @@ export function ItemPicker({
     </div>
   );
 }
+
+function Chip({ label, value }: { label: string; value: string | number }) {
+  return (
+    <span className="rounded-full bg-muted/60 px-2 py-0.5 text-[10px] font-bold text-muted-foreground">
+      {label} <span className="text-foreground">{value}</span>
+    </span>
+  );
+}
