@@ -1,307 +1,47 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
-import { useQuery } from "@tanstack/react-query";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { Send, Loader2, Bot, User, Crown, Sparkles } from "lucide-react";
-import { toast } from "sonner";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Wrench, MessageCircle } from "lucide-react";
 
 import { SiteLayout } from "@/components/site/site-layout";
-import { chatWithAssistant } from "@/lib/ai-chat.functions";
-import { aiSettingsQO, liveStatusQO, websiteSettingsQO } from "@/lib/site-queries";
-
-type Message = { role: "user" | "assistant"; content: string; ts: number };
-
-const SESSION_KEY_STORAGE = "tbp_chat_session";
-const HISTORY_STORAGE = "tbp_chat_history";
-
-function makeKey() {
-  return "sess_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
-}
 
 export const Route = createFileRoute("/chat")({
   head: () => ({
     meta: [
       { title: "Chat AI Admin — The Black Prince" },
-      { name: "description", content: "Chat langsung dengan Assistant Admin AI The Black Prince — tanya harga, stok, PS, giveaway, live." },
+      { name: "description", content: "Chat AI Admin The Black Prince sedang dalam perbaikan." },
       { property: "og:title", content: "AI Admin The Black Prince" },
-      { property: "og:description", content: "Chat AI 24/7 seputar Blox Fruits." },
+      { property: "og:description", content: "Chat AI Admin The Black Prince sedang dalam perbaikan." },
     ],
   }),
-  loader: ({ context }) => {
-    context.queryClient.ensureQueryData(aiSettingsQO);
-    context.queryClient.ensureQueryData(liveStatusQO);
-    context.queryClient.ensureQueryData(websiteSettingsQO);
-  },
   component: ChatPage,
 });
 
-const QUICK_PROMPTS = [
-  "Bang harga dough berapa?",
-  "Kitsune ready ga?",
-  "PS mana bang?",
-  "Link grup dong",
-  "Lagi live ga bang?",
-  "Ada giveaway?",
-  "Cara joki gimana?",
-  "Cara awaken buah?",
-];
-
-function AvatarMark({ logoUrl, size = "h-8 w-8" }: { logoUrl?: string | null; size?: string }) {
-  if (logoUrl) {
-    return (
-      <span className={`grid ${size} shrink-0 place-items-center overflow-hidden rounded-full gradient-primary`}>
-        <img
-          src={logoUrl}
-          alt="Admin"
-          className="h-full w-full object-cover"
-          onError={(e) => {
-            (e.currentTarget as HTMLImageElement).style.display = "none";
-          }}
-        />
-      </span>
-    );
-  }
-  return (
-    <span className={`grid ${size} shrink-0 place-items-center rounded-full gradient-primary text-primary-foreground`}>
-      <Crown className={size === "h-11 w-11" ? "h-5 w-5" : "h-4 w-4"} />
-    </span>
-  );
-}
-
 function ChatPage() {
-  const settings = useQuery(aiSettingsQO).data as any;
-  const live = useQuery(liveStatusQO).data as any;
-  const siteSettings = useQuery(websiteSettingsQO).data as any;
-  const chatFn = useServerFn(chatWithAssistant);
-  const logoUrl = siteSettings?.logo_url;
-
-  const [sessionKey] = useState(() => {
-    if (typeof window === "undefined") return makeKey();
-    const existing = localStorage.getItem(SESSION_KEY_STORAGE);
-    if (existing) return existing;
-    const k = makeKey();
-    localStorage.setItem(SESSION_KEY_STORAGE, k);
-    return k;
-  });
-
-  const [messages, setMessages] = useState<Message[]>(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const raw = localStorage.getItem(HISTORY_STORAGE);
-      if (raw) return JSON.parse(raw);
-    } catch {}
-    return [];
-  });
-
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const endRef = useRef<HTMLDivElement>(null);
-  const taRef = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(HISTORY_STORAGE, JSON.stringify(messages.slice(-40)));
-    } catch {}
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  useEffect(() => {
-    taRef.current?.focus();
-  }, []);
-
-  const greeting = useMemo(() => {
-    return settings?.greeting || "Halo bang! Aku Assistant Admin The Black Prince, ada yang bisa aku bantu?";
-  }, [settings]);
-
-  async function send(text?: string) {
-    const content = (text ?? input).trim();
-    if (!content || loading) return;
-    setInput("");
-    const newMessages: Message[] = [...messages, { role: "user", content, ts: Date.now() }];
-    setMessages(newMessages);
-    setLoading(true);
-    try {
-      const historyForApi = newMessages.slice(-16).map((m) => ({ role: m.role, content: m.content }));
-      const res = await chatFn({ data: { sessionKey, messages: historyForApi } });
-      if (!res.ok) {
-        toast.error(res.error);
-        setLoading(false);
-        return;
-      }
-      setMessages((prev) => [...prev, { role: "assistant", content: res.reply, ts: Date.now() }]);
-    } catch (err: any) {
-      console.error(err);
-      toast.error("Gagal kirim pesan. Coba lagi ya bang.");
-    } finally {
-      setLoading(false);
-      setTimeout(() => taRef.current?.focus(), 50);
-    }
-  }
-
-  function resetChat() {
-    setMessages([]);
-    localStorage.removeItem(HISTORY_STORAGE);
-    const k = makeKey();
-    localStorage.setItem(SESSION_KEY_STORAGE, k);
-    window.location.reload();
-  }
-
   return (
     <SiteLayout>
-      <div className="mx-auto flex h-[calc(100vh-10rem)] max-w-3xl flex-col px-3 py-3 md:h-[calc(100vh-8rem)]">
-        {/* Header */}
-        <div className="mb-3 flex items-center gap-3 rounded-2xl border border-border bg-card p-3">
-          <span className="relative">
-            <AvatarMark logoUrl={logoUrl} size="h-11 w-11" />
-            <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full border-2 border-card bg-emerald-400" />
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="font-black leading-tight">Assistant Admin</p>
-            <p className="text-xs text-muted-foreground">
-              {live?.is_live ? "🔴 Admin lagi live" : "Online · Membaca database realtime"}
-            </p>
-          </div>
-          <button
-            onClick={resetChat}
-            className="rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground"
+      <div className="mx-auto flex max-w-md flex-col items-center px-4 py-20 text-center">
+        <span className="grid h-16 w-16 place-items-center rounded-2xl gradient-primary shadow-neon">
+          <Wrench className="h-8 w-8 text-primary-foreground" />
+        </span>
+        <h1 className="mt-5 text-2xl font-black">Chat AI Lagi Perbaikan</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Assistant Admin AI sementara ditutup dulu ya bang, lagi kita perbaiki biar makin
+          akurat. Coba lagi nanti, atau langsung cek harga fruit, akun, dan trade di menu.
+        </p>
+        <div className="mt-6 flex flex-wrap justify-center gap-2">
+          <Link
+            to="/fruits"
+            className="inline-flex items-center gap-2 rounded-xl gradient-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-neon"
           >
-            Reset
-          </button>
-        </div>
-
-        {/* Messages */}
-        <div className="flex-1 space-y-3 overflow-y-auto rounded-2xl border border-border bg-card/40 p-3">
-          {messages.length === 0 && (
-            <div className="mx-auto max-w-md pt-6 text-center">
-              <span className="mx-auto mb-3 grid h-16 w-16 place-items-center rounded-2xl gradient-primary shadow-neon animate-pulse-neon overflow-hidden">
-                {logoUrl ? (
-                  <img
-                    src={logoUrl}
-                    alt="Admin"
-                    className="h-full w-full object-cover"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).style.display = "none";
-                    }}
-                  />
-                ) : (
-                  <Sparkles className="h-8 w-8 text-primary-foreground" />
-                )}
-              </span>
-              <p className="text-sm text-muted-foreground">{greeting}</p>
-              <div className="mt-4 grid grid-cols-2 gap-2">
-                {QUICK_PROMPTS.map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => send(p)}
-                    className="rounded-xl border border-border bg-background/80 px-3 py-2 text-left text-xs hover:border-primary/60"
-                  >
-                    {p}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {messages.map((m, i) => (
-            <MessageBubble key={i} message={m} logoUrl={logoUrl} />
-          ))}
-
-          {loading && (
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Bot className="h-4 w-4" />
-              <span className="inline-flex gap-1">
-                <span className="h-2 w-2 animate-bounce rounded-full bg-primary" style={{ animationDelay: "0ms" }} />
-                <span className="h-2 w-2 animate-bounce rounded-full bg-primary" style={{ animationDelay: "120ms" }} />
-                <span className="h-2 w-2 animate-bounce rounded-full bg-primary" style={{ animationDelay: "240ms" }} />
-              </span>
-              <span>Assistant lagi ngetik...</span>
-            </div>
-          )}
-          <div ref={endRef} />
-        </div>
-
-        {/* Composer */}
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            send();
-          }}
-          className="mt-3 flex items-end gap-2 rounded-2xl border border-border bg-card p-2"
-        >
-          <textarea
-            ref={taRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                send();
-              }
-            }}
-            rows={1}
-            maxLength={1000}
-            placeholder="Ketik pesan... (ex: bg dough ready ga?)"
-            className="min-h-[40px] max-h-32 flex-1 resize-none bg-transparent px-2 py-2 text-sm outline-none placeholder:text-muted-foreground"
-          />
-          <button
-            type="submit"
-            disabled={loading || !input.trim()}
-            className="grid h-10 w-10 shrink-0 place-items-center rounded-xl gradient-primary text-primary-foreground shadow-neon disabled:opacity-40"
+            Lihat Harga Fruit
+          </Link>
+          <Link
+            to="/community"
+            className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-5 py-2.5 text-sm font-semibold hover:bg-accent"
           >
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-          </button>
-        </form>
+            <MessageCircle className="h-4 w-4" /> Kontak Admin
+          </Link>
+        </div>
       </div>
     </SiteLayout>
-  );
-}
-
-function MessageBubble({ message, logoUrl }: { message: Message; logoUrl?: string | null }) {
-  const isUser = message.role === "user";
-  return (
-    <div className={"flex gap-2 " + (isUser ? "justify-end" : "justify-start")}>
-      {!isUser && <AvatarMark logoUrl={logoUrl} />}
-      <div
-        className={
-          "max-w-[80%] rounded-2xl px-3.5 py-2 text-sm leading-relaxed " +
-          (isUser
-            ? "gradient-primary text-primary-foreground shadow-neon"
-            : "border border-border bg-background/80")
-        }
-      >
-        {isUser ? (
-          <p className="whitespace-pre-wrap">{message.content}</p>
-        ) : (
-          <div
-            className="prose prose-invert prose-sm max-w-none
-              [&>*]:my-1.5 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0
-              [&_p]:my-1.5 [&_p]:leading-relaxed
-              [&_ul]:my-1.5 [&_ul]:pl-4 [&_ol]:my-1.5 [&_ol]:pl-4
-              [&_li]:my-0.5
-              [&_code]:rounded [&_code]:bg-black/40 [&_code]:px-1 [&_code]:py-0.5 [&_code]:text-xs
-              [&_pre]:my-1.5 [&_pre]:rounded-lg [&_pre]:bg-black/40 [&_pre]:p-2
-              [&_a]:text-primary [&_a]:underline [&_a]:break-all hover:[&_a]:opacity-80"
-          >
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={{
-                a: ({ node, ...props }) => (
-                  <a {...props} target="_blank" rel="noopener noreferrer" />
-                ),
-              }}
-            >
-              {message.content}
-            </ReactMarkdown>
-          </div>
-        )}
-      </div>
-      {isUser && (
-        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-muted text-muted-foreground">
-          <User className="h-4 w-4" />
-        </span>
-      )}
-    </div>
   );
 }
