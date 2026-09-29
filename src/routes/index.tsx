@@ -18,6 +18,7 @@ import {
 
 import { SiteLayout } from "@/components/site/site-layout";
 import { PriceTag } from "@/components/price-tag";
+import { AdminChatLink } from "@/components/site/admin-chat-link";
 import { priceWithPromo } from "@/lib/discount";
 import { ProductImage } from "@/components/product-image";
 import {
@@ -29,6 +30,14 @@ import {
 } from "@/lib/site-queries";
 
 export const Route = createFileRoute("/")({
+  head: () => ({ meta: [
+    { title: "The Black Prince — Blox Fruits Store & Trade" },
+    { name: "description", content: "Cari fruit, akun, jasa joki, promo, dan penawaran Trade Blox Fruits di The Black Prince." },
+    { property: "og:title", content: "The Black Prince — Blox Fruits Store & Trade" },
+    { property: "og:description", content: "Fruit, akun, joki, promo, dan Trade Blox Fruits dalam satu tempat." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary_large_image" },
+  ] }),
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(bannersQO);
     context.queryClient.ensureQueryData(fruitsQO);
@@ -44,7 +53,7 @@ const quickMenu = [
   { to: "/joki", label: "Jasa Joki", icon: Wrench, color: "from-orange-500/40 to-red-600/40" },
   { to: "/accounts", label: "Harga Akun", icon: UserCircle2, color: "from-orange-500/40 to-red-600/40" },
   { to: "/community", label: "Link", icon: Users, color: "from-orange-500/40 to-red-600/40" },
-  { to: "/calculator-trade", label: "Calculator Trade", icon: ArrowLeftRight, color: "from-orange-500/40 to-red-600/40" },
+  { to: "/trade", label: "Trade", icon: ArrowLeftRight, color: "from-orange-500/40 to-red-600/40" },
   { to: "/giveaway", label: "Giveaway", icon: Gift, color: "from-orange-500/40 to-red-600/40" },
   { to: "/events", label: "Event", icon: CalendarRange, color: "from-orange-500/40 to-red-600/40" },
   { to: "/faq", label: "FAQ", icon: HelpCircle, color: "from-orange-500/40 to-red-600/40" },
@@ -69,7 +78,7 @@ function HomePage() {
       <section className="relative overflow-hidden gradient-hero">
         <div className="mx-auto max-w-6xl px-4 pb-10 pt-8 md:pt-16">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-            <Sparkles className="h-3.5 w-3.5" /> ASSISTANT ADMIN AI · 24/7
+             <MessageCircle className="h-3.5 w-3.5" /> CHAT ADMIN
           </div>
           <h1 className="text-4xl font-black leading-tight tracking-tight md:text-6xl">
             <span className="block">Blox Fruits</span>
@@ -84,12 +93,11 @@ function HomePage() {
           />
 
           <div className="mt-6 flex flex-wrap gap-2">
-            <Link
-              to="/chat"
+             <AdminChatLink
               className="inline-flex items-center gap-2 rounded-xl gradient-primary px-5 py-3 text-sm font-bold text-primary-foreground shadow-neon animate-pulse-neon"
             >
-              <MessageCircle className="h-4 w-4" /> Chat AI Admin
-            </Link>
+               <MessageCircle className="h-4 w-4" /> Chat Admin
+             </AdminChatLink>
             <Link
               to="/fruits"
               className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-5 py-3 text-sm font-semibold hover:bg-accent"
@@ -241,20 +249,18 @@ function HomePage() {
 
       {/* AI CTA */}
       <section className="mx-auto max-w-6xl px-4 pb-10">
-        <Link
-          to="/chat"
+         <AdminChatLink
           className="flex items-center gap-4 rounded-2xl border border-primary/40 gradient-primary p-5 shadow-neon"
         >
           <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-background/20 backdrop-blur">
             <Zap className="h-7 w-7 text-primary-foreground" />
           </span>
           <div className="min-w-0 flex-1 text-primary-foreground">
-            <p className="text-xs font-bold uppercase opacity-90">Assistant Admin AI</p>
-            <p className="text-lg font-black">Tanya apa aja, jawab realtime sesuai data</p>
-            <p className="text-xs opacity-90">Harga · Stok · PS · Trade · Giveaway · Event · FAQ</p>
+             <p className="text-xs font-bold uppercase opacity-90">WhatsApp Admin</p>
+             <p className="text-lg font-black">Chat langsung dengan admin</p>
           </div>
           <Crown className="hidden h-10 w-10 text-primary-foreground/70 md:block" />
-        </Link>
+         </AdminChatLink>
       </section>
     </SiteLayout>
   );

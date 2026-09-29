@@ -4,9 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowLeftRight, Loader2, Plus, Search } from "lucide-react";
 import { SiteLayout } from "@/components/site/site-layout";
 import { TradeNav } from "@/components/trade/trade-nav";
-import { activeOffersQO, myOffersQO, STATUS_LABEL, type TradeOffer } from "@/lib/trade-offers";
+import { activeOffersQO, STATUS_LABEL, type TradeOffer } from "@/lib/trade-offers";
 import { formatValue } from "@/lib/trade";
-import { useAuthUser } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/trade/")({
   head: () => ({
@@ -29,23 +28,19 @@ export const Route = createFileRoute("/trade/")({
 const PAGE = 12;
 
 function TradeListPage() {
-  const user = useAuthUser();
   const { data: offers = [], isLoading, error } = useQuery(activeOffersQO);
-  const { data: mine = [] } = useQuery(myOffersQO(user?.id));
   const [q, setQ] = useState("");
   const [page, setPage] = useState(1);
-  const [tab, setTab] = useState<"all" | "mine">("all");
 
-  const base = tab === "mine" ? mine : offers;
   const list = useMemo(() => {
     const t = q.trim().toLowerCase();
-    if (!t) return base;
-    return base.filter(
+    if (!t) return offers;
+    return offers.filter(
       (o) =>
         o.title.toLowerCase().includes(t) ||
         (o.items ?? []).some((i) => i.item_name.toLowerCase().includes(t)),
     );
-  }, [base, q]);
+  }, [offers, q]);
 
   const shown = list.slice(0, page * PAGE);
 
@@ -53,7 +48,7 @@ function TradeListPage() {
     <SiteLayout>
       <section className="mx-auto max-w-5xl px-4 py-6">
         <TradeNav />
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:flex">
           <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl gradient-primary shadow-neon">
             <ArrowLeftRight className="h-5 w-5 text-primary-foreground" />
           </span>
@@ -61,35 +56,16 @@ function TradeListPage() {
             <h1 className="text-2xl font-black leading-tight md:text-3xl">
               <span className="text-gradient">Trade</span> Blox Fruits
             </h1>
-            <p className="text-xs text-muted-foreground">Penawaran trade dari komunitas. Chat langsung dengan pemilik.</p>
           </div>
           <Link
             to="/trade/new"
-            className="inline-flex shrink-0 items-center gap-1 rounded-xl gradient-primary px-3 py-2 text-sm font-black text-primary-foreground shadow-neon"
+            className="col-span-2 inline-flex items-center justify-center gap-1 rounded-xl gradient-primary px-3 py-2 text-sm font-black text-primary-foreground shadow-neon sm:col-span-1 sm:ml-auto"
           >
             <Plus className="h-4 w-4" /> Buat Trade
           </Link>
         </div>
 
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          {(["all", "mine"] as const).map((t) => (
-            <button
-              key={t}
-              onClick={() => {
-                setTab(t);
-                setPage(1);
-              }}
-              className={
-                "rounded-full border px-3 py-1 text-xs font-bold " +
-                (tab === t ? "border-primary bg-primary/20 text-primary" : "border-border text-muted-foreground")
-              }
-            >
-              {t === "all" ? "Semua Penawaran" : "Trade Saya"}
-            </button>
-          ))}
-        </div>
-
-        <div className="relative mt-3">
+        <div className="relative mt-4">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             value={q}
@@ -101,15 +77,6 @@ function TradeListPage() {
             className="w-full rounded-xl border border-border bg-background py-2 pl-9 pr-3 text-sm outline-none focus:border-primary/60"
           />
         </div>
-
-        {tab === "mine" && user === null && (
-          <p className="mt-4 rounded-2xl border border-border bg-card p-4 text-sm text-muted-foreground">
-            <Link to="/login" className="font-bold text-primary">
-              Masuk
-            </Link>{" "}
-            untuk melihat trade milikmu.
-          </p>
-        )}
 
         {isLoading ? (
           <Loader2 className="mt-6 h-5 w-5 animate-spin text-primary" />

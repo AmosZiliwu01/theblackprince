@@ -11,7 +11,6 @@ import {
   Gift,
   CalendarRange,
   HelpCircle,
-  MessageCircle,
   Crown,
   ShoppingCart,
 } from "lucide-react";
@@ -29,7 +28,7 @@ const nav = [
   { to: "/fruits", label: "Fruit", icon: Apple },
   { to: "/joki", label: "Joki", icon: Wrench },
   { to: "/accounts", label: "Akun", icon: UserCircle2 },
-  { to: "/calculator-trade", label: "Trade", icon: ArrowLeftRight },
+  { to: "/trade", label: "Trade", icon: ArrowLeftRight },
 ];
 
 // Desktop nav — single row, no duplicate AI Assistant/Chat AI entry
@@ -38,7 +37,7 @@ const drawerLinks = [
   { to: "/joki", label: "Jasa Joki", icon: Wrench },
   { to: "/accounts", label: "Harga Akun", icon: UserCircle2 },
   { to: "/community", label: "Link", icon: Users },
-  { to: "/calculator-trade", label: "Trade", icon: ArrowLeftRight },
+  { to: "/trade", label: "Trade", icon: ArrowLeftRight },
   { to: "/giveaway", label: "Giveaway", icon: Gift },
   { to: "/events", label: "Event", icon: CalendarRange },
   { to: "/faq", label: "FAQ", icon: HelpCircle },
@@ -89,7 +88,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           </Link>
           <nav className="ml-2 hidden min-w-0 flex-1 items-center gap-0.5 overflow-x-auto whitespace-nowrap lg:flex">
             {drawerLinks.map((l) => {
-              const active = pathname === l.to;
+               const active = pathname === l.to || (l.to === "/trade" && (pathname.startsWith("/trade") || pathname === "/calculator-trade"));
               return (
                 <Link
                   key={l.to}
@@ -148,7 +147,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border/70 bg-background/95 backdrop-blur-lg md:hidden">
         <div className="mx-auto grid max-w-md grid-cols-5">
           {nav.map((l) => {
-            const active = pathname === l.to;
+             const active = pathname === l.to || (l.to === "/trade" && (pathname.startsWith("/trade") || pathname === "/calculator-trade"));
             const Icon = l.icon;
             return (
               <Link

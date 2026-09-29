@@ -121,11 +121,12 @@ export function bestDiscountPercent(
   return p ? Number(p.discount_percent) : 0;
 }
 
-/** Potong harga RUPIAH — dibulatkan ke rupiah bulat terdekat. */
+/** Harga promo Rupiah naik ke kelipatan Rp500; produk Rp1.000 tidak didiskon. */
 export function discountedRp(price: number, percent: number): number {
   const base = Number(price ?? 0);
-  if (!percent || percent <= 0) return base;
-  return Math.max(0, Math.round(base * (1 - percent / 100)));
+  if (!percent || percent <= 0 || base <= 1000) return base;
+  const floor = base <= 2000 ? 1500 : 0;
+  return Math.min(base, Math.max(floor, Math.ceil(base * (1 - percent / 100) / 500) * 500));
 }
 
 /** Potong harga RM — dibulatkan ke SEN terdekat (2 desimal), bukan bilangan bulat. */
@@ -155,11 +156,13 @@ export function priceWithPromo(
   now: Date = new Date(),
 ): PricedResult {
   const promo = findBestPromo(promos, target, now);
-  const percent = promo ? Number(promo.discount_percent) : 0;
+  const offeredPercent = promo ? Number(promo.discount_percent) : 0;
+  const finalPrice = discountedRp(price, offeredPercent);
+  const percent = finalPrice < Number(price ?? 0) ? offeredPercent : 0;
   return {
     percent,
-    promo,
-    price: discountedRp(price, percent),
+    promo: percent ? promo : null,
+    price: finalPrice,
     priceRm: discountedRm(priceRm ?? null, percent),
     originalPrice: Number(price ?? 0),
     originalPriceRm: priceRm ?? null,
