@@ -7,7 +7,7 @@ const INACTIVE = { className: "border-border text-muted-foreground hover:text-fo
 /** Sub-navigasi fitur Trade. */
 export function TradeNav() {
   return (
-    <nav className="mb-4 flex flex-wrap items-center gap-1.5">
+    <nav className="mb-4 flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-1">
       <Link to="/calculator-trade" activeOptions={{ exact: true }} activeProps={ACTIVE} inactiveProps={INACTIVE} className={CLS}>
         Calculator Trade
       </Link>
