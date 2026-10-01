@@ -96,8 +96,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "The Black Prince — Blox Fruits Shop, Joki & Community" },
       { name: "twitter:description", content: "Marketplace Blox Fruits terpercaya: jual fruit, akun, jasa joki, komunitas, event, giveaway & trade calculator. Chat AI Admin 24/7." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/znHrrt2eK0MlZ2wdnYxx2MNZCD63/social-images/social-1783953747362-WhatsApp_Image_2026-07-10_at_09.30.02.webp" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/znHrrt2eK0MlZ2wdnYxx2MNZCD63/social-images/social-1783953747362-WhatsApp_Image_2026-07-10_at_09.30.02.webp" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

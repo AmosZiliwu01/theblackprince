@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as StoreRouteImport } from './routes/store'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as LoginRouteImport } from './routes/login'
@@ -51,6 +52,11 @@ import { Route as AuthenticatedAdminAnnouncementsRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminAiSettingsRouteImport } from './routes/_authenticated/admin/ai-settings'
 import { Route as AuthenticatedAdminAccountsRouteImport } from './routes/_authenticated/admin/accounts'
 
+const StoreRoute = StoreRouteImport.update({
+  id: '/store',
+  path: '/store',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -281,6 +287,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/store': typeof StoreRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/accounts/$id': typeof AccountsIdRoute
   '/fruits/$id': typeof FruitsIdRoute
@@ -323,6 +330,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/store': typeof StoreRoute
   '/accounts/$id': typeof AccountsIdRoute
   '/fruits/$id': typeof FruitsIdRoute
   '/joki/$id': typeof JokiIdRoute
@@ -366,6 +374,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/store': typeof StoreRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/accounts/$id': typeof AccountsIdRoute
   '/fruits/$id': typeof FruitsIdRoute
@@ -410,6 +419,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/notifications'
     | '/sitemap.xml'
+    | '/store'
     | '/admin'
     | '/accounts/$id'
     | '/fruits/$id'
@@ -452,6 +462,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/notifications'
     | '/sitemap.xml'
+    | '/store'
     | '/accounts/$id'
     | '/fruits/$id'
     | '/joki/$id'
@@ -494,6 +505,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/notifications'
     | '/sitemap.xml'
+    | '/store'
     | '/_authenticated/admin'
     | '/accounts/$id'
     | '/fruits/$id'
@@ -538,6 +550,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   NotificationsRoute: typeof NotificationsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  StoreRoute: typeof StoreRoute
   AccountsIdRoute: typeof AccountsIdRoute
   FruitsIdRoute: typeof FruitsIdRoute
   JokiIdRoute: typeof JokiIdRoute
@@ -552,6 +565,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/store': {
+      id: '/store'
+      path: '/store'
+      fullPath: '/store'
+      preLoaderRoute: typeof StoreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -912,6 +932,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   NotificationsRoute: NotificationsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  StoreRoute: StoreRoute,
   AccountsIdRoute: AccountsIdRoute,
   FruitsIdRoute: FruitsIdRoute,
   JokiIdRoute: JokiIdRoute,

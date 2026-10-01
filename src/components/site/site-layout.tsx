@@ -24,7 +24,7 @@ import { NotificationBell } from "./notification-bell";
 
 // Mobile bottom nav: Home, Fruit, Joki, Akun, Trade (no Cart — cart lives in header)
 const nav = [
-  { to: "/", label: "Home", icon: Home },
+  { to: "/store", label: "Toko", icon: Home },
   { to: "/fruits", label: "Fruit", icon: Apple },
   { to: "/joki", label: "Joki", icon: Wrench },
   { to: "/accounts", label: "Akun", icon: UserCircle2 },
@@ -80,7 +80,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       <PromoToast />
       <header className="sticky top-0 z-40 border-b border-border/70 bg-background/80 backdrop-blur-lg">
         <div className="mx-auto flex h-14 max-w-6xl items-center gap-2 px-4">
-          <Link to="/" className="flex min-w-0 shrink-0 items-center gap-2 font-black tracking-tight">
+          <Link to="/store" className="flex min-w-0 shrink-0 items-center gap-2 font-black tracking-tight">
             <LogoMark logoUrl={settings?.logo_url} />
             <span className="truncate text-sm leading-none sm:text-lg">
               THE <span className="text-gradient">BLACK PRINCE <br></br> STORE</span>
