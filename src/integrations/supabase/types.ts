@@ -213,8 +213,11 @@ export type Database = {
         Row: {
           active: boolean
           created_at: string
+          description: string | null
           id: string
           label: string
+          link_group: string
+          note: string | null
           platform: string
           sort_order: number
           updated_at: string
@@ -223,8 +226,11 @@ export type Database = {
         Insert: {
           active?: boolean
           created_at?: string
+          description?: string | null
           id?: string
           label: string
+          link_group?: string
+          note?: string | null
           platform: string
           sort_order?: number
           updated_at?: string
@@ -233,8 +239,11 @@ export type Database = {
         Update: {
           active?: boolean
           created_at?: string
+          description?: string | null
           id?: string
           label?: string
+          link_group?: string
+          note?: string | null
           platform?: string
           sort_order?: number
           updated_at?: string
