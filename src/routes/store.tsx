@@ -1,0 +1,267 @@
+import { DescriptionRenderer } from "@/components/site/description";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import {
+  Apple,
+  Wrench,
+  UserCircle2,
+  Users,
+  ArrowLeftRight,
+  Gift,
+  CalendarRange,
+  HelpCircle,
+  MessageCircle,
+  Sparkles,
+  Zap,
+  Crown,
+} from "lucide-react";
+
+import { SiteLayout } from "@/components/site/site-layout";
+import { PriceTag } from "@/components/price-tag";
+import { AdminChatLink } from "@/components/site/admin-chat-link";
+import { priceWithPromo } from "@/lib/discount";
+import { ProductImage } from "@/components/product-image";
+import {
+  bannersQO,
+  fruitsQO,
+  jokiQO,
+  giveawaysQO,
+  promotionsQO,
+} from "@/lib/site-queries";
+
+export const Route = createFileRoute("/store")({
+  head: () => ({ meta: [
+    { title: "Toko Blox Fruits — The Black Prince" },
+    { name: "description", content: "Belanja fruit, akun, jasa joki, dan temukan promo Blox Fruits terbaru di The Black Prince." },
+    { property: "og:title", content: "Toko Blox Fruits — The Black Prince" },
+    { property: "og:description", content: "Jelajahi fruit, akun, jasa joki, dan promo di toko The Black Prince." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary_large_image" },
+  ] }),
+  loader: ({ context }) => {
+    context.queryClient.ensureQueryData(bannersQO);
+    context.queryClient.ensureQueryData(fruitsQO);
+    context.queryClient.ensureQueryData(jokiQO);
+    context.queryClient.ensureQueryData(giveawaysQO);
+    context.queryClient.ensureQueryData(promotionsQO);
+  },
+  component: HomePage,
+});
+
+const quickMenu = [
+  { to: "/fruits", label: "Harga Fruit", icon: Apple, color: "from-orange-500/40 to-red-600/40" },
+  { to: "/joki", label: "Jasa Joki", icon: Wrench, color: "from-orange-500/40 to-red-600/40" },
+  { to: "/accounts", label: "Harga Akun", icon: UserCircle2, color: "from-orange-500/40 to-red-600/40" },
+  { to: "/community", label: "Link", icon: Users, color: "from-orange-500/40 to-red-600/40" },
+  { to: "/trade", label: "Trade", icon: ArrowLeftRight, color: "from-orange-500/40 to-red-600/40" },
+  { to: "/giveaway", label: "Giveaway", icon: Gift, color: "from-orange-500/40 to-red-600/40" },
+  { to: "/events", label: "Event", icon: CalendarRange, color: "from-orange-500/40 to-red-600/40" },
+  { to: "/faq", label: "FAQ", icon: HelpCircle, color: "from-orange-500/40 to-red-600/40" },
+] as const;
+
+function HomePage() {
+  const banners = useQuery(bannersQO).data ?? [];
+  const fruits = useQuery(fruitsQO).data ?? [];
+  const joki = useQuery(jokiQO).data ?? [];
+  const giveaways = (useQuery(giveawaysQO).data ?? []).filter((g: any) => g.active);
+
+  const hero =
+    banners.find((b: any) => b.type === "hero" && b.active) ||
+    banners.find((b: any) => b.type === "promo" && b.active);
+  const promos = (useQuery(promotionsQO).data ?? []) as any;
+  const featuredFruits = fruits.filter((f: any) => f.ready).slice(0, 6);
+  const featuredJoki = joki.filter((j: any) => j.active).slice(0, 4);
+
+  return (
+    <SiteLayout>
+      {/* HERO */}
+      <section className="relative overflow-hidden gradient-hero">
+        <div className="mx-auto max-w-6xl px-4 pb-10 pt-8 md:pt-16">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+             <MessageCircle className="h-3.5 w-3.5" /> CHAT ADMIN
+          </div>
+          <h1 className="text-4xl font-black leading-tight tracking-tight md:text-6xl">
+            <span className="block">Blox Fruits</span>
+            <span className="text-gradient">Marketplace #1</span>
+          </h1>
+          <DescriptionRenderer
+            text={
+              hero?.subtitle ??
+              "Jual Fruit, Akun, Jasa Joki, Calculator Trade, Komunitas & Giveaway. Semua di The Black Prince."
+            }
+            className="mt-3 max-w-xl text-muted-foreground"
+          />
+
+          <div className="mt-6 flex flex-wrap gap-2">
+             <AdminChatLink
+              className="inline-flex items-center gap-2 rounded-xl gradient-primary px-5 py-3 text-sm font-bold text-primary-foreground shadow-neon animate-pulse-neon"
+            >
+               <MessageCircle className="h-4 w-4" /> Chat Admin
+             </AdminChatLink>
+            <Link
+              to="/fruits"
+              className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-5 py-3 text-sm font-semibold hover:bg-accent"
+            >
+              <Apple className="h-4 w-4" /> Lihat Fruit
+            </Link>
+          </div>
+
+        </div>
+      </section>
+
+      {/* QUICK MENU */}
+      <section className="mx-auto max-w-6xl px-4 py-6">
+        <h2 className="mb-3 text-sm font-bold uppercase tracking-widest text-muted-foreground">Quick Menu</h2>
+        <div className="grid grid-cols-4 gap-2 sm:grid-cols-4 md:grid-cols-8">
+          {quickMenu.map((q) => {
+            const Icon = q.icon;
+            return (
+              <Link
+                key={q.to}
+                to={q.to}
+                className="group flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3 text-center transition hover:-translate-y-0.5 hover:border-primary/60 hover:shadow-neon"
+              >
+                <span
+                  className={
+                    "grid h-11 w-11 place-items-center rounded-lg bg-gradient-to-br " +
+                    q.color +
+                    " ring-1 ring-inset ring-white/10"
+                  }
+                >
+                  <Icon className="h-5 w-5 text-primary-foreground" />
+                </span>
+                <span className="text-[11px] font-medium leading-tight">{q.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* GIVEAWAY BANNER */}
+      {giveaways.length > 0 && (
+        <section className="mx-auto max-w-6xl px-4 pb-2">
+          <Link
+            to="/giveaway"
+            className="flex items-center gap-4 rounded-2xl border border-primary/40 bg-gradient-to-r from-primary/20 to-secondary/20 p-4"
+          >
+            <Gift className="h-8 w-8 shrink-0 text-primary" />
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-bold uppercase text-primary">Giveaway Aktif</p>
+              <p className="truncate text-sm font-semibold">{giveaways[0].name}</p>
+              <p className="truncate text-xs text-muted-foreground">Hadiah: {giveaways[0].prize}</p>
+            </div>
+            <span className="rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">
+              Ikut
+            </span>
+          </Link>
+        </section>
+      )}
+
+      {/* FEATURED FRUITS */}
+      <section className="mx-auto max-w-6xl px-4 py-6">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-lg font-bold">🔥 Fruit Ready</h2>
+          <Link to="/fruits" className="text-xs font-semibold text-primary hover:underline">
+            Lihat semua →
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
+          {featuredFruits.map((f: any) => (
+            <Link
+              to="/fruits/$id"
+              params={{ id: f.id }}
+              key={f.id}
+              className="group overflow-hidden rounded-xl border border-border bg-card transition hover:border-primary/60 hover:shadow-neon"
+            >
+              <ProductImage
+                src={f.image_url}
+                alt={f.alt_text || f.name}
+                kind="fruit"
+                ratio="square"
+                className="rounded-none"
+              />
+              <div className="p-2.5">
+                <p className="truncate text-sm font-bold">{f.name}</p>
+                <p className="text-[11px] uppercase text-muted-foreground">{f.category}</p>
+                {(() => {
+                  const pr = priceWithPromo(promos, { id: f.id, kind: "fruit", category: f.category }, Number(f.price), f.price_rm != null ? Number(f.price_rm) : null);
+                  return (
+                    <PriceTag
+                      className="mt-1"
+                      price={pr.price}
+                      priceRm={pr.priceRm}
+                      originalPrice={pr.originalPrice}
+                      originalPriceRm={pr.originalPriceRm}
+                      percent={pr.percent}
+                    />
+                  );
+                })()}
+                <p className="text-[11px] text-muted-foreground">
+                  {f.stock > 0 ? `Stok: ${f.stock}` : "PO 1-3 hari"}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* FEATURED JOKI */}
+      <section className="mx-auto max-w-6xl px-4 pb-10">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-lg font-bold">⚡ Jasa Joki Populer</h2>
+          <Link to="/joki" className="text-xs font-semibold text-primary hover:underline">
+            Lihat semua →
+          </Link>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {featuredJoki.map((j: any) => (
+            <Link
+              to="/joki/$id"
+              params={{ id: j.id }}
+              key={j.id}
+              className="flex items-start gap-3 rounded-xl border border-border bg-card p-4 transition hover:border-primary/60 hover:shadow-neon"
+            >
+              <div className="w-16 shrink-0">
+                <ProductImage src={j.image_url} alt={j.alt_text || j.name} kind="joki" ratio="square" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="font-bold">{j.name}</p>
+                <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{j.description}</p>
+                <p className="mt-2 text-xs text-muted-foreground">Estimasi: {j.estimation}</p>
+              </div>
+              {(() => {
+                const pr = priceWithPromo(promos, { id: j.id, kind: "joki", category: j.category }, Number(j.price), j.price_rm != null ? Number(j.price_rm) : null);
+                return (
+                  <PriceTag
+                    className="shrink-0 justify-end text-right"
+                    price={pr.price}
+                    priceRm={pr.priceRm}
+                    originalPrice={pr.originalPrice}
+                    originalPriceRm={pr.originalPriceRm}
+                    percent={pr.percent}
+                  />
+                );
+              })()}
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* AI CTA */}
+      <section className="mx-auto max-w-6xl px-4 pb-10">
+         <AdminChatLink
+          className="flex items-center gap-4 rounded-2xl border border-primary/40 gradient-primary p-5 shadow-neon"
+        >
+          <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-background/20 backdrop-blur">
+            <Zap className="h-7 w-7 text-primary-foreground" />
+          </span>
+          <div className="min-w-0 flex-1 text-primary-foreground">
+             <p className="text-xs font-bold uppercase opacity-90">WhatsApp Admin</p>
+             <p className="text-lg font-black">Chat langsung dengan admin</p>
+          </div>
+          <Crown className="hidden h-10 w-10 text-primary-foreground/70 md:block" />
+         </AdminChatLink>
+      </section>
+    </SiteLayout>
+  );
+}
