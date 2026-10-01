@@ -1,5 +1,5 @@
 - [ ] Ringkas navigasi dan tampilan penawaran Trade; gunakan grid item pada pembuatan dan detail.
-- [ ] Ganti Chat AI menjadi pintasan WhatsApp admin dari nomor toko.
+- [x] Ganti Chat AI menjadi pintasan WhatsApp admin dari nomor toko.
 - [ ] Permudah identitas Trade melalui pop-up aman dan sesi tersimpan.
-- [ ] Bulatkan harga diskon Rupiah sesuai aturan minimum; periksa hasil di halaman.
+- [x] Bulatkan harga diskon Rupiah sesuai aturan minimum; periksa hasil di halaman.
 - [x] Tampilkan semua link resmi pada halaman pertama sesuai contoh; pindahkan toko ke /store dan sediakan judul, deskripsi, catatan, serta kelompok link di admin.
