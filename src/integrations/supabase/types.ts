@@ -476,6 +476,33 @@ export type Database = {
         }
         Relationships: []
       }
+      link_groups: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          name: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          name: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          name?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       live_status: {
         Row: {
           ai_message: string | null
@@ -747,6 +774,38 @@ export type Database = {
           },
         ]
       }
+      trade_offer_contacts: {
+        Row: {
+          created_at: string
+          offer_id: string
+          owner_id: string
+          updated_at: string
+          whatsapp_number: string
+        }
+        Insert: {
+          created_at?: string
+          offer_id: string
+          owner_id: string
+          updated_at?: string
+          whatsapp_number: string
+        }
+        Update: {
+          created_at?: string
+          offer_id?: string
+          owner_id?: string
+          updated_at?: string
+          whatsapp_number?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trade_offer_contacts_offer_id_fkey"
+            columns: ["offer_id"]
+            isOneToOne: true
+            referencedRelation: "trade_offers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       trade_offer_items: {
         Row: {
           created_at: string
@@ -865,7 +924,13 @@ export type Database = {
         Row: {
           id: number
           logo_url: string | null
+          payment_enabled: boolean
+          payment_note: string | null
+          payment_qris_url: string | null
+          payment_wallet_number: string | null
           site_name: string
+          store_cta_description: string
+          store_cta_title: string
           tagline: string
           updated_at: string
           whatsapp_greeting: string | null
@@ -874,7 +939,13 @@ export type Database = {
         Insert: {
           id?: number
           logo_url?: string | null
+          payment_enabled?: boolean
+          payment_note?: string | null
+          payment_qris_url?: string | null
+          payment_wallet_number?: string | null
           site_name?: string
+          store_cta_description?: string
+          store_cta_title?: string
           tagline?: string
           updated_at?: string
           whatsapp_greeting?: string | null
@@ -883,7 +954,13 @@ export type Database = {
         Update: {
           id?: number
           logo_url?: string | null
+          payment_enabled?: boolean
+          payment_note?: string | null
+          payment_qris_url?: string | null
+          payment_wallet_number?: string | null
           site_name?: string
+          store_cta_description?: string
+          store_cta_title?: string
           tagline?: string
           updated_at?: string
           whatsapp_greeting?: string | null

@@ -3,3 +3,6 @@
 - [ ] Permudah identitas Trade melalui pop-up aman dan sesi tersimpan.
 - [x] Bulatkan harga diskon Rupiah sesuai aturan minimum; periksa hasil di halaman.
 - [x] Tampilkan semua link resmi pada halaman pertama sesuai contoh; pindahkan toko ke /store dan sediakan judul, deskripsi, catatan, serta kelompok link di admin.
+- [ ] Kelompok tautan bisa ditambah/diedit; judul dan keterangan tombol toko dapat diatur admin.
+- [ ] Sediakan pembayaran QRIS dan satu nomor DANA/GoPay yang opsional di halaman utama.
+- [ ] Trade: perbaiki tata letak ponsel, kontak WA pemilik tersembunyi, dan chat situs untuk peminat.
