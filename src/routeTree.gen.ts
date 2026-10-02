@@ -9,107 +9,56 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as StoreRouteImport } from './routes/store'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as NotificationsRouteImport } from './routes/notifications'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as GiveawayRouteImport } from './routes/giveaway'
-import { Route as FaqRouteImport } from './routes/faq'
-import { Route as EventsRouteImport } from './routes/events'
-import { Route as CommunityRouteImport } from './routes/community'
-import { Route as CheckoutRouteImport } from './routes/checkout'
-import { Route as ChatRouteImport } from './routes/chat'
-import { Route as CartRouteImport } from './routes/cart'
-import { Route as CalculatorTradeRouteImport } from './routes/calculator-trade'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as TradeIndexRouteImport } from './routes/trade/index'
-import { Route as JokiIndexRouteImport } from './routes/joki/index'
-import { Route as FruitsIndexRouteImport } from './routes/fruits/index'
-import { Route as AccountsIndexRouteImport } from './routes/accounts/index'
-import { Route as TradeNewRouteImport } from './routes/trade/new'
-import { Route as TradeMineRouteImport } from './routes/trade/mine'
-import { Route as TradeIdRouteImport } from './routes/trade/$id'
-import { Route as JokiIdRouteImport } from './routes/joki/$id'
-import { Route as FruitsIdRouteImport } from './routes/fruits/$id'
-import { Route as AccountsIdRouteImport } from './routes/accounts/$id'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CalculatorTradeRouteImport } from './routes/calculator-trade'
+import { Route as CartRouteImport } from './routes/cart'
+import { Route as ChatRouteImport } from './routes/chat'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as CommunityRouteImport } from './routes/community'
+import { Route as EventsRouteImport } from './routes/events'
+import { Route as FaqRouteImport } from './routes/faq'
+import { Route as GiveawayRouteImport } from './routes/giveaway'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as StoreRouteImport } from './routes/store'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
+import { Route as AccountsIndexRouteImport } from './routes/accounts/index'
+import { Route as AccountsIdRouteImport } from './routes/accounts/$id'
+import { Route as FruitsIndexRouteImport } from './routes/fruits/index'
+import { Route as FruitsIdRouteImport } from './routes/fruits/$id'
+import { Route as JokiIndexRouteImport } from './routes/joki/index'
+import { Route as JokiIdRouteImport } from './routes/joki/$id'
+import { Route as TradeIndexRouteImport } from './routes/trade/index'
+import { Route as TradeIdRouteImport } from './routes/trade/$id'
+import { Route as TradeMineRouteImport } from './routes/trade/mine'
+import { Route as TradeNewRouteImport } from './routes/trade/new'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
-import { Route as AuthenticatedAdminWebsiteRouteImport } from './routes/_authenticated/admin/website'
-import { Route as AuthenticatedAdminTradeRouteImport } from './routes/_authenticated/admin/trade'
-import { Route as AuthenticatedAdminPromotionsRouteImport } from './routes/_authenticated/admin/promotions'
-import { Route as AuthenticatedAdminJokiRouteImport } from './routes/_authenticated/admin/joki'
-import { Route as AuthenticatedAdminGiveawaysRouteImport } from './routes/_authenticated/admin/giveaways'
-import { Route as AuthenticatedAdminFruitsRouteImport } from './routes/_authenticated/admin/fruits'
-import { Route as AuthenticatedAdminFaqsRouteImport } from './routes/_authenticated/admin/faqs'
-import { Route as AuthenticatedAdminEventsRouteImport } from './routes/_authenticated/admin/events'
-import { Route as AuthenticatedAdminCommunityRouteImport } from './routes/_authenticated/admin/community'
-import { Route as AuthenticatedAdminChatsRouteImport } from './routes/_authenticated/admin/chats'
-import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin/categories'
-import { Route as AuthenticatedAdminBannersRouteImport } from './routes/_authenticated/admin/banners'
-import { Route as AuthenticatedAdminAnnouncementsRouteImport } from './routes/_authenticated/admin/announcements'
-import { Route as AuthenticatedAdminAiSettingsRouteImport } from './routes/_authenticated/admin/ai-settings'
 import { Route as AuthenticatedAdminAccountsRouteImport } from './routes/_authenticated/admin/accounts'
+import { Route as AuthenticatedAdminAiSettingsRouteImport } from './routes/_authenticated/admin/ai-settings'
+import { Route as AuthenticatedAdminAnnouncementsRouteImport } from './routes/_authenticated/admin/announcements'
+import { Route as AuthenticatedAdminBannersRouteImport } from './routes/_authenticated/admin/banners'
+import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin/categories'
+import { Route as AuthenticatedAdminChatsRouteImport } from './routes/_authenticated/admin/chats'
+import { Route as AuthenticatedAdminCommunityRouteImport } from './routes/_authenticated/admin/community'
+import { Route as AuthenticatedAdminEventsRouteImport } from './routes/_authenticated/admin/events'
+import { Route as AuthenticatedAdminFaqsRouteImport } from './routes/_authenticated/admin/faqs'
+import { Route as AuthenticatedAdminFruitsRouteImport } from './routes/_authenticated/admin/fruits'
+import { Route as AuthenticatedAdminGiveawaysRouteImport } from './routes/_authenticated/admin/giveaways'
+import { Route as AuthenticatedAdminJokiRouteImport } from './routes/_authenticated/admin/joki'
+import { Route as AuthenticatedAdminPromotionsRouteImport } from './routes/_authenticated/admin/promotions'
+import { Route as AuthenticatedAdminTradeRouteImport } from './routes/_authenticated/admin/trade'
+import { Route as AuthenticatedAdminWebsiteRouteImport } from './routes/_authenticated/admin/website'
 
-const StoreRoute = StoreRouteImport.update({
-  id: '/store',
-  path: '/store',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NotificationsRoute = NotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GiveawayRoute = GiveawayRouteImport.update({
-  id: '/giveaway',
-  path: '/giveaway',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FaqRoute = FaqRouteImport.update({
-  id: '/faq',
-  path: '/faq',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EventsRoute = EventsRouteImport.update({
-  id: '/events',
-  path: '/events',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CommunityRoute = CommunityRouteImport.update({
-  id: '/community',
-  path: '/community',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CheckoutRoute = CheckoutRouteImport.update({
-  id: '/checkout',
-  path: '/checkout',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ChatRoute = ChatRouteImport.update({
-  id: '/chat',
-  path: '/chat',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CartRoute = CartRouteImport.update({
-  id: '/cart',
-  path: '/cart',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CalculatorTradeRoute = CalculatorTradeRouteImport.update({
-  id: '/calculator-trade',
-  path: '/calculator-trade',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -117,63 +66,64 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const CalculatorTradeRoute = CalculatorTradeRouteImport.update({
+  id: '/calculator-trade',
+  path: '/calculator-trade',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TradeIndexRoute = TradeIndexRouteImport.update({
-  id: '/trade/',
-  path: '/trade/',
+const ChatRoute = ChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
-const JokiIndexRoute = JokiIndexRouteImport.update({
-  id: '/joki/',
-  path: '/joki/',
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FruitsIndexRoute = FruitsIndexRouteImport.update({
-  id: '/fruits/',
-  path: '/fruits/',
+const CommunityRoute = CommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AccountsIndexRoute = AccountsIndexRouteImport.update({
-  id: '/accounts/',
-  path: '/accounts/',
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TradeNewRoute = TradeNewRouteImport.update({
-  id: '/trade/new',
-  path: '/trade/new',
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TradeMineRoute = TradeMineRouteImport.update({
-  id: '/trade/mine',
-  path: '/trade/mine',
+const GiveawayRoute = GiveawayRouteImport.update({
+  id: '/giveaway',
+  path: '/giveaway',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TradeIdRoute = TradeIdRouteImport.update({
-  id: '/trade/$id',
-  path: '/trade/$id',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const JokiIdRoute = JokiIdRouteImport.update({
-  id: '/joki/$id',
-  path: '/joki/$id',
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FruitsIdRoute = FruitsIdRouteImport.update({
-  id: '/fruits/$id',
-  path: '/fruits/$id',
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AccountsIdRoute = AccountsIdRouteImport.update({
-  id: '/accounts/$id',
-  path: '/accounts/$id',
+const StoreRoute = StoreRouteImport.update({
+  id: '/store',
+  path: '/store',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
@@ -181,83 +131,65 @@ const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AccountsIndexRoute = AccountsIndexRouteImport.update({
+  id: '/accounts/',
+  path: '/accounts/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountsIdRoute = AccountsIdRouteImport.update({
+  id: '/accounts/$id',
+  path: '/accounts/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FruitsIndexRoute = FruitsIndexRouteImport.update({
+  id: '/fruits/',
+  path: '/fruits/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FruitsIdRoute = FruitsIdRouteImport.update({
+  id: '/fruits/$id',
+  path: '/fruits/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JokiIndexRoute = JokiIndexRouteImport.update({
+  id: '/joki/',
+  path: '/joki/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JokiIdRoute = JokiIdRouteImport.update({
+  id: '/joki/$id',
+  path: '/joki/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TradeIndexRoute = TradeIndexRouteImport.update({
+  id: '/trade/',
+  path: '/trade/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TradeIdRoute = TradeIdRouteImport.update({
+  id: '/trade/$id',
+  path: '/trade/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TradeMineRoute = TradeMineRouteImport.update({
+  id: '/trade/mine',
+  path: '/trade/mine',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TradeNewRoute = TradeNewRouteImport.update({
+  id: '/trade/new',
+  path: '/trade/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
-const AuthenticatedAdminWebsiteRoute =
-  AuthenticatedAdminWebsiteRouteImport.update({
-    id: '/website',
-    path: '/website',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminTradeRoute = AuthenticatedAdminTradeRouteImport.update({
-  id: '/trade',
-  path: '/trade',
-  getParentRoute: () => AuthenticatedAdminRouteRoute,
-} as any)
-const AuthenticatedAdminPromotionsRoute =
-  AuthenticatedAdminPromotionsRouteImport.update({
-    id: '/promotions',
-    path: '/promotions',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminJokiRoute = AuthenticatedAdminJokiRouteImport.update({
-  id: '/joki',
-  path: '/joki',
-  getParentRoute: () => AuthenticatedAdminRouteRoute,
-} as any)
-const AuthenticatedAdminGiveawaysRoute =
-  AuthenticatedAdminGiveawaysRouteImport.update({
-    id: '/giveaways',
-    path: '/giveaways',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminFruitsRoute =
-  AuthenticatedAdminFruitsRouteImport.update({
-    id: '/fruits',
-    path: '/fruits',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminFaqsRoute = AuthenticatedAdminFaqsRouteImport.update({
-  id: '/faqs',
-  path: '/faqs',
-  getParentRoute: () => AuthenticatedAdminRouteRoute,
-} as any)
-const AuthenticatedAdminEventsRoute =
-  AuthenticatedAdminEventsRouteImport.update({
-    id: '/events',
-    path: '/events',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminCommunityRoute =
-  AuthenticatedAdminCommunityRouteImport.update({
-    id: '/community',
-    path: '/community',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminChatsRoute = AuthenticatedAdminChatsRouteImport.update({
-  id: '/chats',
-  path: '/chats',
-  getParentRoute: () => AuthenticatedAdminRouteRoute,
-} as any)
-const AuthenticatedAdminCategoriesRoute =
-  AuthenticatedAdminCategoriesRouteImport.update({
-    id: '/categories',
-    path: '/categories',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminBannersRoute =
-  AuthenticatedAdminBannersRouteImport.update({
-    id: '/banners',
-    path: '/banners',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminAnnouncementsRoute =
-  AuthenticatedAdminAnnouncementsRouteImport.update({
-    id: '/announcements',
-    path: '/announcements',
+const AuthenticatedAdminAccountsRoute =
+  AuthenticatedAdminAccountsRouteImport.update({
+    id: '/accounts',
+    path: '/accounts',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedAdminAiSettingsRoute =
@@ -266,10 +198,78 @@ const AuthenticatedAdminAiSettingsRoute =
     path: '/ai-settings',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
-const AuthenticatedAdminAccountsRoute =
-  AuthenticatedAdminAccountsRouteImport.update({
-    id: '/accounts',
-    path: '/accounts',
+const AuthenticatedAdminAnnouncementsRoute =
+  AuthenticatedAdminAnnouncementsRouteImport.update({
+    id: '/announcements',
+    path: '/announcements',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminBannersRoute =
+  AuthenticatedAdminBannersRouteImport.update({
+    id: '/banners',
+    path: '/banners',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminCategoriesRoute =
+  AuthenticatedAdminCategoriesRouteImport.update({
+    id: '/categories',
+    path: '/categories',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminChatsRoute = AuthenticatedAdminChatsRouteImport.update({
+  id: '/chats',
+  path: '/chats',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
+const AuthenticatedAdminCommunityRoute =
+  AuthenticatedAdminCommunityRouteImport.update({
+    id: '/community',
+    path: '/community',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminEventsRoute =
+  AuthenticatedAdminEventsRouteImport.update({
+    id: '/events',
+    path: '/events',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminFaqsRoute = AuthenticatedAdminFaqsRouteImport.update({
+  id: '/faqs',
+  path: '/faqs',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
+const AuthenticatedAdminFruitsRoute =
+  AuthenticatedAdminFruitsRouteImport.update({
+    id: '/fruits',
+    path: '/fruits',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminGiveawaysRoute =
+  AuthenticatedAdminGiveawaysRouteImport.update({
+    id: '/giveaways',
+    path: '/giveaways',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminJokiRoute = AuthenticatedAdminJokiRouteImport.update({
+  id: '/joki',
+  path: '/joki',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
+const AuthenticatedAdminPromotionsRoute =
+  AuthenticatedAdminPromotionsRouteImport.update({
+    id: '/promotions',
+    path: '/promotions',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminTradeRoute = AuthenticatedAdminTradeRouteImport.update({
+  id: '/trade',
+  path: '/trade',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
+const AuthenticatedAdminWebsiteRoute =
+  AuthenticatedAdminWebsiteRouteImport.update({
+    id: '/website',
+    path: '/website',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 
@@ -565,95 +565,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/store': {
-      id: '/store'
-      path: '/store'
-      fullPath: '/store'
-      preLoaderRoute: typeof StoreRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/notifications': {
-      id: '/notifications'
-      path: '/notifications'
-      fullPath: '/notifications'
-      preLoaderRoute: typeof NotificationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/giveaway': {
-      id: '/giveaway'
-      path: '/giveaway'
-      fullPath: '/giveaway'
-      preLoaderRoute: typeof GiveawayRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/faq': {
-      id: '/faq'
-      path: '/faq'
-      fullPath: '/faq'
-      preLoaderRoute: typeof FaqRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/events': {
-      id: '/events'
-      path: '/events'
-      fullPath: '/events'
-      preLoaderRoute: typeof EventsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/community': {
-      id: '/community'
-      path: '/community'
-      fullPath: '/community'
-      preLoaderRoute: typeof CommunityRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checkout': {
-      id: '/checkout'
-      path: '/checkout'
-      fullPath: '/checkout'
-      preLoaderRoute: typeof CheckoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/chat': {
-      id: '/chat'
-      path: '/chat'
-      fullPath: '/chat'
-      preLoaderRoute: typeof ChatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cart': {
-      id: '/cart'
-      path: '/cart'
-      fullPath: '/cart'
-      preLoaderRoute: typeof CartRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/calculator-trade': {
-      id: '/calculator-trade'
-      path: '/calculator-trade'
-      fullPath: '/calculator-trade'
-      preLoaderRoute: typeof CalculatorTradeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -663,81 +579,95 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/trade/': {
-      id: '/trade/'
-      path: '/trade'
-      fullPath: '/trade/'
-      preLoaderRoute: typeof TradeIndexRouteImport
+    '/calculator-trade': {
+      id: '/calculator-trade'
+      path: '/calculator-trade'
+      fullPath: '/calculator-trade'
+      preLoaderRoute: typeof CalculatorTradeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/joki/': {
-      id: '/joki/'
-      path: '/joki'
-      fullPath: '/joki/'
-      preLoaderRoute: typeof JokiIndexRouteImport
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/fruits/': {
-      id: '/fruits/'
-      path: '/fruits'
-      fullPath: '/fruits/'
-      preLoaderRoute: typeof FruitsIndexRouteImport
+    '/chat': {
+      id: '/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/accounts/': {
-      id: '/accounts/'
-      path: '/accounts'
-      fullPath: '/accounts/'
-      preLoaderRoute: typeof AccountsIndexRouteImport
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/trade/new': {
-      id: '/trade/new'
-      path: '/trade/new'
-      fullPath: '/trade/new'
-      preLoaderRoute: typeof TradeNewRouteImport
+    '/community': {
+      id: '/community'
+      path: '/community'
+      fullPath: '/community'
+      preLoaderRoute: typeof CommunityRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/trade/mine': {
-      id: '/trade/mine'
-      path: '/trade/mine'
-      fullPath: '/trade/mine'
-      preLoaderRoute: typeof TradeMineRouteImport
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/trade/$id': {
-      id: '/trade/$id'
-      path: '/trade/$id'
-      fullPath: '/trade/$id'
-      preLoaderRoute: typeof TradeIdRouteImport
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/joki/$id': {
-      id: '/joki/$id'
-      path: '/joki/$id'
-      fullPath: '/joki/$id'
-      preLoaderRoute: typeof JokiIdRouteImport
+    '/giveaway': {
+      id: '/giveaway'
+      path: '/giveaway'
+      fullPath: '/giveaway'
+      preLoaderRoute: typeof GiveawayRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/fruits/$id': {
-      id: '/fruits/$id'
-      path: '/fruits/$id'
-      fullPath: '/fruits/$id'
-      preLoaderRoute: typeof FruitsIdRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/accounts/$id': {
-      id: '/accounts/$id'
-      path: '/accounts/$id'
-      fullPath: '/accounts/$id'
-      preLoaderRoute: typeof AccountsIdRouteImport
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/store': {
+      id: '/store'
+      path: '/store'
+      fullPath: '/store'
+      preLoaderRoute: typeof StoreRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -747,6 +677,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/accounts/': {
+      id: '/accounts/'
+      path: '/accounts'
+      fullPath: '/accounts/'
+      preLoaderRoute: typeof AccountsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounts/$id': {
+      id: '/accounts/$id'
+      path: '/accounts/$id'
+      fullPath: '/accounts/$id'
+      preLoaderRoute: typeof AccountsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fruits/': {
+      id: '/fruits/'
+      path: '/fruits'
+      fullPath: '/fruits/'
+      preLoaderRoute: typeof FruitsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fruits/$id': {
+      id: '/fruits/$id'
+      path: '/fruits/$id'
+      fullPath: '/fruits/$id'
+      preLoaderRoute: typeof FruitsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/joki/': {
+      id: '/joki/'
+      path: '/joki'
+      fullPath: '/joki/'
+      preLoaderRoute: typeof JokiIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/joki/$id': {
+      id: '/joki/$id'
+      path: '/joki/$id'
+      fullPath: '/joki/$id'
+      preLoaderRoute: typeof JokiIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trade/': {
+      id: '/trade/'
+      path: '/trade'
+      fullPath: '/trade/'
+      preLoaderRoute: typeof TradeIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trade/$id': {
+      id: '/trade/$id'
+      path: '/trade/$id'
+      fullPath: '/trade/$id'
+      preLoaderRoute: typeof TradeIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trade/mine': {
+      id: '/trade/mine'
+      path: '/trade/mine'
+      fullPath: '/trade/mine'
+      preLoaderRoute: typeof TradeMineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trade/new': {
+      id: '/trade/new'
+      path: '/trade/new'
+      fullPath: '/trade/new'
+      preLoaderRoute: typeof TradeNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
       path: '/'
@@ -754,95 +754,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
-    '/_authenticated/admin/website': {
-      id: '/_authenticated/admin/website'
-      path: '/website'
-      fullPath: '/admin/website'
-      preLoaderRoute: typeof AuthenticatedAdminWebsiteRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/trade': {
-      id: '/_authenticated/admin/trade'
-      path: '/trade'
-      fullPath: '/admin/trade'
-      preLoaderRoute: typeof AuthenticatedAdminTradeRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/promotions': {
-      id: '/_authenticated/admin/promotions'
-      path: '/promotions'
-      fullPath: '/admin/promotions'
-      preLoaderRoute: typeof AuthenticatedAdminPromotionsRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/joki': {
-      id: '/_authenticated/admin/joki'
-      path: '/joki'
-      fullPath: '/admin/joki'
-      preLoaderRoute: typeof AuthenticatedAdminJokiRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/giveaways': {
-      id: '/_authenticated/admin/giveaways'
-      path: '/giveaways'
-      fullPath: '/admin/giveaways'
-      preLoaderRoute: typeof AuthenticatedAdminGiveawaysRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/fruits': {
-      id: '/_authenticated/admin/fruits'
-      path: '/fruits'
-      fullPath: '/admin/fruits'
-      preLoaderRoute: typeof AuthenticatedAdminFruitsRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/faqs': {
-      id: '/_authenticated/admin/faqs'
-      path: '/faqs'
-      fullPath: '/admin/faqs'
-      preLoaderRoute: typeof AuthenticatedAdminFaqsRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/events': {
-      id: '/_authenticated/admin/events'
-      path: '/events'
-      fullPath: '/admin/events'
-      preLoaderRoute: typeof AuthenticatedAdminEventsRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/community': {
-      id: '/_authenticated/admin/community'
-      path: '/community'
-      fullPath: '/admin/community'
-      preLoaderRoute: typeof AuthenticatedAdminCommunityRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/chats': {
-      id: '/_authenticated/admin/chats'
-      path: '/chats'
-      fullPath: '/admin/chats'
-      preLoaderRoute: typeof AuthenticatedAdminChatsRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/categories': {
-      id: '/_authenticated/admin/categories'
-      path: '/categories'
-      fullPath: '/admin/categories'
-      preLoaderRoute: typeof AuthenticatedAdminCategoriesRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/banners': {
-      id: '/_authenticated/admin/banners'
-      path: '/banners'
-      fullPath: '/admin/banners'
-      preLoaderRoute: typeof AuthenticatedAdminBannersRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/announcements': {
-      id: '/_authenticated/admin/announcements'
-      path: '/announcements'
-      fullPath: '/admin/announcements'
-      preLoaderRoute: typeof AuthenticatedAdminAnnouncementsRouteImport
+    '/_authenticated/admin/accounts': {
+      id: '/_authenticated/admin/accounts'
+      path: '/accounts'
+      fullPath: '/admin/accounts'
+      preLoaderRoute: typeof AuthenticatedAdminAccountsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/admin/ai-settings': {
@@ -852,11 +768,95 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAiSettingsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
-    '/_authenticated/admin/accounts': {
-      id: '/_authenticated/admin/accounts'
-      path: '/accounts'
-      fullPath: '/admin/accounts'
-      preLoaderRoute: typeof AuthenticatedAdminAccountsRouteImport
+    '/_authenticated/admin/announcements': {
+      id: '/_authenticated/admin/announcements'
+      path: '/announcements'
+      fullPath: '/admin/announcements'
+      preLoaderRoute: typeof AuthenticatedAdminAnnouncementsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/banners': {
+      id: '/_authenticated/admin/banners'
+      path: '/banners'
+      fullPath: '/admin/banners'
+      preLoaderRoute: typeof AuthenticatedAdminBannersRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/categories': {
+      id: '/_authenticated/admin/categories'
+      path: '/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AuthenticatedAdminCategoriesRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/chats': {
+      id: '/_authenticated/admin/chats'
+      path: '/chats'
+      fullPath: '/admin/chats'
+      preLoaderRoute: typeof AuthenticatedAdminChatsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/community': {
+      id: '/_authenticated/admin/community'
+      path: '/community'
+      fullPath: '/admin/community'
+      preLoaderRoute: typeof AuthenticatedAdminCommunityRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/events': {
+      id: '/_authenticated/admin/events'
+      path: '/events'
+      fullPath: '/admin/events'
+      preLoaderRoute: typeof AuthenticatedAdminEventsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/faqs': {
+      id: '/_authenticated/admin/faqs'
+      path: '/faqs'
+      fullPath: '/admin/faqs'
+      preLoaderRoute: typeof AuthenticatedAdminFaqsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/fruits': {
+      id: '/_authenticated/admin/fruits'
+      path: '/fruits'
+      fullPath: '/admin/fruits'
+      preLoaderRoute: typeof AuthenticatedAdminFruitsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/giveaways': {
+      id: '/_authenticated/admin/giveaways'
+      path: '/giveaways'
+      fullPath: '/admin/giveaways'
+      preLoaderRoute: typeof AuthenticatedAdminGiveawaysRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/joki': {
+      id: '/_authenticated/admin/joki'
+      path: '/joki'
+      fullPath: '/admin/joki'
+      preLoaderRoute: typeof AuthenticatedAdminJokiRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/promotions': {
+      id: '/_authenticated/admin/promotions'
+      path: '/promotions'
+      fullPath: '/admin/promotions'
+      preLoaderRoute: typeof AuthenticatedAdminPromotionsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/trade': {
+      id: '/_authenticated/admin/trade'
+      path: '/trade'
+      fullPath: '/admin/trade'
+      preLoaderRoute: typeof AuthenticatedAdminTradeRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/website': {
+      id: '/_authenticated/admin/website'
+      path: '/website'
+      fullPath: '/admin/website'
+      preLoaderRoute: typeof AuthenticatedAdminWebsiteRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
   }
