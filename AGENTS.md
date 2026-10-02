@@ -10,3 +10,6 @@
 <!-- LOVABLE:END -->
 The public root page is the editable official-links hub; keep shopping content at /store so shared links open to the curated directory first.
 Community links carry group, description, and optional note in their existing table; render from live records so admins control homepage content without code changes.
+Link group names and order live in a separate admin-managed table; why: group presentation must remain editable without code changes.
+Trade WhatsApp numbers live in an owner-only contact table, never on publicly readable offers; why: prospective traders communicate through private in-site chat without exposing phone numbers.
+Homepage payment methods and store CTA content live in website settings; why: the admin can enable optional payment information and edit copy without deploying code.
