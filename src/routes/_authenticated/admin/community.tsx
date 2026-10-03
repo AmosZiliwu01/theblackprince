@@ -26,11 +26,7 @@ export const Route = createFileRoute("/_authenticated/admin/community")({
           ],
         },
         { key: "label", label: "Judul Link", type: "text", required: true, placeholder: "Contoh: Grup WhatsApp" },
-        { key: "link_group", label: "Kelompok", type: "select", required: true, defaultValue: "Sosial & Roblox", options: [
-          { value: "Chat Admin & Komunitas", label: "Chat Admin & Komunitas" },
-          { value: "Dukung & Kepercayaan", label: "Dukung & Kepercayaan" },
-          { value: "Sosial & Roblox", label: "Sosial & Roblox" },
-        ] },
+        { key: "link_group", label: "Kelompok (tulis sama persis dengan nama di menu Kelompok Link)", type: "text", required: true, defaultValue: "Sosial & Roblox", placeholder: "Contoh: Chat Admin & Komunitas" },
         { key: "description", label: "Deskripsi Singkat", type: "text", placeholder: "Teks kecil di bawah judul" },
         { key: "note", label: "Catatan (opsional)", type: "text", placeholder: "Info tambahan jika diperlukan" },
         { key: "url", label: "URL", type: "text", required: true },

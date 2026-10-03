@@ -27,14 +27,16 @@ function FruitsPage() {
   const cats = useQuery(categoriesQO).data ?? [];
   const [q, setQ] = useState("");
   const [cat, setCat] = useState<string>("all");
+  const [onlyReady, setOnlyReady] = useState(false);
 
   const filtered = useMemo(() => {
     return fruits.filter((f: any) => {
       if (cat !== "all" && f.category !== cat) return false;
+      if (onlyReady && (!f.ready || Number(f.stock ?? 0) <= 0)) return false;
       if (q && !f.name.toLowerCase().includes(q.toLowerCase())) return false;
       return true;
     });
-  }, [fruits, q, cat]);
+  }, [fruits, q, cat, onlyReady]);
 
   return (
     <SiteLayout>
@@ -55,6 +57,7 @@ function FruitsPage() {
             />
           </div>
           <div className="flex gap-2 overflow-x-auto pb-1">
+            <Chip active={onlyReady} onClick={() => setOnlyReady((v) => !v)}>✓ Tersedia saja</Chip>
             <Chip active={cat === "all"} onClick={() => setCat("all")}>Semua</Chip>
             {cats.map((c: any) => (
               <Chip key={c.id} active={cat === c.name} onClick={() => setCat(c.name)}>

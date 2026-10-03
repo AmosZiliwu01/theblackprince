@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import type { FieldDef } from "./admin-crud";
+import { ImageUploadField } from "./image-upload-field";
 
 const sb = supabase as any;
 
@@ -89,6 +90,10 @@ export function SingletonEditor({
                 rows={5}
                 className="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary/60"
               />
+            ) : f.type === "image" ? (
+              <div className="mt-1">
+                <ImageUploadField value={row[f.key] ?? null} onChange={(v: any) => setRow({ ...row, [f.key]: v })} />
+              </div>
             ) : f.type === "boolean" ? (
               <label className="mt-2 inline-flex cursor-pointer items-center gap-2">
                 <input
