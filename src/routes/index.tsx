@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowUpRight, Crown, ShoppingBag, MessageCircle, Heart, Users, Gamepad2, Link2 } from "lucide-react";
-import { communityQO, websiteSettingsQO } from "@/lib/site-queries";
+import { communityQO, websiteSettingsQO, linkGroupsQO } from "@/lib/site-queries";
 import { PromoToast } from "@/components/site/promo-toast";
 
 export const Route = createFileRoute("/")({
@@ -16,11 +16,10 @@ export const Route = createFileRoute("/")({
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(communityQO);
     context.queryClient.ensureQueryData(websiteSettingsQO);
+    context.queryClient.ensureQueryData(linkGroupsQO);
   },
   component: LinksHome,
 });
-
-const groupOrder = ["Chat Admin & Komunitas", "Dukung & Kepercayaan", "Sosial & Roblox"];
 
 function linkIcon(platform: string, label: string) {
   const text = `${platform} ${label}`.toLowerCase();
@@ -33,9 +32,16 @@ function linkIcon(platform: string, label: string) {
 
 function LinksHome() {
   const settings = useQuery(websiteSettingsQO).data;
+  const groupRows = useQuery(linkGroupsQO).data ?? [];
   const { data: rawLinks = [], isPending, isError } = useQuery(communityQO);
   const links = rawLinks.filter((link: any) => link.active && link.url);
-  const groups = [...new Set([...groupOrder, ...links.map((link: any) => link.link_group || "Sosial & Roblox")])];
+  const inactive = new Set(groupRows.filter((g: any) => !g.active).map((g: any) => g.name));
+  const groups = [...new Set([
+    ...groupRows.filter((g: any) => g.active).map((g: any) => g.name as string),
+    ...links.map((link: any) => link.link_group || "Lainnya"),
+  ])].filter((g) => !inactive.has(g));
+  const siteName = settings?.site_name || "The Black Prince";
+  const waNumber = String(settings?.whatsapp_number ?? "").replace(/\D/g, "");
 
   return (
     <main className="min-h-screen bg-background px-4 pb-12 pt-10 text-foreground sm:pt-16">
@@ -44,21 +50,53 @@ function LinksHome() {
         <header className="mb-10 flex flex-col items-center text-center">
           <div className="grid h-24 w-24 place-items-center overflow-hidden rounded-full border-2 border-primary/70 bg-card shadow-neon sm:h-28 sm:w-28">
             {settings?.logo_url ? (
-              <img src={settings.logo_url} alt="Logo The Black Prince Store" className="h-full w-full object-cover" />
+              <img src={settings.logo_url} alt={`Logo ${siteName}`} className="h-full w-full object-cover" />
             ) : (
-              <Crown className="h-11 w-11 text-primary" aria-label="The Black Prince Store" />
+              <Crown className="h-11 w-11 text-primary" aria-label={siteName} />
             )}
           </div>
-          <h1 className="mt-5 text-3xl font-black leading-tight sm:text-4xl">The Black Prince Store</h1>
-          <p className="mt-2 text-sm font-medium text-primary sm:text-base">Jual Buah, Akun, dan Jasa Blox Fruits terpercaya.</p>
-          <p className="mt-2 text-sm text-muted-foreground">Semua kebutuhan Blox Fruits kamu ada di sini!</p>
+          <h1 className="mt-5 text-3xl font-black leading-tight sm:text-4xl">{siteName}</h1>
+          <p className="mt-2 text-sm font-medium text-primary sm:text-base">{settings?.tagline || "Jual Buah, Akun, dan Jasa Blox Fruits terpercaya."}</p>
         </header>
 
         <Link to="/store" className="group flex min-h-16 items-center gap-4 rounded-md border border-primary/60 gradient-primary px-5 py-4 text-primary-foreground shadow-neon transition hover:brightness-110">
           <ShoppingBag className="h-6 w-6 shrink-0" />
-          <span className="min-w-0 flex-1 text-base font-extrabold">Beli di The Black Prince Store</span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-base font-extrabold">{settings?.store_cta_title || "Beli di The Black Prince Store"}</span>
+            {settings?.store_cta_description && <span className="mt-0.5 block text-xs opacity-90">{settings.store_cta_description}</span>}
+          </span>
           <ArrowUpRight className="h-5 w-5 shrink-0 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
         </Link>
+
+        {settings?.payment_enabled && (
+          <section className="mt-9" aria-label="Pembayaran">
+            <div className="mb-3 border-b border-border pb-2"><h2 className="text-sm font-bold">Pembayaran</h2></div>
+            <div className="rounded-md border border-border bg-card p-4 text-center">
+              {settings.payment_qris_url && (
+                <img src={settings.payment_qris_url} alt="QRIS pembayaran" className="mx-auto mb-3 w-full max-w-64 rounded-md bg-background object-contain" />
+              )}
+              {settings.payment_wallet_number && (
+                <div className="mb-2">
+                  <p className="text-xs text-muted-foreground">DANA / GoPay</p>
+                  <button
+                    onClick={() => navigator.clipboard?.writeText(settings.payment_wallet_number)}
+                    className="mt-1 text-lg font-black tracking-wide text-primary"
+                    title="Salin nomor"
+                  >
+                    {settings.payment_wallet_number}
+                  </button>
+                </div>
+              )}
+              {settings.payment_note && <p className="whitespace-pre-line text-xs text-muted-foreground">{settings.payment_note}</p>}
+              {waNumber && (
+                <a href={`https://wa.me/${waNumber}?text=${encodeURIComponent("Halo admin, saya minta info pembayaran (QRIS/DANA/GoPay).")}`} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-2 rounded-md border border-primary/60 px-3 py-2 text-xs font-bold text-primary">
+                  <MessageCircle className="h-4 w-4" /> Minta lewat WhatsApp
+                </a>
+              )}
+            </div>
+          </section>
+        )}
+
 
         {groups.map((group) => {
           const items = links.filter((link: any) => (link.link_group || "Sosial & Roblox") === group);

@@ -28,6 +28,7 @@ export const fruitsQO = queryOptions({ ...fresh, queryKey: ["public", "fruits"],
 export const jokiQO = queryOptions({ ...fresh, queryKey: ["public", "joki"], queryFn: () => selectAll("joki_services") });
 export const accountsQO = queryOptions({ ...fresh, queryKey: ["public", "accounts"], queryFn: () => selectAll("accounts") });
 export const communityQO = queryOptions({ ...fresh, queryKey: ["public", "community"], queryFn: () => selectAll("community_links") });
+export const linkGroupsQO = queryOptions({ ...fresh, queryKey: ["public", "link_groups"], queryFn: () => selectAll("link_groups") });
 export const liveStatusQO = queryOptions({
   ...fresh,
   queryKey: ["public", "live"],
