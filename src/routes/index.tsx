@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowUpRight, Crown, ShoppingBag, MessageCircle, Heart, Users, Gamepad2, Link2 } from "lucide-react";
+import { useState } from "react";
+import { ArrowUpRight, ChevronDown, Crown, ShoppingBag, MessageCircle, Heart, Users, Gamepad2, Link2, Wallet } from "lucide-react";
 import { communityQO, websiteSettingsQO, linkGroupsQO } from "@/lib/site-queries";
 import { PromoToast } from "@/components/site/promo-toast";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
@@ -31,6 +33,7 @@ function linkIcon(platform: string, label: string) {
 }
 
 function LinksHome() {
+  const [paymentOpen, setPaymentOpen] = useState(false);
   const settings = useQuery(websiteSettingsQO).data;
   const groupRows = useQuery(linkGroupsQO).data ?? [];
   const { data: rawLinks = [], isPending, isError } = useQuery(communityQO);
@@ -70,21 +73,25 @@ function LinksHome() {
 
         {settings?.payment_enabled && (
           <section className="mt-9" aria-label="Pembayaran">
-            <div className="mb-3 border-b border-border pb-2"><h2 className="text-sm font-bold">Pembayaran</h2></div>
-            <div className="rounded-md border border-border bg-card p-4 text-center">
+            <Button variant="outline" aria-expanded={paymentOpen} aria-controls="payment-details" onClick={() => setPaymentOpen((open) => !open)} className="flex h-auto min-h-16 w-full justify-start gap-4 border-border bg-card px-4 py-3 text-left hover:border-primary/70">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-md bg-primary/15 text-primary"><Wallet className="h-5 w-5" /></span>
+              <span className="min-w-0 flex-1"><span className="block text-sm font-bold">Pembayaran</span><span className="block text-xs font-normal text-muted-foreground">QRIS, DANA / GoPay, atau WhatsApp</span></span>
+              <ChevronDown className={`h-4 w-4 shrink-0 transition-transform ${paymentOpen ? "rotate-180" : ""}`} />
+            </Button>
+            {paymentOpen && <div id="payment-details" className="mt-2 rounded-md border border-border bg-card p-4 text-center">
               {settings.payment_qris_url && (
                 <img src={settings.payment_qris_url} alt="QRIS pembayaran" className="mx-auto mb-3 w-full max-w-64 rounded-md bg-background object-contain" />
               )}
               {settings.payment_wallet_number && (
                 <div className="mb-2">
                   <p className="text-xs text-muted-foreground">DANA / GoPay</p>
-                  <button
+                  <Button variant="ghost"
                     onClick={() => navigator.clipboard?.writeText(settings.payment_wallet_number)}
-                    className="mt-1 text-lg font-black tracking-wide text-primary"
+                    className="mt-1 h-auto text-lg font-black text-primary"
                     title="Salin nomor"
                   >
                     {settings.payment_wallet_number}
-                  </button>
+                  </Button>
                 </div>
               )}
               {settings.payment_note && <p className="whitespace-pre-line text-xs text-muted-foreground">{settings.payment_note}</p>}
@@ -93,7 +100,7 @@ function LinksHome() {
                   <MessageCircle className="h-4 w-4" /> Minta lewat WhatsApp
                 </a>
               )}
-            </div>
+            </div>}
           </section>
         )}
 

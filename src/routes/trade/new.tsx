@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Minus, Plus, Trash2 } from "lucide-react";
@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { SiteLayout } from "@/components/site/site-layout";
 import { TradeNav } from "@/components/trade/trade-nav";
 import { ItemPicker } from "@/components/trade/item-picker";
+import { TradeAccess } from "@/components/trade/trade-access";
+import { Button } from "@/components/ui/button";
 import { tradeItemsQO } from "@/lib/site-queries";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthUser } from "@/hooks/use-auth";
@@ -41,6 +43,7 @@ function NewTradePage() {
   const [want, setWant] = useState<DraftRow[]>([]);
   const [picker, setPicker] = useState<Side | null>(null);
   const [saving, setSaving] = useState(false);
+  const [waNumber, setWaNumber] = useState("");
 
   const rowValue = (r: DraftRow) => variantValue(r.item, r.variant);
   const sum = (rows: DraftRow[]) => rows.reduce((a, r) => a + (rowValue(r) ?? 0) * Math.max(1, r.qty), 0);
@@ -63,6 +66,8 @@ function NewTradePage() {
   async function submit() {
     if (!user) return;
     if (give.length === 0 || want.length === 0) return toast.error("Isi minimal 1 item di kedua sisi");
+    const contactNumber = waNumber.replace(/\D/g, "");
+    if (waNumber && !/^\+?[1-9][0-9]{7,14}$/.test(waNumber.trim())) return toast.error("Periksa nomor WhatsApp, gunakan format +628…");
 
     setSaving(true);
     try {
@@ -105,6 +110,10 @@ function NewTradePage() {
 
       const { error: e2 } = await sb.from("trade_offer_items").insert(rows);
       if (e2) throw e2;
+      if (contactNumber) {
+        const { error: contactError } = await sb.from("trade_offer_contacts").insert({ offer_id: offer.id, owner_id: user.id, whatsapp_number: `+${contactNumber}` });
+        if (contactError) throw contactError;
+      }
 
       qc.invalidateQueries({ queryKey: ["trade"] });
       toast.success("Penawaran trade dibuat");
@@ -130,16 +139,7 @@ function NewTradePage() {
     return (
       <SiteLayout>
         <section className="mx-auto max-w-md px-4 py-16 text-center">
-          <h1 className="text-xl font-black">Masuk dulu untuk membuat trade</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Penawaran trade terhubung ke akunmu supaya pembeli bisa chat langsung.
-          </p>
-          <Link
-            to="/login"
-            className="mt-4 inline-block rounded-2xl gradient-primary px-5 py-2.5 text-sm font-black text-primary-foreground shadow-neon"
-          >
-            Masuk / Daftar
-          </Link>
+          <TradeAccess onClose={() => navigate({ to: "/trade" })} onSuccess={() => window.location.reload()} />
         </section>
       </SiteLayout>
     );
@@ -153,22 +153,20 @@ function NewTradePage() {
           Buat <span className="text-gradient">Trade</span>
         </h1>
 
-        <p className="mt-1 text-xs text-muted-foreground">
-          Pilih item yang kamu berikan dan yang kamu cari. Judul penawaran dibuat otomatis dari namamu dan itemnya.
-        </p>
-
-        <div className="mt-3 grid gap-3 md:grid-cols-2">
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:gap-3">
           <SideEditor title="Saya Memberi" rows={give} setRows={setGive} onAdd={() => setPicker("offer")} total={sum(give)} />
           <SideEditor title="Saya Mencari" rows={want} setRows={setWant} onAdd={() => setPicker("request")} total={sum(want)} />
         </div>
 
-        <button
+        <label className="mt-4 block text-sm font-semibold" htmlFor="trade-wa">WhatsApp kamu <span className="font-normal text-muted-foreground">(opsional, tidak ditampilkan ke publik)</span></label>
+        <input id="trade-wa" type="tel" inputMode="tel" value={waNumber} onChange={(e) => setWaNumber(e.target.value)} placeholder="+628…" className="mt-1 w-full rounded-md border border-border bg-card px-3 py-2 text-sm" />
+        <Button
           onClick={submit}
           disabled={saving}
-          className="mt-4 w-full rounded-2xl gradient-primary py-3 text-sm font-black text-primary-foreground shadow-neon disabled:opacity-60"
+          className="mt-4 w-full"
         >
           {saving ? "Menyimpan…" : "Posting Penawaran"}
-        </button>
+        </Button>
       </section>
 
       {picker && (
@@ -200,15 +198,16 @@ function SideEditor({
     setRows((r) => r.map((x) => (x.key === key ? { ...x, qty: Math.max(1, Math.min(99, x.qty + d)) } : x)));
 
   return (
-    <div className="rounded-3xl border border-border bg-card p-3">
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <p className="font-black">{title}</p>
-        <button
+    <div className="min-w-0 rounded-md border border-border bg-card p-2 sm:p-3">
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+        <p className="text-sm font-black sm:text-base">{title}</p>
+        <Button
           onClick={onAdd}
-          className="inline-flex items-center gap-1 rounded-xl gradient-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-neon"
+          size="sm"
+          className="gap-1"
         >
-          <Plus className="h-3.5 w-3.5" /> Add Item
-        </button>
+          <Plus className="h-3.5 w-3.5" /> Item
+        </Button>
       </div>
 
       {rows.length === 0 ? (
@@ -216,44 +215,44 @@ function SideEditor({
           Belum ada item.
         </p>
       ) : (
-        <div className="space-y-2">
+        <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
           {rows.map((r) => (
-            <div key={r.key} className="flex items-center gap-2 rounded-2xl border border-border bg-background p-2">
+            <div key={r.key} className="min-w-0 rounded-md border border-border bg-background p-1.5 text-center">
               <img
                 src={r.item.image_url ?? ""}
                 alt={r.item.name}
                 loading="lazy"
-                className="h-10 w-10 shrink-0 rounded-lg bg-muted object-contain"
+                className="mx-auto h-10 w-10 rounded-md bg-muted object-contain sm:h-12 sm:w-12"
                 onError={(e) => ((e.currentTarget as HTMLImageElement).style.visibility = "hidden")}
               />
-              <div className="min-w-0 flex-1">
+              <div className="min-w-0">
                 <p className="truncate text-xs font-bold">{r.item.name}</p>
                 <p className="text-[10px] text-muted-foreground">
                   {VARIANT_LABEL[r.variant]} · {formatValue(variantValue(r.item, r.variant))}
                 </p>
               </div>
-              <div className="flex shrink-0 items-center gap-1">
-                <button onClick={() => setQty(r.key, -1)} className="rounded-md border border-border p-1" aria-label="Kurangi">
+              <div className="mt-1 flex items-center justify-center gap-0.5">
+                <Button variant="ghost" size="icon" onClick={() => setQty(r.key, -1)} className="h-6 w-6" aria-label="Kurangi">
                   <Minus className="h-3 w-3" />
-                </button>
-                <span className="w-6 text-center text-xs font-black">{r.qty}</span>
-                <button onClick={() => setQty(r.key, 1)} className="rounded-md border border-border p-1" aria-label="Tambah">
+                </Button>
+                <span className="w-4 text-center text-xs font-black">{r.qty}</span>
+                <Button variant="ghost" size="icon" onClick={() => setQty(r.key, 1)} className="h-6 w-6" aria-label="Tambah">
                   <Plus className="h-3 w-3" />
-                </button>
-                <button
+                </Button>
+                <Button variant="ghost" size="icon"
                   onClick={() => setRows((rws) => rws.filter((x) => x.key !== r.key))}
-                  className="rounded-md p-1 text-red-400 hover:bg-red-500/10"
+                  className="h-6 w-6 text-destructive"
                   aria-label="Hapus"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
-                </button>
+                </Button>
               </div>
             </div>
           ))}
         </div>
       )}
 
-      <p className="mt-2 rounded-2xl bg-muted/40 px-3 py-2 text-center text-xs font-black">
+      <p className="mt-2 bg-muted/40 px-2 py-2 text-center text-xs font-black">
         Total Value: {formatValue(total)}
       </p>
     </div>
