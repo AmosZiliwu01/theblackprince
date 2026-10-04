@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 /**
  * Sumber data trade value komunitas (pihak ketiga), bukan nilai resmi Blox Fruits.
@@ -75,8 +76,16 @@ function toRows(items: SourceItem[]) {
  * Hanya request ke sumber bila cache sudah kadaluarsa (kecuali force = true).
  */
 export const syncTradeItems = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((data: { force?: boolean } | undefined) => ({ force: !!data?.force }))
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
+    const { data: role, error: roleError } = await context.supabase
+      .from("user_roles")
+      .select("id")
+      .eq("user_id", context.userId)
+      .eq("role", "admin")
+      .maybeSingle();
+    if (roleError || !role) throw new Error("Hanya admin yang dapat menyinkronkan item Trade.");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const sb = supabaseAdmin as any;
 

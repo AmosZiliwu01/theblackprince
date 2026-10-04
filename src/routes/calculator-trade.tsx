@@ -1,11 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
+import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { ArrowLeftRight, Minus, Plus, Trash2 } from "lucide-react";
 import { SiteLayout } from "@/components/site/site-layout";
 import { tradeItemsQO } from "@/lib/site-queries";
-import { syncTradeItems } from "@/lib/trade.functions";
 import { ItemPicker } from "@/components/trade/item-picker";
 import { TradeNav } from "@/components/trade/trade-nav";
 import {
@@ -45,22 +43,7 @@ export const Route = createFileRoute("/calculator-trade")({
 type Side = "p1" | "p2";
 
 function CalculatorTradePage() {
-  const qc = useQueryClient();
   const items = (useQuery(tradeItemsQO).data ?? []) as TradeItem[];
-  const sync = useServerFn(syncTradeItems);
-
-  useEffect(() => {
-    let cancelled = false;
-    sync({ data: {} })
-      .then((r: any) => {
-        if (!cancelled && r?.synced > 0) qc.invalidateQueries({ queryKey: ["public", "trade_items"] });
-      })
-      .catch(() => {});
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const [p1, setP1] = useState<TradeSideRow[]>([]);
   const [p2, setP2] = useState<TradeSideRow[]>([]);
