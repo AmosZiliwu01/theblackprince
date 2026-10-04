@@ -1,8 +1,10 @@
-- [ ] Ringkas navigasi dan tampilan penawaran Trade; gunakan grid item pada pembuatan dan detail.
+- [x] Ringkas navigasi dan tampilan penawaran Trade; gunakan grid item pada pembuatan dan detail.
 - [x] Ganti Chat AI menjadi pintasan WhatsApp admin dari nomor toko.
-- [ ] Permudah identitas Trade melalui pop-up aman dan sesi tersimpan.
+- [x] Permudah identitas Trade melalui pop-up aman dan sesi tersimpan.
 - [x] Bulatkan harga diskon Rupiah sesuai aturan minimum; periksa hasil di halaman.
 - [x] Tampilkan semua link resmi pada halaman pertama sesuai contoh; pindahkan toko ke /store dan sediakan judul, deskripsi, catatan, serta kelompok link di admin.
-- [ ] Kelompok tautan bisa ditambah/diedit; judul dan keterangan tombol toko dapat diatur admin.
-- [ ] Sediakan pembayaran QRIS dan satu nomor DANA/GoPay yang opsional di halaman utama.
-- [ ] Trade: perbaiki tata letak ponsel, kontak WA pemilik tersembunyi, dan chat situs untuk peminat.
+- [x] Kelompok tautan bisa ditambah/diedit; judul dan keterangan tombol toko dapat diatur admin.
+- [x] Sediakan pembayaran QRIS dan satu nomor DANA/GoPay yang opsional di halaman utama; tampilkan saat dibuka.
+- [x] Trade: perbaiki tata letak ponsel, kontak WA pemilik tersembunyi, dan chat situs untuk peminat.
+- [ ] Uji sinkronisasi item Trade melalui tombol admin (belum terverifikasi).
+- [ ] Buah otomatis dari daftar gambar Trade, termasuk limited, skin, gamepass, permanent (tugas berikutnya).

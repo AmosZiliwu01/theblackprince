@@ -6,6 +6,8 @@ import { CheckCircle2, Loader2, Lock, MessageCircle, Send, Trash2, UserCircle2 }
 import { toast } from "sonner";
 import { SiteLayout } from "@/components/site/site-layout";
 import { TradeNav } from "@/components/trade/trade-nav";
+import { TradeAccess } from "@/components/trade/trade-access";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthUser } from "@/hooks/use-auth";
 import { formatValue, VARIANT_LABEL, type TradeVariant } from "@/lib/trade";
@@ -58,7 +60,6 @@ function TradeDetailPage() {
   const want = (offer?.items ?? []).filter((i) => i.side === "request");
   const giveTotal = sumItems(give);
   const wantTotal = sumItems(want);
-  const diff = wantTotal - giveTotal;
 
   const matches = useMemo(
     () => (offer && isOwner ? potentialMatches(offer, allOffers) : []),
@@ -132,25 +133,9 @@ function TradeDetailPage() {
         {offer.note && (
           <p className="mt-3 whitespace-pre-wrap rounded-2xl border border-border bg-card p-3 text-sm">{offer.note}</p>
         )}
-        {offer.contact && (
-          <p className="mt-2 rounded-2xl border border-border bg-muted/40 p-3 text-sm">
-            <span className="font-bold">Kontak:</span> {offer.contact}
-          </p>
-        )}
-
-        <div className="mt-4 grid gap-3 md:grid-cols-2">
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:gap-3">
           <ItemList title="Saya Punya" rows={give} total={giveTotal} />
           <ItemList title="Saya Mencari" rows={want} total={wantTotal} />
-        </div>
-
-        <div className="mt-3 rounded-3xl border border-border bg-card p-4 text-center">
-          <p className="text-[11px] uppercase tracking-widest text-muted-foreground">Selisih Value</p>
-          <p className="text-2xl font-black">
-            {diff === 0 ? "Seimbang" : `${diff > 0 ? "+" : "-"}${formatValue(Math.abs(diff))}`}
-          </p>
-          <p className="mt-1 text-[11px] text-muted-foreground">
-            Dari sudut pandang pemilik penawaran (yang dicari − yang diberikan).
-          </p>
         </div>
 
         {isOwner && (
@@ -219,24 +204,24 @@ function sumItems(rows: OfferItemRow[]) {
 
 function ItemList({ title, rows, total }: { title: string; rows: OfferItemRow[]; total: number }) {
   return (
-    <div className="rounded-3xl border border-border bg-card p-3">
-      <p className="mb-2 font-black">{title}</p>
+    <div className="min-w-0 rounded-md border border-border bg-card p-2 sm:p-3">
+      <p className="mb-2 text-sm font-black sm:text-base">{title}</p>
       {rows.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-border p-6 text-center text-xs text-muted-foreground">
           Tidak ada item.
         </p>
       ) : (
-        <div className="space-y-2">
+        <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
           {rows.map((r) => (
-            <div key={r.id} className="flex items-center gap-2 rounded-2xl border border-border bg-background p-2">
+            <div key={r.id} className="min-w-0 rounded-md border border-border bg-background p-1.5 text-center">
               <img
                 src={r.image_url ?? ""}
                 alt={r.item_name}
                 loading="lazy"
-                className="h-10 w-10 shrink-0 rounded-lg bg-muted object-contain"
+                className="mx-auto h-10 w-10 rounded-md bg-muted object-contain sm:h-12 sm:w-12"
                 onError={(e) => ((e.currentTarget as HTMLImageElement).style.visibility = "hidden")}
               />
-              <div className="min-w-0 flex-1">
+              <div className="min-w-0">
                 <p className="truncate text-xs font-bold">{r.item_name}</p>
                 <p className="text-[10px] text-muted-foreground">
                   {VARIANT_LABEL[r.variant as TradeVariant] ?? r.variant} · {formatValue(r.value)} · x{r.qty}
@@ -246,7 +231,7 @@ function ItemList({ title, rows, total }: { title: string; rows: OfferItemRow[];
           ))}
         </div>
       )}
-      <p className="mt-2 rounded-2xl bg-muted/40 px-3 py-2 text-center text-xs font-black">
+      <p className="mt-2 bg-muted/40 px-2 py-2 text-center text-xs font-black">
         Total Value: {formatValue(total)}
       </p>
     </div>
@@ -269,6 +254,7 @@ function ChatSection({
   const { data: conversations = [], isLoading, refetch } = useQuery(conversationsQO(offer.id, userId));
   const [activeId, setActiveId] = useState<string | null>(null);
   const [starting, setStarting] = useState(false);
+  const [accessOpen, setAccessOpen] = useState(false);
 
   const mine = useMemo(
     () => (isOwner ? conversations : conversations.filter((c) => c.buyer_id === userId)),
@@ -283,11 +269,9 @@ function ChatSection({
 
   if (!userId) {
     return (
-      <div className="mt-4 rounded-3xl border border-border bg-card p-4 text-center text-sm text-muted-foreground">
-        <Link to="/login" className="font-bold text-primary">
-          Masuk
-        </Link>{" "}
-        untuk chat dengan pemilik penawaran ini.
+      <div className="mt-4 text-center">
+        <Button onClick={() => setAccessOpen(true)} className="w-full">Chat Pemilik</Button>
+        {accessOpen && <TradeAccess onClose={() => setAccessOpen(false)} onSuccess={() => window.location.reload()} />}
       </div>
     );
   }
@@ -295,7 +279,8 @@ function ChatSection({
   async function startChat() {
     setStarting(true);
     try {
-      const conv = await ensureConversation(offer.id, offer.user_id, userId!);
+      if (!userId) return;
+      const conv = await ensureConversation(offer.id, offer.user_id, userId);
       await refetch();
       setActiveId(conv.id);
     } catch (e: any) {
