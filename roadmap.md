@@ -7,4 +7,6 @@
 - [x] Sediakan pembayaran QRIS dan satu nomor DANA/GoPay yang opsional di halaman utama; tampilkan saat dibuka.
 - [x] Trade: perbaiki tata letak ponsel, kontak WA pemilik tersembunyi, dan chat situs untuk peminat.
 - [ ] Uji sinkronisasi item Trade melalui tombol admin (belum terverifikasi).
-- [ ] Buah otomatis dari daftar gambar Trade, termasuk limited, skin, gamepass, permanent (tugas berikutnya).
+- [x] Buah otomatis dari daftar gambar Trade (56 item ditambahkan, nonaktif & stok 0).
+- [ ] Tombol "aktifkan semua" di admin buah.
+- [x] Notifikasi lonceng untuk chat Trade.
