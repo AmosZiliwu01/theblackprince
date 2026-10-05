@@ -30,12 +30,20 @@ function FruitsPage() {
   const [onlyReady, setOnlyReady] = useState(false);
 
   const filtered = useMemo(() => {
-    return fruits.filter((f: any) => {
+    const list = fruits.filter((f: any) => {
+      if (f.category === "Gamepass") return false;
       if (cat !== "all" && f.category !== cat) return false;
       if (onlyReady && (!f.ready || Number(f.stock ?? 0) <= 0)) return false;
       if (q && !f.name.toLowerCase().includes(q.toLowerCase())) return false;
       return true;
     });
+    // Skin/Limited tanpa stok ditaruh paling bawah; yang ada stok tetap di atas.
+    const sinks = (f: any) =>
+      f.category === "Limited" && (!f.ready || Number(f.stock ?? 0) <= 0) ? 1 : 0;
+    return list
+      .map((f: any, i: number) => ({ f, i }))
+      .sort((a, b) => sinks(a.f) - sinks(b.f) || a.i - b.i)
+      .map((x) => x.f);
   }, [fruits, q, cat, onlyReady]);
 
   return (
