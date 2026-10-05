@@ -392,17 +392,8 @@ function ChatBox({
       if (e) throw e;
       setText("");
       qc.invalidateQueries({ queryKey: ["trade", "messages", conversation.id] });
-
-      const target = isOwner ? conversation.buyer_id : conversation.owner_id;
-      notify({
-        data: {
-          userId: target,
-          type: "trade_chat",
-          title: `Pesan baru di "${offer.title}"`,
-          body: content.slice(0, 120),
-          link: `/trade/${offer.id}`,
-        },
-      }).catch(() => {});
+      // Notifikasi dibuat otomatis oleh database saat pesan masuk.
+      void notify; void isOwner; void offer;
     } catch (e: any) {
       toast.error(e?.message ?? "Gagal mengirim pesan");
     } finally {
