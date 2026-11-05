@@ -8,5 +8,5 @@
 - [x] Trade: perbaiki tata letak ponsel, kontak WA pemilik tersembunyi, dan chat situs untuk peminat.
 - [ ] Uji sinkronisasi item Trade melalui tombol admin (belum terverifikasi).
 - [x] Buah otomatis dari daftar gambar Trade (56 item ditambahkan, nonaktif & stok 0).
-- [ ] Tombol "aktifkan semua" di admin buah.
+- [x] Tombol "aktifkan semua" di admin buah.
 - [x] Notifikasi lonceng untuk chat Trade.
