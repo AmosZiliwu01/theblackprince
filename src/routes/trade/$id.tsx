@@ -269,8 +269,9 @@ function ChatSection({
 
   if (!userId) {
     return (
-      <div className="mt-4 text-center">
+      <div className="mt-4 space-y-2">
         <Button onClick={() => setAccessOpen(true)} className="w-full">Chat Pemilik</Button>
+        <WhatsAppButton offerId={offer.id} onNeedAccess={() => setAccessOpen(true)} />
         {accessOpen && <TradeAccess onClose={() => setAccessOpen(false)} onSuccess={() => window.location.reload()} />}
       </div>
     );
@@ -304,13 +305,16 @@ function ChatSection({
             Belum ada yang menghubungi penawaran ini.
           </p>
         ) : (
-          <button
-            onClick={startChat}
-            disabled={starting}
-            className="w-full rounded-2xl gradient-primary py-3 text-sm font-black text-primary-foreground shadow-neon disabled:opacity-60"
-          >
-            {starting ? "Membuka chat…" : "Chat Pemilik"}
-          </button>
+          <div className="space-y-2">
+            <button
+              onClick={startChat}
+              disabled={starting}
+              className="w-full rounded-2xl gradient-primary py-3 text-sm font-black text-primary-foreground shadow-neon disabled:opacity-60"
+            >
+              {starting ? "Membuka chat…" : "Chat Pemilik"}
+            </button>
+            <WhatsAppButton offerId={offer.id} userId={userId} onNeedAccess={() => setAccessOpen(true)} />
+          </div>
         )
       ) : (
         <>
@@ -330,6 +334,9 @@ function ChatSection({
               ))}
             </div>
           )}
+          <div className="mb-2">
+            <WhatsAppButton offerId={offer.id} userId={userId} onNeedAccess={() => setAccessOpen(true)} />
+          </div>
           {activeId && (
             <ChatBox
               conversation={mine.find((c) => c.id === activeId)!}
