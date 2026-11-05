@@ -20,6 +20,8 @@ export function PriceTag({
   size = "sm",
 }: Props) {
   const discounted = percent > 0;
+  if (!price || price <= 0)
+    return <div className={"text-sm font-bold text-muted-foreground " + className}>Belum ada harga</div>;
   return (
     <div className={"flex flex-wrap items-center gap-x-2 gap-y-0.5 " + className}>
       <span className={(size === "lg" ? "text-2xl" : "text-sm") + " font-black text-primary"}>
