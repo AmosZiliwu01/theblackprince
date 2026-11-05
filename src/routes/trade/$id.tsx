@@ -464,3 +464,48 @@ function ChatBox({
     </div>
   );
 }
+
+/**
+ * Tombol WhatsApp untuk pembeli. Nomornya tidak pernah tampil di halaman:
+ * server yang mengambilnya lalu tautan langsung dibuka di WhatsApp.
+ */
+function WhatsAppButton({
+  offerId,
+  userId,
+  onNeedAccess,
+}: {
+  offerId: string;
+  userId?: string;
+  onNeedAccess: () => void;
+}) {
+  const getLink = useServerFn(getTradeWhatsAppLink);
+  const [busy, setBusy] = useState(false);
+
+  async function open() {
+    if (!userId) return onNeedAccess();
+    setBusy(true);
+    try {
+      const res = await getLink({ data: { offerId } });
+      if (!res?.link) {
+        toast("Pemilik tidak menyertakan nomor WhatsApp. Pakai chat di sini dulu ya.");
+        return;
+      }
+      window.open(res.link, "_blank", "noopener,noreferrer");
+    } catch (e: any) {
+      toast.error(e?.message ?? "Gagal membuka WhatsApp");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <button
+      onClick={open}
+      disabled={busy}
+      className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-emerald-500/50 bg-emerald-500/10 px-3 py-3 text-sm font-black text-emerald-300 hover:bg-emerald-500/20 disabled:opacity-60"
+    >
+      {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Phone className="h-4 w-4" />}
+      Chat via WhatsApp
+    </button>
+  );
+}
