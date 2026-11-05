@@ -42,7 +42,11 @@ function FruitsPage() {
       f.category === "Limited" && (!f.ready || Number(f.stock ?? 0) <= 0) ? 1 : 0;
     return list
       .map((f: any, i: number) => ({ f, i }))
-      .sort((a, b) => sinks(a.f) - sinks(b.f) || a.i - b.i)
+      .sort((a, b) => {
+        const rank = ["Mythical", "Legendary", "Rare", "Uncommon", "Common"];
+        const r = (f: any) => { const x = rank.indexOf(f.category); return x < 0 ? 9 : x; };
+        return sinks(a.f) - sinks(b.f) || r(a.f) - r(b.f) || a.i - b.i;
+      })
       .map((x) => x.f);
   }, [fruits, q, cat, onlyReady]);
 
