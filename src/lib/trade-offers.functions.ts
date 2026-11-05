@@ -48,3 +48,46 @@ export const notifyUser = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true, skipped: false };
   });
+
+/**
+ * Tautan WhatsApp pemilik penawaran.
+ * Nomornya disimpan tersembunyi (hanya pemilik yang bisa membacanya lewat RLS),
+ * jadi diambil server-side dan dikirim hanya ke pembeli yang sudah login.
+ * Nomornya tidak pernah tampil di halaman — langsung terbuka di WhatsApp.
+ */
+export const getTradeWhatsAppLink = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { offerId?: string } | undefined) => {
+    const offerId = String(input?.offerId ?? "");
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(offerId)) {
+      throw new Error("Penawaran tidak valid");
+    }
+    return { offerId };
+  })
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const sb = supabaseAdmin as any;
+
+    const { data: offer, error: offerError } = await sb
+      .from("trade_offers")
+      .select("id,user_id,status,title")
+      .eq("id", data.offerId)
+      .maybeSingle();
+    if (offerError) throw new Error(offerError.message);
+    if (!offer) throw new Error("Penawaran tidak ditemukan");
+    if (offer.status !== "active") throw new Error("Penawaran ini sudah tidak aktif");
+    if (offer.user_id === context.userId) throw new Error("Ini penawaran kamu sendiri");
+
+    const { data: contact, error: contactError } = await sb
+      .from("trade_offer_contacts")
+      .select("whatsapp_number")
+      .eq("offer_id", data.offerId)
+      .maybeSingle();
+    if (contactError) throw new Error(contactError.message);
+
+    const digits = String(contact?.whatsapp_number ?? "").replace(/\D/g, "");
+    if (digits.length < 8) return { link: null as string | null };
+
+    const text = `Halo, saya tertarik dengan trade "${offer.title}" di The Black Prince.`;
+    return { link: `https://wa.me/${digits}?text=${encodeURIComponent(text)}` };
+  });

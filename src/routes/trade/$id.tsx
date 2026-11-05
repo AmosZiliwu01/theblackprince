@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { CheckCircle2, Loader2, Lock, MessageCircle, Send, Trash2, UserCircle2 } from "lucide-react";
+import { CheckCircle2, Loader2, Lock, MessageCircle, Phone, Send, Trash2, UserCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { SiteLayout } from "@/components/site/site-layout";
 import { TradeNav } from "@/components/trade/trade-nav";
@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthUser } from "@/hooks/use-auth";
 import { formatValue, VARIANT_LABEL, type TradeVariant } from "@/lib/trade";
-import { notifyUser } from "@/lib/trade-offers.functions";
+import { getTradeWhatsAppLink, notifyUser } from "@/lib/trade-offers.functions";
 import {
   STATUS_LABEL,
   activeOffersQO,
@@ -269,8 +269,9 @@ function ChatSection({
 
   if (!userId) {
     return (
-      <div className="mt-4 text-center">
+      <div className="mt-4 space-y-2">
         <Button onClick={() => setAccessOpen(true)} className="w-full">Chat Pemilik</Button>
+        <WhatsAppButton offerId={offer.id} onNeedAccess={() => setAccessOpen(true)} />
         {accessOpen && <TradeAccess onClose={() => setAccessOpen(false)} onSuccess={() => window.location.reload()} />}
       </div>
     );
@@ -304,13 +305,16 @@ function ChatSection({
             Belum ada yang menghubungi penawaran ini.
           </p>
         ) : (
-          <button
-            onClick={startChat}
-            disabled={starting}
-            className="w-full rounded-2xl gradient-primary py-3 text-sm font-black text-primary-foreground shadow-neon disabled:opacity-60"
-          >
-            {starting ? "Membuka chat…" : "Chat Pemilik"}
-          </button>
+          <div className="space-y-2">
+            <button
+              onClick={startChat}
+              disabled={starting}
+              className="w-full rounded-2xl gradient-primary py-3 text-sm font-black text-primary-foreground shadow-neon disabled:opacity-60"
+            >
+              {starting ? "Membuka chat…" : "Chat Pemilik"}
+            </button>
+            <WhatsAppButton offerId={offer.id} userId={userId} onNeedAccess={() => setAccessOpen(true)} />
+          </div>
         )
       ) : (
         <>
@@ -330,6 +334,9 @@ function ChatSection({
               ))}
             </div>
           )}
+          <div className="mb-2">
+            <WhatsAppButton offerId={offer.id} userId={userId} onNeedAccess={() => setAccessOpen(true)} />
+          </div>
           {activeId && (
             <ChatBox
               conversation={mine.find((c) => c.id === activeId)!}
