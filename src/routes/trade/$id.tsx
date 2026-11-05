@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { CheckCircle2, Loader2, Lock, MessageCircle, Send, Trash2, UserCircle2 } from "lucide-react";
+import { CheckCircle2, Loader2, Lock, MessageCircle, Phone, Send, Trash2, UserCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { SiteLayout } from "@/components/site/site-layout";
 import { TradeNav } from "@/components/trade/trade-nav";
@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthUser } from "@/hooks/use-auth";
 import { formatValue, VARIANT_LABEL, type TradeVariant } from "@/lib/trade";
-import { notifyUser } from "@/lib/trade-offers.functions";
+import { getTradeWhatsAppLink, notifyUser } from "@/lib/trade-offers.functions";
 import {
   STATUS_LABEL,
   activeOffersQO,
