@@ -27,28 +27,43 @@ type SourceItem = {
   demand?: string;
   category?: string;
   beli_price?: number;
-  last_updated?: number;
+  last_updated?: number | string;
 };
+
+function finiteNumber(value: unknown): number | null {
+  if (value === null || value === undefined || value === "") return null;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+function sourceDate(value: SourceItem["last_updated"]): string | null {
+  if (value === null || value === undefined || value === "") return null;
+  const numeric = Number(value);
+  const date = Number.isFinite(numeric)
+    ? new Date(numeric < 10_000_000_000 ? numeric * 1000 : numeric)
+    : new Date(String(value));
+  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+}
 
 /** Satu baris per item sumber. Regular & Permanent = varian dari item yang sama. */
 function toRows(items: SourceItem[]) {
-  const rows: any[] = [];
+  const rows: Record<string, unknown>[] = [];
   const seen = new Set<string>();
 
   for (const it of items) {
     const name = String(it.name ?? "").trim();
     if (!name) continue;
 
-    const cat = String(it.category ?? "").toLowerCase();
-    const kind = cat.startsWith("gamepass") ? "gamepass" : cat.startsWith("limited") ? "limited" : "fruit";
+    const cat = String(it.category ?? "").trim().toLowerCase();
+    const kind = cat.includes("gamepass") ? "gamepass" : cat.includes("limited") ? "limited" : "fruit";
 
     const slug = slugify(name);
     const key = `${slug}|${kind}`;
     if (seen.has(key)) continue;
     seen.add(key);
 
-    const reg = Number(it.value_reg ?? 0) || null;
-    const perm = Number(it.value_perm ?? 0) || null;
+    const reg = finiteNumber(it.value_reg);
+    const perm = finiteNumber(it.value_perm);
 
     rows.push({
       name,
@@ -60,11 +75,11 @@ function toRows(items: SourceItem[]) {
       regular_value: kind === "fruit" ? reg : kind === "limited" ? reg : null,
       permanent_value: kind === "fruit" ? perm : null,
       gamepass_value: kind === "gamepass" ? reg : null,
-      price: Number(it.beli_price ?? 0) || null,
+      price: finiteNumber(it.beli_price),
       demand: it.demand ?? null,
       trend: it.trend ?? null,
       source: SOURCE_NAME,
-      source_updated_at: it.last_updated ? new Date(Number(it.last_updated) * 1000).toISOString() : null,
+      source_updated_at: sourceDate(it.last_updated),
       updated_at: new Date().toISOString(),
     });
   }
@@ -103,28 +118,54 @@ export const syncTradeItems = createServerFn({ method: "POST" })
 
     let items: SourceItem[] = [];
     try {
-      const res = await fetch(SOURCE_URL, { headers: { accept: "application/json" }, cache: "no-store" });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
-      items = Array.isArray(json) ? json : [];
+      const res = await fetch(SOURCE_URL, {
+        headers: { accept: "application/json" },
+        cache: "no-store",
+        signal: AbortSignal.timeout(20_000),
+      });
+      if (!res.ok) {
+        console.error(`[trade-sync] Source returned HTTP ${res.status}`);
+        return { synced: 0, skipped: true as const, error: `Sumber nilai merespons HTTP ${res.status}`, source: SOURCE_NAME };
+      }
+      const json: unknown = await res.json();
+      if (!Array.isArray(json) || json.length === 0) {
+        console.error("[trade-sync] Source returned an empty or invalid response");
+        return { synced: 0, skipped: true as const, error: "Format data sumber tidak valid atau kosong", source: SOURCE_NAME };
+      }
+      items = json as SourceItem[];
     } catch (e: any) {
-      // Sumber sedang bermasalah → tetap pakai cache terakhir.
-      return { synced: 0, skipped: true as const, error: String(e?.message ?? e), source: SOURCE_NAME };
+      console.error("[trade-sync] Could not fetch source", e);
+      return { synced: 0, skipped: true as const, error: "Sumber nilai sedang tidak bisa dihubungi; data lama tetap dipakai", source: SOURCE_NAME };
     }
 
     const rows = toRows(items);
     if (!rows.length) return { synced: 0, skipped: true as const, error: "empty source", source: SOURCE_NAME };
 
     const { error } = await sb.from("trade_items").upsert(rows, { onConflict: "slug,type" });
-    if (error) throw new Error(error.message);
+    if (error) {
+      console.error("[trade-sync] Could not save source values", error);
+      throw new Error(`Gagal menyimpan nilai terbaru: ${error.message}`);
+    }
 
-    // Bersihkan sisa item lama yang sudah tidak ada di sumber (mis. entri "Perm X" versi lama).
-    const keep = rows.map((r) => r.slug);
-    const { data: all } = await sb.from("trade_items").select("id,slug,type");
+    // Hapus hanya item lama dari sumber ini, jangan sentuh item dari sumber lain.
+    const { data: all, error: selectError } = await sb
+      .from("trade_items")
+      .select("id,slug,type")
+      .eq("source", SOURCE_NAME);
+    if (selectError) {
+      console.error("[trade-sync] Could not inspect old source rows", selectError);
+      throw new Error(`Nilai diperbarui, tetapi pemeriksaan item lama gagal: ${selectError.message}`);
+    }
     const stale = (all ?? []).filter(
-      (r: any) => !rows.some((x) => x.slug === r.slug && x.type === r.type) && keep.length > 0,
+      (r: { slug: string; type: string }) => !rows.some((x) => x.slug === r.slug && x.type === r.type),
     );
-    if (stale.length) await sb.from("trade_items").delete().in("id", stale.map((r: any) => r.id));
+    if (stale.length) {
+      const { error: deleteError } = await sb.from("trade_items").delete().in("id", stale.map((r: { id: string }) => r.id));
+      if (deleteError) {
+        console.error("[trade-sync] Could not remove obsolete source rows", deleteError);
+        throw new Error(`Nilai diperbarui, tetapi item lama gagal dibersihkan: ${deleteError.message}`);
+      }
+    }
 
     return { synced: rows.length, skipped: false as const, source: SOURCE_NAME };
   });
